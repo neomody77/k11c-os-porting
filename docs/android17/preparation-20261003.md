@@ -27,9 +27,11 @@ Git、Python3、repo 2.65 launcher、Java21、GCC/G++、make、bison、flex、zi
 bash tools/prepare-android17.sh /path/to/aosp17
 ```
 
-工具要求独立目录、至少400GiB可用空间，使用文件锁防止重复任务；验证 manifest 精确提交后进行 `repo sync -c -j8 --fail-fast`，完成时导出 `.repo/k11c/android17-pinned-manifest.xml`。未完成的同步可以在同一已验证目录重跑。工具不应用补丁、不编译、不刷机，源码和逐项目锁定清单不上传此仓库。
+工具要求独立目录、至少400GiB可用空间，使用文件锁防止重复任务；验证 manifest 精确提交后进行 `repo sync -c -j2 --fail-fast`，完成时导出 `.repo/k11c/android17-pinned-manifest.xml`。失败会按30/60/120/240秒退避，最多5次尝试；仍失败则退出，保留对象，之后可在同一已验证目录重跑。工具不应用补丁、不编译、不刷机，源码和逐项目锁定清单不上传此仓库。
 
 首次尝试引用 Android16 对象缓存时，旧 manifest 为浅克隆，缺失基础 Git 对象，导致 `unresolved deltas`。失败目录与日志已在私有环境保留，改用独立 `--depth=1` 克隆后 manifest 初始化成功并进入项目抓取。工具拒绝以浅克隆 manifest 为引用，避免复现该故障。没有修改 Android16 源码或镜像。
+
+首次8并发项目抓取后，源码服务器对证书项目返回 `RESOURCE_EXHAUSTED`。改为2并发并加入有限退避重试，从已下载对象继续；不把该限流当作源码标签缺失，也不删除整个checkout重下。
 
 ## Android16 适配的逐项审查
 

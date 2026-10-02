@@ -3,7 +3,7 @@
 set -euo pipefail
 aosp="${1:?Usage: prepare-android17.sh /path/to/aosp17 [existing-aosp-reference]}"
 reference="${2:-}"
-jobs="${SYNC_JOBS:-8}"
+jobs="${SYNC_JOBS:-2}"
 tag=android-17.0.0_r1
 manifest_commit=5bc9a7ce1cd78dd53613bbfd0ebf506e1e4adb0f
 [[ "$jobs" =~ ^[1-9][0-9]*$ ]] || { echo 'SYNC_JOBS must be a positive integer' >&2; exit 1; }
@@ -47,7 +47,19 @@ repo init "${init_args[@]}"
 [[ "$(git -C .repo/manifests rev-parse HEAD)" == "$manifest_commit" ]] || {
   echo 'Official manifest differs from the verified Android17 baseline.' >&2; exit 1;
 }
-repo sync -c -j"$jobs" --fail-fast --no-clone-bundle
+synced=false
+for attempt in 1 2 3 4 5; do
+  if repo sync -c -j"$jobs" --fail-fast --no-clone-bundle; then
+    synced=true
+    break
+  fi
+  if (( attempt < 5 )); then
+    delay=$((30 * (2 ** (attempt - 1))))
+    echo "Source sync failed (attempt $attempt/5); retrying in ${delay}s."
+    sleep "$delay"
+  fi
+done
+[[ "$synced" == true ]] || { echo 'Source synchronization did not complete.' >&2; exit 1; }
 mkdir -p "$aosp/.repo/k11c"
 repo manifest -r -o "$aosp/.repo/k11c/android17-pinned-manifest.xml"
 echo 'Android17 source synchronized and revisions recorded. No patches, build or flashing performed.'
