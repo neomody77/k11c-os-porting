@@ -30,6 +30,12 @@ repo launcher不可写的新版本提示经更新到2.65处理，已有同步继
 
 USB-A主机连接保持configured/high-speed；运行设备树与厂商规格确认Type-C OTG为USB2.0，不将480Mbps称降速。后续C→C重测中同一个OTG控制器两次切换host，随后黑屏与无线失联，接回USB-A仍不恢复。保留日志与pstore，用户重新上电后原版13与USB-A恢复，未取得可确认panic栈。原版13相同C→C也角色震荡且Mac不枚举，但画面/无线仍正常；临时PHY peripheral停止host循环，数据连接仍待查。详见 [后续记录](../android16/followup-usb-dns-sensors.md)。
 
+## 2026-10-02：Android16持久改进候选
+
+按用户要求暂停Mac C→C排查，接回USB-A后恢复PHY otg。把Seekwave蓝牙权限规则、默认62Hz framework RRO和GPU-work缺map时的错误处理集成到GSI。增量构建2分33秒成功，文件系统/AVB/VINTF与实际packaged规则、资源检查通过；独立GPU-work native回归在板上1/1通过，未替换运行中系统库。
+
+四个源码补丁在精确标签fixture首次与重复应用通过；末项目冲突时验证前三个项目和overlay均未修改。实际厂商RIL反汇编与radio日志定位到误选VNDK31、dlopen被VNDK33 namespace拒绝、property_get空指针调用；这项未修复。新候选安装后发现原厂工具重建userdata，且宿主metadata加密使文件层备份不能直接恢复；已在新镜像重启前停止，DSU disabled，原版13正常。旧文件层副本及extent元数据私有保留，恢复/舍弃旧测试数据尚待决定。新候选的整镜像验收状态见 [改进记录](../android16/improvements-20261002.md)。
+
 ## 后续：Android17
 
 尚未选择源码引用、构建或刷入Android17。先完成Android16剩余兼容问题并保持可恢复基线，再按 [roadmap](../android17/roadmap.md)推进。

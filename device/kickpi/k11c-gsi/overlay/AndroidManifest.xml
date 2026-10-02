@@ -1,0 +1,6 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.kickpi.k11c.frameworkoverlay">
+    <overlay android:targetPackage="android" android:isStatic="true"
+        android:priority="100" />
+    <application android:hasCode="false" />
+</manifest>

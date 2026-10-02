@@ -23,15 +23,28 @@ bash tools/apply-android16.sh /path/to/aosp16
 AOSP_ROOT=/path/to/aosp16 JOBS=12 bash tools/build-android16.sh
 ```
 
-apply 工具校验目标两个项目的 HEAD 对应指定标签，先检查所有补丁，再复制 VINTF 模块和应用补丁。检测到已应用的同一补丁会跳过；不一致的 overlay 会报错。它不清理他人的源码修改。
+apply 工具校验目标四个项目的 HEAD 对应指定标签，先检查所有补丁，再复制板级模块和应用补丁。检测到已应用的同一补丁会跳过；不一致的 overlay 会报错。它不清理他人的源码修改。
 
 | 文件 | AOSP 目标项目 |
 |---|---|
 | patches/android16/0001-avc-high10-overflow-and-tests.patch | frameworks/av |
 | patches/android16/0002-k11c-framework-matrix.patch | build/make |
-| device/kickpi/k11c-gsi/{Android.bp,compatibility_matrix.k11c.xml} | device/kickpi/k11c-gsi |
+| patches/android16/0003-k11c-ueventd-import.patch | system/core |
+| patches/android16/0004-gpuwork-missing-map-and-test.patch | frameworks/native |
+| device/kickpi/k11c-gsi/ | VINTF、ueventd 规则和 product framework overlay |
 
 构建过程不刷机。镜像位于 AOSP out/target/product/generic_arm64/system.img，不进入本仓库。每次构建单独记录源码引用、补丁版本、镜像哈希及验证状态；不要把一次成功构建当作适合任意 K11C 固件。
+
+GPU-work 回归程序单独构建，不进入系统镜像的安装文件列表：
+
+```bash
+cd /path/to/aosp16
+source build/envsetup.sh
+lunch aosp_arm64-bp4a-userdebug
+m -j12 k11c_gpuwork_regression_test
+```
+
+测试需要 root、bpf.progs_loaded=1 且 GPU-work map 缺失的设备；map 已存在会明确跳过，不能计为通过。初始化等待约30秒。板上执行方法与本次结果见 [改进验收](improvements-20261002.md)。
 
 ## 构建后的验收
 

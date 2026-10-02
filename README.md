@@ -17,7 +17,7 @@ Android16 修正了 factory first-stage 缺少 vbmeta 节点初始化，以及 A
 
 连续动画默认 31.03FPS；临时将刷新率上下限设为 62Hz 后为 61.99FPS，CPU 满载时为 61.85FPS。空闲可用内存约 2.77GiB，一分钟四核压力最高 SoC 76.25℃。这些是短时应用绘制测试，不是游戏跑分或长期稳定性认证。
 
-蓝牙经运行时节点权限修复后能开启并扫描，但修复尚未固化；传感器注册、vendor rild、GPU-work 统计服务仍有问题。Android16 当前是单次 DSU，正常重启回原厂 Android13。
+蓝牙权限、默认62Hz刷新率和GPU-work缺map处理已集成新候选并完成离线验收；GPU-work独立板测1/1通过，整镜像效果待验收。传感器注册和vendor rild仍未修复。Android16 当前是单次 DSU，正常重启回原厂 Android13。
 
 ## 导航
 
@@ -31,6 +31,7 @@ Android16 修正了 factory first-stage 缺少 vbmeta 节点初始化，以及 A
 | 启动与崩溃根因 | [docs/android16/boot-and-codec.md](docs/android16/boot-and-codec.md) |
 | 功能、性能与流畅度测试 | [docs/android16/test-report.md](docs/android16/test-report.md) / [JSON](docs/android16/test-results.json) |
 | USB、DNS、传感器后续定位 | [docs/android16/followup-usb-dns-sensors.md](docs/android16/followup-usb-dns-sensors.md) |
+| 持久改进与候选验收 | [docs/android16/improvements-20261002.md](docs/android16/improvements-20261002.md) |
 | 待修问题 | [docs/android16/known-issues.md](docs/android16/known-issues.md) |
 | Android17 计划 | [docs/android17/roadmap.md](docs/android17/roadmap.md) |
 | 上游跟踪 | [docs/upstream.md](docs/upstream.md) |

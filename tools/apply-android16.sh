@@ -4,8 +4,8 @@ repo_root="$(cd "$(dirname "$0")/.." && pwd)"
 aosp="${1:?Usage: apply-android16.sh /path/to/aosp16}"
 aosp="$(cd "$aosp" && pwd)"
 tag=android-16.0.0_r4
-projects=(frameworks/av build/make)
-patches=(0001-avc-high10-overflow-and-tests.patch 0002-k11c-framework-matrix.patch)
+projects=(frameworks/av build/make system/core frameworks/native)
+patches=(0001-avc-high10-overflow-and-tests.patch 0002-k11c-framework-matrix.patch 0003-k11c-ueventd-import.patch 0004-gpuwork-missing-map-and-test.patch)
 pending=()
 for i in "${!projects[@]}"; do
   project="$aosp/${projects[$i]}"
@@ -24,14 +24,17 @@ for i in "${!projects[@]}"; do
   fi
 done
 overlay=device/kickpi/k11c-gsi
-for file in Android.bp compatibility_matrix.k11c.xml; do
+overlay_files=(Android.bp compatibility_matrix.k11c.xml ueventd.bluetooth.fragment overlay/AndroidManifest.xml overlay/res/values/config.xml)
+for file in "${overlay_files[@]}"; do
   if [[ -e "$aosp/$overlay/$file" ]] && ! cmp -s "$repo_root/$overlay/$file" "$aosp/$overlay/$file"; then
     echo "Refusing to overwrite differing overlay: $overlay/$file" >&2
     exit 1
   fi
 done
-mkdir -p "$aosp/$overlay"
-cp "$repo_root/$overlay/Android.bp" "$repo_root/$overlay/compatibility_matrix.k11c.xml" "$aosp/$overlay/"
+for file in "${overlay_files[@]}"; do
+  mkdir -p "$(dirname "$aosp/$overlay/$file")"
+  cp "$repo_root/$overlay/$file" "$aosp/$overlay/$file"
+done
 for i in "${pending[@]}"; do
   git -C "$aosp/${projects[$i]}" apply "$repo_root/patches/android16/${patches[$i]}"
   printf 'Applied: %s\n' "${patches[$i]}"

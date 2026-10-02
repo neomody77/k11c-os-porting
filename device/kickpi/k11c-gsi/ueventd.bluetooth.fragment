@@ -1,4 +1,4 @@
-# Prepared rule fragment only. Not applied to a persistent firmware image.
+# Seekwave Bluetooth nodes: imported after vendor rules by the K11C GSI.
 /dev/BTBOOT      0660 bluetooth bluetooth
 /dev/BTCMD       0660 bluetooth bluetooth
 /dev/BTDATA      0660 bluetooth bluetooth

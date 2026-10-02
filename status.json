@@ -12,7 +12,16 @@
     "full_peripheral_validation": false,
     "cts_vts": "not_run",
     "diagnostic_network_readiness": "callback fix verified on device: 12/12; cold control 0/4",
-    "open_work": ["persist Bluetooth node permissions", "refresh-rate policy", "codec capability declaration", "correct ghost sensor declaration or add actual sensor driver", "rild compatibility", "GPU-work statistics", "C-to-C role-switch failure: stock-system comparison and cause isolation"]
+    "open_work": [
+      "resolve DSU test-data retention, then boot-test Bluetooth permissions, refresh-rate RRO and GPU-work fix",
+      "codec capability declaration",
+      "correct ghost sensor declaration or add actual sensor driver",
+      "RIL wrong VNDK selection and unchecked initialization failure",
+      "GPU-work kernel statistics support",
+      "Mac C-to-C investigation paused by user"
+    ],
+    "improvements_candidate": "installed disabled; not booted; userdata retention/recovery decision pending",
+    "current_running_api": 33
   },
   "android17": {
     "source_ref": null,

@@ -1,0 +1,58 @@
+diff --git a/services/gpuservice/gpuwork/GpuWork.cpp b/services/gpuservice/gpuwork/GpuWork.cpp
+--- a/services/gpuservice/gpuwork/GpuWork.cpp
++++ b/services/gpuservice/gpuwork/GpuWork.cpp
+@@ -66,10 +66,10 @@
+ // Gets a BPF map from |mapPath|.
+ template <class Key, class Value>
+ bool getBpfMap(const char* mapPath, bpf::BpfMap<Key, Value>* out) {
+-    errno = 0;
+-    auto map = bpf::BpfMap<Key, Value>(mapPath);
+-    if (!map.isValid()) {
+-        ALOGW("Failed to create bpf map from %s [%d(%s)]", mapPath, errno, strerror(errno));
++    bpf::BpfMap<Key, Value> map;
++    const auto result = map.init(mapPath);
++    if (!result.ok()) {
++        ALOGW("Failed to open bpf map from %s: %s", mapPath, result.error().message().c_str());
+         return false;
+     }
+     *out = std::move(map);
+diff --git a/services/gpuservice/tests/unittests/Android.bp b/services/gpuservice/tests/unittests/Android.bp
+--- a/services/gpuservice/tests/unittests/Android.bp
++++ b/services/gpuservice/tests/unittests/Android.bp
+@@ -96,3 +96,13 @@
+     ],
+     require_root: true,
+ }
++
++// Regression for factory kernels without the optional GPU work BPF map.
++cc_test {
++    name: "k11c_gpuwork_regression_test",
++    srcs: ["GpuWorkRegressionTest.cpp"],
++    header_libs: ["bpf_headers"],
++    compile_multilib: "64",
++    shared_libs: ["libbase", "libbinder", "libgpuwork", "libstatssocket", "libutils"],
++    require_root: true,
++}
+diff --git a/services/gpuservice/tests/unittests/GpuWorkRegressionTest.cpp b/services/gpuservice/tests/unittests/GpuWorkRegressionTest.cpp
+new file mode 100644
+--- /dev/null
++++ b/services/gpuservice/tests/unittests/GpuWorkRegressionTest.cpp
+@@ -0,0 +1,18 @@
++// SPDX-License-Identifier: Apache-2.0
++#include <android-base/properties.h>
++#include <gtest/gtest.h>
++#include <gpuwork/GpuWork.h>
++#include <unistd.h>
++
++TEST(GpuWorkRegression, MissingPinnedMapDoesNotAbort) {
++    if (access("/sys/fs/bpf/map_gpuWork_gpu_work_map", F_OK) == 0) {
++        GTEST_SKIP() << "Requires a device without the GPU work map";
++    }
++    ASSERT_EQ(0u, getuid());
++    ASSERT_EQ("1", android::base::GetProperty("bpf.progs_loaded", ""));
++    android::gpuwork::GpuWork work;
++    work.initialize();
++    std::string result;
++    work.dump({}, &result);
++    EXPECT_EQ("GPU work information is not available.\n", result);
++}

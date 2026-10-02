@@ -77,10 +77,10 @@ USB实验重新上电回到原版13后，再只读核对sensorservice与设备�
 
 随后仅通过运行时sysfs，将fe8a0000.usb2-phy/otg_mode从otg写为peripheral。[Rockchip USB2 PHY参考源码](https://github.com/rockchip-linux/kernel/blob/develop-5.10/drivers/phy/rockchip/phy-rockchip-inno-usb2.c)中的该路径通过GRF强制ID指示device并关闭VBUS供电；公开分支未确认与factory二进制逐行一致，实际效果以板端状态为准。写入后host创建循环停止，USB-HOST与USB_VBUS_EN均为0，UDC重新出现，但USB=0、UDC=not attached、speed=UNKNOWN，Mac仍未枚举。
 
-此时DWC3 runtime_status=suspended，debugfs mode读取UNKNOWN 00000000，不能把休眠时读到的零寄存器当成一个有效新角色。仅固定PHY角色还没有修好C→C数据连接。保持Mac端不动，板端按原方向拔出约3秒再插入，仍USB=0、UDC=not attached，Mac无USB ADB；用户确认画面正常。还需反向插头与USB-A相同临时模式对照，确认主机是否供VBUS以及板端检测是否变化。未手动写DWC3 debugfs角色，未改DT/镜像。此临时PHY覆盖仍在原版13运行中，需在结束实验时恢复otg；重启也会恢复。
+此时DWC3 runtime_status=suspended，debugfs mode读取UNKNOWN 00000000，不能把休眠时读到的零寄存器当成一个有效新角色。仅固定PHY角色还没有修好C→C数据连接。保持Mac端不动，板端按原方向拔出约3秒再插入，仍USB=0、UDC=not attached，Mac无USB ADB；用户确认画面正常。后续若恢复C→C排查，可做反向插头和VBUS检测对照；本轮按用户要求暂停Mac侧排查，不把未做的实验写成结论。未手动写DWC3 debugfs角色，未改DT/镜像。用户接回USB-A主机后，已显式恢复PHY模式otg，并确认UDC configured/high-speed；随后重新进入Android16。临时覆盖已清理，没有改DT或镜像。
 
 运行设备树未显示独立Type-C/CC控制器，但被动CC电阻不需要Linux节点，不能据此认定CC电阻缺失或硬件不合规。厂商原理图下载未能从公开页面直接取得，暂不编造电路结论。
 
 ## 清理与可追溯结果
 
-三份诊断APK均在结束后卸载，临时主机APK副本已删除；DNS实验结束时Android16与USB仍正常。后续C→C引发失联，由用户重新上电后恢复原版13与USB-A ADB。原版C→C对照进行了可恢复的PHY peripheral覆盖，没有刷机或改变DNS。聚合结果见 [followup-results.json](followup-results.json)。
+三份诊断APK均在结束后卸载，临时主机APK副本已删除；DNS实验结束时Android16与USB仍正常。后续C→C引发失联，由用户重新上电后恢复原版13与USB-A ADB。原版C→C对照进行了可恢复的PHY peripheral覆盖，接回USB-A后已恢复otg；本轮USB实验没有刷写固件或改变DNS。聚合结果见 [followup-results.json](followup-results.json)。

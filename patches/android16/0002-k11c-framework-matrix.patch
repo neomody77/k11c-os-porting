@@ -9,18 +9,20 @@ index 5052404..6e6aae3 100644
 +
 +# K11C factory vendor optional HAL declarations.
 +ifeq (aosp_arm64,$(TARGET_PRODUCT))
-+PRODUCT_PACKAGES += k11c_framework_compatibility_matrix
++PRODUCT_PACKAGES += k11c_framework_compatibility_matrix k11c_ueventd_bluetooth k11c_framework_overlay
 +endif
 diff --git a/target/product/gsi/Android.bp b/target/product/gsi/Android.bp
 index 3fa6e76..0d33394 100644
 --- a/target/product/gsi/Android.bp
 +++ b/target/product/gsi/Android.bp
-@@ -178,6 +178,9 @@ android_system_image {
+@@ -178,6 +178,11 @@ android_system_image {
      name: "aosp_system_image",
      defaults: ["android_gsi_defaults"],
      deps: [
 +        // K11C factory vendor optional HAL declarations.
 +        "k11c_framework_compatibility_matrix",
++        "k11c_ueventd_bluetooth",
++        "k11c_framework_overlay",
 +
          // handheld_system_ext
          "AccessibilityMenu",

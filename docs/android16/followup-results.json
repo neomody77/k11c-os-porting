@@ -115,7 +115,7 @@
       "USB": 0,
       "USB-HOST": 0,
       "USB_VBUS_EN": 0,
-      "restored_to_otg": false,
+      "restored_to_otg": true,
       "same_orientation_replug": {
         "mac_usb_enumerated": false,
         "udc": "not attached",
@@ -123,6 +123,13 @@
         "wireless_shell_responded": true,
         "screen": "normal_user_confirmed"
       }
+    },
+    "investigation_status": "Mac C-to-C investigation paused by user; Android work continues over USB-A",
+    "after_return_to_usb_a": {
+      "phy_mode": "otg",
+      "udc": "configured",
+      "current_speed": "high-speed",
+      "android_api": 36
     }
   },
   "cleanup": {

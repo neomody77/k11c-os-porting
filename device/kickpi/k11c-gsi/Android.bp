@@ -2,6 +2,20 @@ package {
     default_applicable_licenses: ["Android-Apache-2.0"],
 }
 
+prebuilt_etc {
+    name: "k11c_ueventd_bluetooth",
+    src: "ueventd.bluetooth.fragment",
+    filename: "ueventd.k11c.rc",
+    system_ext_specific: true,
+}
+
+runtime_resource_overlay {
+    name: "k11c_framework_overlay",
+    manifest: "overlay/AndroidManifest.xml",
+    resource_dirs: ["overlay/res"],
+    product_specific: true,
+}
+
 vintf_compatibility_matrix {
     name: "k11c_framework_compatibility_matrix",
     stem: "compatibility_matrix.k11c.xml",

@@ -1,0 +1,56 @@
+{
+  "tested_on": "2026-10-02",
+  "source_ref": "android-16.0.0_r4",
+  "target": "aosp_arm64-bp4a-userdebug",
+  "build": "passed",
+  "incremental_build_seconds": 153,
+  "system_raw_bytes": 1899532288,
+  "system_sha256": "54b9b621ee801070398ef61a08a5cf17d544e0e9c5b10727ffe47b0df9c207b9",
+  "system_gzip_bytes": 990764179,
+  "system_gzip_sha256": "eb9f6963b5c15bdf0d4cb8053abce218034eb455704bcbe190b0a08c7ff68aa8",
+  "offline_checks": {
+    "filesystem": "passed",
+    "avb": "passed",
+    "vintf_actual_vendor_kernel": "passed",
+    "gzip": "passed",
+    "packaged_bluetooth_rules": 7,
+    "packaged_default_refresh_rate": 62,
+    "idmap_product_policy": "passed",
+    "patch_first_application": "passed",
+    "patch_repeat_application": "passed"
+  },
+  "gpuwork_isolated_regression": {
+    "tests": 1,
+    "passed": 1,
+    "skipped": 0,
+    "duration_ms": 30003,
+    "system_library_replaced": false,
+    "gpuwork_statistics_available": false
+  },
+  "candidate_boot": "installed_disabled_not_booted",
+  "ril": {
+    "wrong_vndk_selected": 31,
+    "required_vendor_vndk": 33,
+    "initialization_failure": "dlopen rejected, property_get remains null",
+    "persistent_fix_applied": false
+  },
+  "mac_investigation": "paused_by_user",
+  "phy_override_restored": true,
+  "factory_boot_vendor_dtb_modified_this_round": false,
+  "dsu_userdata": {
+    "backing_file_backup_bytes": 8589934592,
+    "backup_layer": "filesystem view under host metadata encryption",
+    "tool_recreated_userdata": true,
+    "direct_file_restore_sufficient": false,
+    "direct_file_restore_stopped": true,
+    "old_extent_metadata_preserved": true,
+    "restoration_verified": false,
+    "pending_user_data_retention_decision": true
+  },
+  "current_device": {
+    "android_api": 33,
+    "boot_complete": true,
+    "dsu": "installed_disabled",
+    "boot_partition_hash_unchanged": true
+  }
+}

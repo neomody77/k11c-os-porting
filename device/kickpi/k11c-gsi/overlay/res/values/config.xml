@@ -1,0 +1,4 @@
+<resources>
+    <!-- This panel is 62 Hz; a 60 Hz cap selects its 31 Hz render divisor. -->
+    <integer name="config_defaultRefreshRate">62</integer>
+</resources>
