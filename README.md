@@ -11,8 +11,8 @@
 | 分支 | 用途 |
 |---|---|
 | `main` | 项目总览、通用记录及首次公开时的 Android16 基线 |
-| `android-16` | Android16 补丁、构建工具、板上验证与阶段总结；本阶段已结束 |
-| `android-17` | 后续 Android17 开发；开始实际工作时创建，目前尚不存在 |
+| [`android-16`](https://github.com/neomody77/k11c-os-porting/tree/android-16) | Android16 补丁、构建工具、板上验证与阶段总结；本阶段已结束 |
+| [`android-17`](https://github.com/neomody77/k11c-os-porting/tree/android-17) | Android17 独立开发；固定源码同步与补丁准备已启动，尚未编译或板测 |
 
 复现 Android16 时先执行 `git switch android-16`。后续版本的实现与测试结果在对应版本分支维护，不把 Android16 的验证结果当作其他版本的通过证据。
 
@@ -23,7 +23,7 @@
 | 版本 | 构建与启动 | 完成度 |
 |---|---|---|
 | Android 16 | android-16.0.0_r4；aosp_arm64-bp4a-userdebug；编译成功，eMMC原生首启与正常重启成功，API36.1 | 网络、GPU、媒体、存储等已有实际测试；仍有外设兼容缺口 |
-| Android 17 | 尚未选择具体源码版本；尚未构建或板测 | 调研与验证计划已建立，不复用 Android16 成功结论 |
+| Android 17 | android-17.0.0_r1；独立源码同步与补丁准备已启动，尚未构建或板测 | 最新进展以 [android-17 分支准备记录](https://github.com/neomody77/k11c-os-porting/blob/android-17/docs/android17/preparation-20261003.md) 为准 |
 
 Android16 修正了 factory first-stage 缺少 vbmeta 节点初始化，以及 AVC High10 Level6.2 码率乘法溢出。保留 UBSan/CFI，32/64 位回归测试各 25 项通过。
 
