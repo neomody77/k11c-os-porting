@@ -11,7 +11,8 @@
     "native_codec_tests_passed": 50,
     "full_peripheral_validation": false,
     "cts_vts": "not_run",
-    "open_work": ["persist Bluetooth node permissions", "refresh-rate policy", "codec capability declaration", "sensor registration", "rild compatibility", "GPU-work statistics"]
+    "diagnostic_network_readiness": "callback fix verified on device: 12/12; cold control 0/4",
+    "open_work": ["persist Bluetooth node permissions", "refresh-rate policy", "codec capability declaration", "correct ghost sensor declaration or add actual sensor driver", "rild compatibility", "GPU-work statistics", "physical C-to-C USB retest"]
   },
   "android17": {
     "source_ref": null,

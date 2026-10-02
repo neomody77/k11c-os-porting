@@ -37,7 +37,8 @@ public class Probe extends Instrumentation {
         case "storage": storage(); break;
         case "keystore": keystore(); break;
         case "gpu": gpu(); break;
-        case "network": network(); break;
+        case "network": network(true); break;
+        case "network-cold": network(false); break;
         case "sensor": sensor(); break;
         case "bluetooth-scan": bluetoothScan(); break;
         case "animation": animation(); break;
@@ -98,8 +99,23 @@ public class Probe extends Instrumentation {
       put("frames_verified",300);
     } finally {EGL14.eglMakeCurrent(d,EGL14.EGL_NO_SURFACE,EGL14.EGL_NO_SURFACE,EGL14.EGL_NO_CONTEXT);EGL14.eglDestroySurface(d,s);EGL14.eglDestroyContext(d,c);EGL14.eglTerminate(d);}
   }
-  void network() throws Exception {
+  void network(boolean awaitReady) throws Exception {
     android.net.ConnectivityManager cm=(android.net.ConnectivityManager)ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
+    if(awaitReady) {
+      CountDownLatch ready=new CountDownLatch(1);
+      android.net.ConnectivityManager.NetworkCallback callback=new android.net.ConnectivityManager.NetworkCallback(){
+        boolean validated=false,blocked=true;
+        void signalReady(){if(validated&&!blocked)ready.countDown();}
+        @Override public synchronized void onCapabilitiesChanged(android.net.Network network,android.net.NetworkCapabilities caps){validated=caps.hasCapability(android.net.NetworkCapabilities.NET_CAPABILITY_INTERNET)&&caps.hasCapability(android.net.NetworkCapabilities.NET_CAPABILITY_VALIDATED);signalReady();}
+        @Override public synchronized void onBlockedStatusChanged(android.net.Network network,boolean value){blocked=value;signalReady();}
+        @Override public synchronized void onLost(android.net.Network network){validated=false;blocked=true;}
+      };
+      long start=SystemClock.elapsedRealtime();
+      cm.registerDefaultNetworkCallback(callback);
+      try {require(ready.await(5,TimeUnit.SECONDS),"default network not validated or UID still blocked");}
+      finally {cm.unregisterNetworkCallback(callback);}
+      put("network_ready_wait_ms",SystemClock.elapsedRealtime()-start);
+    }
     put("uid",android.os.Process.myUid());put("active_network",String.valueOf(cm.getActiveNetwork()));
     boolean dnsOk=false;
     try {JSONArray dns=new JSONArray();for(InetAddress a:InetAddress.getAllByName("example.com"))dns.put(a.getHostAddress());put("dns",dns);dnsOk=true;}catch(Exception e){put("dns_error",e.toString());put("dns_cause",String.valueOf(e.getCause()));}

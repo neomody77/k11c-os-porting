@@ -79,3 +79,5 @@ AudioTrack 写入并播放 48,000 个 PCM 采样，播放位置正常推进。Au
 公开的机器结果见 [test-results.json](test-results.json)。诊断工具源码位于仓库 diagnostics/。公开仓库不包含原始日志、截图、实际设备标识或私有工作空间路径。可用 tools/run-diagnostics.py --serial 参数在自己的设备上运行；输出保留在 git 忽略的本地目录，审核脱敏后再补充公开指标。
 
 本轮未刷入新镜像，原厂 userdata 与固件分区未因性能测试被替换。
+
+后续定位见 [USB、DNS、传感器继续排查](followup-usb-dns-sensors.md)：DNS间歇失败已复现为instrumentation冷启动时UID网络策略竞争，诊断工具等待网络回调后12/12通过；传感器错误来自不存在的设备节点和HAL的-1错误码误传。上面的原始测试快照保持不变。

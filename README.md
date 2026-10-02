@@ -30,6 +30,7 @@ Android16 修正了 factory first-stage 缺少 vbmeta 节点初始化，以及 A
 | Android16 构建复现 | [docs/android16/build.md](docs/android16/build.md) |
 | 启动与崩溃根因 | [docs/android16/boot-and-codec.md](docs/android16/boot-and-codec.md) |
 | 功能、性能与流畅度测试 | [docs/android16/test-report.md](docs/android16/test-report.md) / [JSON](docs/android16/test-results.json) |
+| USB、DNS、传感器后续定位 | [docs/android16/followup-usb-dns-sensors.md](docs/android16/followup-usb-dns-sensors.md) |
 | 待修问题 | [docs/android16/known-issues.md](docs/android16/known-issues.md) |
 | Android17 计划 | [docs/android17/roadmap.md](docs/android17/roadmap.md) |
 | 上游跟踪 | [docs/upstream.md](docs/upstream.md) |

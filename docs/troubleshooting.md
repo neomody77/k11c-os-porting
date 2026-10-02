@@ -176,6 +176,8 @@ adb -s "$ANDROID_SERIAL" shell svc power stayon true
 
 全部指标和方法见 [test-report](android16/test-report.md)。摄像头数为0、无以太网/SD/USB-host附件，保持未测。音频API成功不等于人耳确认音质。核心在约35分钟观察中未重启，不是24小时或CTS/VTS认证。
 
+后续继续排查已定位DNS冷启动UID策略竞争、传感器缺失设备与错误码误传，并核对Type-C OTG的USB2.0边界，见 [后续记录](android16/followup-usb-dns-sensors.md)。以上表格保留前一阶段的观察，不能只引用它忽略后来证据。
+
 ## 12. 上游查重、版本路线与最终边界
 
 AOSP已有同类Gerrit，维护者备注内部合入，见 [upstream](upstream.md)。内部合入不等于目标公开分支已包含；不向GitHub镜像提交重复PR。新增测试与独立复现证据可用于后续贡献，但尚未发布上游反馈。

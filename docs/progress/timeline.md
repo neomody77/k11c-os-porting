@@ -24,6 +24,12 @@ repo launcher不可写的新版本提示经更新到2.65处理，已有同步继
 
 本日默认31FPS与临时62Hz策略分别测得31.03/61.99FPS；62Hz并行四核压力为61.85FPS。诊断APK与压力任务已清理，刷新率临时设定已恢复。自动熄屏关闭。公开指标经过脱敏，原始证据另存。
 
+## 2026-10-02：USB、DNS、传感器继续排查
+
+保留原始设备树、内核/应用日志与实际HAL副本。DNS冷启动10轮中6次失败对应resolver的UID网络拦截；延迟与前台对照各6/6通过。改为等待真实网络回调后12/12通过，同一APK的冷启动对照0/4通过，没有修改网络配置。传感器确认所需设备不存在，HAL的EBADF被-1返回值误显示为权限拒绝；仍未提供真实采样或修改vendor。
+
+USB-A主机连接保持configured/high-speed；运行设备树与厂商规格确认Type-C OTG为USB2.0，不将480Mbps称降速。C→C仍需实物重测。详见 [后续记录](../android16/followup-usb-dns-sensors.md)。
+
 ## 后续：Android17
 
 尚未选择源码引用、构建或刷入Android17。先完成Android16剩余兼容问题并保持可恢复基线，再按 [roadmap](../android17/roadmap.md)推进。

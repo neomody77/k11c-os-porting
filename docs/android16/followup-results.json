@@ -1,0 +1,37 @@
+{
+  "tested_on": "2026-10-02",
+  "android_api": 36,
+  "dns": {
+    "initial_cold": {"runs": 10, "passed": 4, "failed": 6, "https_200": 10},
+    "interleaved_controls": {
+      "cold": {"runs": 6, "passed": 3},
+      "delayed_1500_ms": {"runs": 6, "passed": 6},
+      "foreground_delayed_1500_ms": {"runs": 6, "passed": 6}
+    },
+    "callback_fix": {"runs": 12, "passed": 12, "ready_wait_min_ms": 10, "ready_wait_max_ms": 17},
+    "same_apk_cold_control": {"runs": 4, "passed": 0},
+    "matched_failure": "resolver rejected query while UID networking was blocked",
+    "network_configuration_changed": false
+  },
+  "sensor": {
+    "registration_runs": 2,
+    "registration_passed": 0,
+    "declared_accelerometers": 1,
+    "matching_input_device_present": false,
+    "required_device_node_present": false,
+    "hal_error": "open ENOENT then ioctl EBADF returned as -1",
+    "permanent_fix": "not_applied",
+    "physical_chip_presence": "not_confirmed"
+  },
+  "usb": {
+    "current_connection": "USB-A host to Type-C OTG",
+    "udc": "configured",
+    "current_speed": "high-speed",
+    "device_tree_maximum_speed": "high-speed",
+    "controller_role": "device",
+    "c_to_c_root_cause": "physical_retest_required"
+  },
+  "cleanup": {"diagnostic_apks_uninstalled": true, "temporary_host_apks_removed": true},
+  "firmware_flashing_performed": false,
+  "device_rebooted": false
+}
