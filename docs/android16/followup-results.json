@@ -2,14 +2,36 @@
   "tested_on": "2026-10-02",
   "android_api": 36,
   "dns": {
-    "initial_cold": {"runs": 10, "passed": 4, "failed": 6, "https_200": 10},
-    "interleaved_controls": {
-      "cold": {"runs": 6, "passed": 3},
-      "delayed_1500_ms": {"runs": 6, "passed": 6},
-      "foreground_delayed_1500_ms": {"runs": 6, "passed": 6}
+    "initial_cold": {
+      "runs": 10,
+      "passed": 4,
+      "failed": 6,
+      "https_200": 10
     },
-    "callback_fix": {"runs": 12, "passed": 12, "ready_wait_min_ms": 10, "ready_wait_max_ms": 17},
-    "same_apk_cold_control": {"runs": 4, "passed": 0},
+    "interleaved_controls": {
+      "cold": {
+        "runs": 6,
+        "passed": 3
+      },
+      "delayed_1500_ms": {
+        "runs": 6,
+        "passed": 6
+      },
+      "foreground_delayed_1500_ms": {
+        "runs": 6,
+        "passed": 6
+      }
+    },
+    "callback_fix": {
+      "runs": 12,
+      "passed": 12,
+      "ready_wait_min_ms": 10,
+      "ready_wait_max_ms": 17
+    },
+    "same_apk_cold_control": {
+      "runs": 4,
+      "passed": 0
+    },
     "matched_failure": "resolver rejected query while UID networking was blocked",
     "network_configuration_changed": false
   },
@@ -21,17 +43,93 @@
     "required_device_node_present": false,
     "hal_error": "open ENOENT then ioctl EBADF returned as -1",
     "permanent_fix": "not_applied",
-    "physical_chip_presence": "not_confirmed"
+    "physical_chip_presence": "not_confirmed",
+    "stock13_readonly_control": {
+      "android_api": 33,
+      "accelerometer_declared": true,
+      "required_device_node_present": false,
+      "matching_input_device_present": false,
+      "registration_test_repeated": false
+    }
   },
   "usb": {
-    "current_connection": "USB-A host to Type-C OTG",
-    "udc": "configured",
-    "current_speed": "high-speed",
     "device_tree_maximum_speed": "high-speed",
-    "controller_role": "device",
-    "c_to_c_root_cause": "physical_retest_required"
+    "before_c_to_c": {
+      "android_api": 36,
+      "connection": "USB-A host to Type-C OTG",
+      "udc": "configured",
+      "current_speed": "high-speed",
+      "controller_role": "device"
+    },
+    "c_to_c": {
+      "host": "Mac",
+      "usb_enumerated": false,
+      "same_otg_xhci_create_remove_cycles": 2,
+      "last_received_kernel_uptime_seconds": 5791.241244,
+      "screen": "black_user_confirmed",
+      "wireless_shell_responded_after_failure": false,
+      "usb_a_reconnect_without_restart_recovered": false,
+      "dc_continuously_connected_user_confirmed": true,
+      "power_green_led_user_confirmed": true,
+      "panic_confirmed": false,
+      "root_cause": "not_confirmed"
+    },
+    "recovery": {
+      "method": "user power cycle after evidence capture",
+      "android_release": "13",
+      "android_api": 33,
+      "boot_completed": true,
+      "udc": "configured",
+      "current_speed": "high-speed",
+      "controller_role": "device",
+      "phy_mode": "otg",
+      "pstore_files_exported": 2,
+      "pstore_export_hashes_match": true,
+      "pstore_content": "damaged; no confirmed panic record"
+    },
+    "stock13_c_to_c_control": {
+      "android_api": 33,
+      "screen": "normal_user_confirmed",
+      "wireless_shell_responded": true,
+      "mac_usb_enumerated": false,
+      "otg_extcon": {
+        "USB": 0,
+        "USB-HOST": 1,
+        "USB_VBUS_EN": 1
+      },
+      "xhci_start_messages": 628,
+      "xhci_creations": 314,
+      "xhci_start_uptime_range_seconds": [
+        151.896785,
+        235.277409
+      ],
+      "black_screen_reproduced": false
+    },
+    "manual_role_override_applied": true,
+    "temporary_phy_override": {
+      "mode": "peripheral",
+      "host_creation_loop_stopped": true,
+      "mac_usb_enumerated": false,
+      "udc": "not attached",
+      "runtime_status": "suspended",
+      "USB": 0,
+      "USB-HOST": 0,
+      "USB_VBUS_EN": 0,
+      "restored_to_otg": false,
+      "same_orientation_replug": {
+        "mac_usb_enumerated": false,
+        "udc": "not attached",
+        "runtime_status": "suspended",
+        "wireless_shell_responded": true,
+        "screen": "normal_user_confirmed"
+      }
+    }
   },
-  "cleanup": {"diagnostic_apks_uninstalled": true, "temporary_host_apks_removed": true},
+  "cleanup": {
+    "diagnostic_apks_uninstalled": true,
+    "temporary_host_apks_removed": true
+  },
   "firmware_flashing_performed": false,
-  "device_rebooted": false
+  "device_rebooted": true,
+  "reboot_method": "user power cycle to recover from C-to-C failure"
 }

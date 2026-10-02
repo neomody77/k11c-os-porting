@@ -4,6 +4,7 @@ USB、DNS、传感器已有进一步因果证据，见 [后续排查](followup-u
 
 | 问题 | 当前证据 | 后续验收 |
 |---|---|---|
+| C→C角色震荡；16曾黑屏失联 | 原版13也反复创建/移除同一OTG host、Mac不枚举，但画面/无线仍正常；临时PHY peripheral停止host循环，尚未建立数据连接；16失联场景无有效panic栈 | 定位角色检测与VBUS/CC电气触发，分别验收连接异常和16失联；恢复临时覆盖，修复后验证双方向及热插拔 |
 | 蓝牙权限未持久化 | factory Seekwave节点root:root 0600；HAL为bluetooth用户；临时改为0660与bluetooth属主后开启并收包 | 把最小规则放到实际导入的init/ueventd配置，重新构建；重启后不用手工chmod仍可开启与扫描 |
 | 默认应用渲染率31FPS | 物理62Hz，SurfaceFlinger renderRate31Hz；临时min/peak62Hz后绘制61.99FPS | 定位默认refresh-rate投票/配置，验证正常UI和负载下流畅度，再决定默认策略 |
 | AVC能力声明与实际不符 | 1080p60样本isFormatSupported=false，指定c2.rk.avc.decoder后Surface和ByteBuffer都解完 | 检查profile/level/尺寸/帧率声明与实际HAL能力，验证应用自动选择行为 |

@@ -28,7 +28,7 @@ repo launcher不可写的新版本提示经更新到2.65处理，已有同步继
 
 保留原始设备树、内核/应用日志与实际HAL副本。DNS冷启动10轮中6次失败对应resolver的UID网络拦截；延迟与前台对照各6/6通过。改为等待真实网络回调后12/12通过，同一APK的冷启动对照0/4通过，没有修改网络配置。传感器确认所需设备不存在，HAL的EBADF被-1返回值误显示为权限拒绝；仍未提供真实采样或修改vendor。
 
-USB-A主机连接保持configured/high-speed；运行设备树与厂商规格确认Type-C OTG为USB2.0，不将480Mbps称降速。C→C仍需实物重测。详见 [后续记录](../android16/followup-usb-dns-sensors.md)。
+USB-A主机连接保持configured/high-speed；运行设备树与厂商规格确认Type-C OTG为USB2.0，不将480Mbps称降速。后续C→C重测中同一个OTG控制器两次切换host，随后黑屏与无线失联，接回USB-A仍不恢复。保留日志与pstore，用户重新上电后原版13与USB-A恢复，未取得可确认panic栈。原版13相同C→C也角色震荡且Mac不枚举，但画面/无线仍正常；临时PHY peripheral停止host循环，数据连接仍待查。详见 [后续记录](../android16/followup-usb-dns-sensors.md)。
 
 ## 后续：Android17
 

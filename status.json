@@ -12,7 +12,7 @@
     "full_peripheral_validation": false,
     "cts_vts": "not_run",
     "diagnostic_network_readiness": "callback fix verified on device: 12/12; cold control 0/4",
-    "open_work": ["persist Bluetooth node permissions", "refresh-rate policy", "codec capability declaration", "correct ghost sensor declaration or add actual sensor driver", "rild compatibility", "GPU-work statistics", "physical C-to-C USB retest"]
+    "open_work": ["persist Bluetooth node permissions", "refresh-rate policy", "codec capability declaration", "correct ghost sensor declaration or add actual sensor driver", "rild compatibility", "GPU-work statistics", "C-to-C role-switch failure: stock-system comparison and cause isolation"]
   },
   "android17": {
     "source_ref": null,
