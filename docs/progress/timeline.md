@@ -42,6 +42,12 @@ AVC逐项能力查询确认原27.7Mbps测试片超过20Mbps声明范围，符合
 
 RIL隔离实验确认第二层故障：VNDK33加载成功后，厂商库仍不识别Android16，RIL版本0触发HIDL中止。准备精确哈希限制的厂商库副本候选，使用SONAME解析并只为release160选择原有RIL协议12。原init/radio服务连续120秒同PID、IRadio1.5注册成功；卸载临时bind后原库哈希恢复、原重启循环返回，因果对照成立。未写入固件分区或重新安装DSU。候选仍需持久集成、enforcing与实体modem验证，见 [本轮记录](../android16/ril-codec-20261002.md)。
 
+## 2026-10-02：RIL启动集成与保留数据更新
+
+将RIL精确候选转换移入原生helper，构建到system_ext并由post-fs-data同步运行。原库/vendor保持不变，每次Android16 DSU启动在tmpfs生成只读副本；保留原init/radio权限和VNDK namespace。源码、原指令、输出哈希和运行环境均有约束，镜像不包含闭源厂商库。五补丁应用、离线镜像及init检查通过。
+
+使用system-only分区更新，板上只读块备份与更新前后全部userdata哈希一致，backing身份、extents和密钥元数据不变；密钥与完整数据未导出。两次16启动自动集成通过，canary/设置保留，原版13回退启动及原库/boot哈希核验通过。RIL/GPU/system_server首轮24次、第二轮12次均无重启。解锁后绘制61.92FPS、Surface180帧通过；符合声明码率自动硬解180帧、网络、蓝牙和存储回归通过。保留普通锁屏导致的初次显示测试失败及重测证据。enforcing、断电冷启动、实体modem仍待测，详见 [集成记录](../android16/ril-integration-20261002.md)。
+
 ## 后续：Android17
 
 尚未选择源码引用、构建或刷入Android17。先完成Android16剩余兼容问题并保持可恢复基线，再按 [roadmap](../android17/roadmap.md)推进。

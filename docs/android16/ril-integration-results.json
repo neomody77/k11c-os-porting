@@ -1,0 +1,194 @@
+{
+  "tested_on": "2026-10-02",
+  "source_ref": "android-16.0.0_r4",
+  "target": "aosp_arm64-bp4a-userdebug",
+  "system_image": {
+    "bytes": 1899573248,
+    "sha256": "9fb8cbe763aaad4420c82a1f7ac951297fc3941c4a0c2be7f88661a13679d244"
+  },
+  "offline_checks": {
+    "filesystem": true,
+    "avb": true,
+    "actual_vendor_kernel_vintf": true,
+    "gzip": true,
+    "packaged_helper_rc": true,
+    "init_verifier": true,
+    "five_patch_first_repeat_and_conflict_fixture": true,
+    "python_tests_passed": 15
+  },
+  "integration": {
+    "proprietary_library_packaged": false,
+    "vendor_partition_written": false,
+    "boot_partition_written": false,
+    "candidate_generated_in_tmpfs": true,
+    "candidate_bind_read_only": true,
+    "exact_firmware_hash_required": true,
+    "original_init_radio_privileges_retained": true,
+    "android_release_property_changed": false,
+    "linker_namespace_changed": false,
+    "vndk_selected": 33,
+    "ril_protocol": 12,
+    "registered_iradio": [
+      "1.0",
+      "1.1",
+      "1.2",
+      "1.3",
+      "1.4",
+      "1.5"
+    ],
+    "selinux_domain": "existing userdebug su",
+    "selinux_mode": "Permissive"
+  },
+  "userdata_preservation": {
+    "system_only_partition_update": true,
+    "pre_post_raw_block_hash_equal": true,
+    "backing_identity_and_lp_extents_retained": true,
+    "key_file_metadata_unchanged": true,
+    "backup_stays_on_device": true,
+    "encryption_keys_stay_on_device": true,
+    "canary_retained": true,
+    "settings_retained": true,
+    "restore_drill": false
+  },
+  "first_boot": {
+    "completed": true,
+    "automatic_ril_activation": true,
+    "same_pid_running_samples": 24,
+    "observation_seconds": 120,
+    "ril_gpu_system_server_stable": true,
+    "new_crash_records": false,
+    "diagnostics": {
+      "inventory": {
+        "exit_code": 0,
+        "status": "PASS"
+      },
+      "storage": {
+        "exit_code": 0,
+        "status": "PASS"
+      },
+      "keystore": {
+        "exit_code": 0,
+        "status": "PASS"
+      },
+      "gpu": {
+        "exit_code": 0,
+        "status": "PASS"
+      },
+      "network": {
+        "exit_code": 0,
+        "status": "PASS"
+      },
+      "video-hardware": {
+        "exit_code": 0,
+        "status": "PASS"
+      },
+      "video-software": {
+        "exit_code": 0,
+        "status": "PASS"
+      },
+      "audio-decode": {
+        "exit_code": 0,
+        "status": "PASS"
+      },
+      "audio-play": {
+        "exit_code": 0,
+        "status": "PASS"
+      },
+      "audio-record": {
+        "exit_code": 0,
+        "status": "PASS"
+      },
+      "webview": {
+        "exit_code": 0,
+        "status": "PASS"
+      },
+      "sensor": {
+        "exit_code": 0,
+        "status": "FAIL",
+        "error": "java.lang.IllegalStateException: sensor registration failed"
+      },
+      "animation": {
+        "exit_code": 0,
+        "status": "FAIL",
+        "error": "java.lang.IllegalStateException: too few rendered frames",
+        "retest_status": "PASS",
+        "initial_condition": "non-secure startup keyguard showing; screen awake"
+      },
+      "video-hardware-1080p60-surface": {
+        "exit_code": 0,
+        "status": "FAIL",
+        "error": "java.lang.IllegalStateException: Surface not ready",
+        "retest_status": "PASS",
+        "initial_condition": "non-secure startup keyguard showing; screen awake"
+      },
+      "video-hardware-1080p60-bounded": {
+        "exit_code": 0,
+        "status": "PASS"
+      },
+      "bluetooth-scan": {
+        "exit_code": 0,
+        "status": "PASS"
+      }
+    },
+    "network_https_status": 200,
+    "gpu_frames_verified": 300,
+    "bluetooth_rf_reception_verified": true,
+    "bounded_video": {
+      "declared_format_supported": true,
+      "automatic_decoder": "c2.rk.avc.decoder",
+      "output_buffers": 180,
+      "eos": true,
+      "decode_ms": 1786
+    },
+    "animation": {
+      "frames_drawn": 929,
+      "rendered_fps": 61.92159247320922,
+      "interval_p50_ms": 16.11721,
+      "interval_p95_ms": 17.402877,
+      "interval_max_ms": 52.576422,
+      "frame_duration_p95_ms": 36.17195,
+      "display_refresh_hz": 62
+    },
+    "surface_video": {
+      "declared_format_supported": false,
+      "output_buffers": 180,
+      "eos": true,
+      "decode_ms": 1607
+    },
+    "sample_window_seconds": 118
+  },
+  "second_boot": {
+    "completed": true,
+    "automatic_ril_activation": true,
+    "same_pid_running_samples": 12,
+    "observation_seconds": 60,
+    "ril_gpu_system_server_stable": true,
+    "canary_and_settings_retained": true,
+    "new_crash_records": false
+  },
+  "factory13_rollback": {
+    "completed": true,
+    "api": 33,
+    "original_ril_hash_restored": true,
+    "tmpfs_bind_absent": true,
+    "boot_partition_hash_unchanged": true,
+    "backup_still_on_device": true
+  },
+  "final_running_api": 36,
+  "limits": [
+    "physical modem absent",
+    "SELinux enforcing not tested",
+    "power-cycle not tested",
+    "CTS/VTS not run",
+    "known missing sensor remains",
+    "kernel GPU-work statistics unavailable"
+  ],
+  "final_boot": {
+    "completed": true,
+    "automatic_ril_activation": true,
+    "canary_retained_before_cleanup": true,
+    "diagnostic_apk_removed": true,
+    "test_canary_removed": true,
+    "display_unlocked_to_home": true
+  }
+}

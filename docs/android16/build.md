@@ -23,7 +23,7 @@ bash tools/apply-android16.sh /path/to/aosp16
 AOSP_ROOT=/path/to/aosp16 JOBS=12 bash tools/build-android16.sh
 ```
 
-apply 工具校验目标四个项目的 HEAD 对应指定标签，先检查所有补丁，再复制板级模块和应用补丁。检测到已应用的同一补丁会跳过；不一致的 overlay 会报错。它不清理他人的源码修改。
+apply 工具校验目标四个项目的 HEAD 对应指定标签，先检查全部五个补丁，再复制板级模块和应用补丁。检测到已应用的同一补丁会跳过；不一致的 overlay 会报错。唯一允许的旧版 overlay 升级是已知 SHA256 的上一版 Android.bp，便于添加 RIL 模块；其它差异仍拒绝。它不清理他人的源码修改。
 
 | 文件 | AOSP 目标项目 |
 |---|---|
@@ -31,9 +31,12 @@ apply 工具校验目标四个项目的 HEAD 对应指定标签，先检查所�
 | patches/android16/0002-k11c-framework-matrix.patch | build/make |
 | patches/android16/0003-k11c-ueventd-import.patch | system/core |
 | patches/android16/0004-gpuwork-missing-map-and-test.patch | frameworks/native |
-| device/kickpi/k11c-gsi/ | VINTF、ueventd 规则和 product framework overlay |
+| patches/android16/0005-k11c-ril-integration.patch | build/make：安装原生 RIL 兼容 helper 与 init rc |
+| device/kickpi/k11c-gsi/ | VINTF、ueventd、product framework overlay 和 RIL helper |
 
 构建过程不刷机。镜像位于 AOSP out/target/product/generic_arm64/system.img，不进入本仓库。每次构建单独记录源码引用、补丁版本、镜像哈希及验证状态；不要把一次成功构建当作适合任意 K11C 固件。
+
+RIL 模块不包含厂商库；启动时只在已知 Android16 DSU/userdebug、vendor API33 与精确厂商库哈希匹配时生成 tmpfs 副本，并在原 RIL 服务启动前只读 bind。该 helper 使用现有 userdebug `su` SELinux 域，当前不宣称适用于 enforcing 的正式发布镜像。支持条件与板上验收见 [RIL 集成](ril-integration-20261002.md)。
 
 GPU-work 回归程序单独构建，不进入系统镜像的安装文件列表：
 

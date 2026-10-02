@@ -14,14 +14,14 @@
     "diagnostic_network_readiness": "callback fix verified on device: 12/12; cold control 0/4",
     "open_work": [
       "correct ghost sensor declaration or add actual sensor driver",
-      "RIL persistent integration, enforcing SELinux and physical modem validation",
+      "RIL enforcing SELinux, power-cycle and physical modem validation",
       "GPU-work kernel statistics support",
       "Mac C-to-C investigation paused by user"
     ],
     "improvements_candidate": "cold and second boot verified; Bluetooth rules, default62Hz and GPU-work missing-map handling verified",
     "current_running_api": 36,
     "codec_capability_query": "1080p60 within declared bitrate supported; automatic hardware selection verified",
-    "ril_candidate": "exact vendor library copy stable 120s under original init/radio; original restored; not persistent"
+    "ril_candidate": "startup integration verified on two Android16 boots, factory13 rollback and final Android16 boot; exact-hash read-only tmpfs copy under original init/radio; enforcing and physical modem pending"
   },
   "android17": {
     "source_ref": null,

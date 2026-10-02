@@ -1,0 +1,11 @@
+# userdebug bring-up helper; runs before class main starts the stock RIL service.
+on post-fs-data && property:ro.gsid.image_running=1 && property:ro.build.version.sdk=36 && property:ro.debuggable=1
+    exec_start k11c-ril-compat
+
+service k11c-ril-compat /system_ext/bin/k11c-ril-compat
+    disabled
+    oneshot
+    user root
+    group root
+    seclabel u:r:su:s0
+    capabilities SYS_ADMIN DAC_OVERRIDE DAC_READ_SEARCH CHOWN FOWNER

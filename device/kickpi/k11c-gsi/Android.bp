@@ -2,6 +2,16 @@ package {
     default_applicable_licenses: ["Android-Apache-2.0"],
 }
 
+cc_binary {
+    name: "k11c-ril-compat",
+    srcs: ["ril/k11c-ril-compat.cpp"],
+    init_rc: ["ril/k11c-ril-compat.rc"],
+    system_ext_specific: true,
+    compile_multilib: "64",
+    shared_libs: ["libbase", "libcrypto", "libselinux"],
+    cflags: ["-Wall", "-Wextra", "-Werror"],
+}
+
 prebuilt_etc {
     name: "k11c_ueventd_bluetooth",
     src: "ueventd.bluetooth.fragment",
