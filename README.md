@@ -4,6 +4,8 @@
 
 这是社区实验项目，与 KICKPI、Rockchip 或 Google 无官方关联。启动成功不代表完成原生板级移植或通过 CTS/VTS。
 
+当前分支为 `android-17`：已选择官方 Android17 固定标签并启动独立源码同步，尚未编译或在板上启动。下方 Android16 记录是保留的已验证基线，不能当作 Android17 通过证据。见 [Android17 准备记录](docs/android17/preparation-20261003.md)。
+
 ## 分支约定
 
 公开仓库：[neomody77/k11c-os-porting](https://github.com/neomody77/k11c-os-porting)。每个系统版本使用独立分支，命名为 `系统-版本`。
@@ -12,7 +14,7 @@
 |---|---|
 | `main` | 项目总览、通用记录及首次公开时的 Android16 基线 |
 | `android-16` | Android16 补丁、构建工具、板上验证与阶段总结；本阶段已结束 |
-| `android-17` | 后续 Android17 开发；开始实际工作时创建，目前尚不存在 |
+| `android-17` | Android17 独立开发、补丁审查和验证记录；当前处于准备阶段 |
 
 复现 Android16 时先执行 `git switch android-16`。后续版本的实现与测试结果在对应版本分支维护，不把 Android16 的验证结果当作其他版本的通过证据。
 
@@ -23,7 +25,7 @@
 | 版本 | 构建与启动 | 完成度 |
 |---|---|---|
 | Android 16 | android-16.0.0_r4；aosp_arm64-bp4a-userdebug；编译成功，eMMC原生首启与正常重启成功，API36.1 | 网络、GPU、媒体、存储等已有实际测试；仍有外设兼容缺口 |
-| Android 17 | 尚未选择具体源码版本；尚未构建或板测 | 调研与验证计划已建立，不复用 Android16 成功结论 |
+| Android 17 | android-17.0.0_r1；独立源码同步中；候选目标 aosp_arm64-cp2a-userdebug | AVC 补丁已重新定位，上游已修 GPU-work；尚未编译或板测 |
 
 Android16 修正了 factory first-stage 缺少 vbmeta 节点初始化，以及 AVC High10 Level6.2 码率乘法溢出。保留 UBSan/CFI，32/64 位回归测试各 25 项通过。
 
@@ -55,6 +57,7 @@ Android16 修正了 factory first-stage 缺少 vbmeta 节点初始化，以及 A
 | Enforcing、传感器声明与回归验收 | [记录](docs/android16/enforcing-sensors-20261002.md) / [JSON](docs/android16/enforcing-sensors-results-20261002.json) |
 | 待修问题 | [docs/android16/known-issues.md](docs/android16/known-issues.md) |
 | Android17 计划 | [docs/android17/roadmap.md](docs/android17/roadmap.md) |
+| Android17 环境与补丁准备 | [docs/android17/preparation-20261003.md](docs/android17/preparation-20261003.md) |
 | 上游跟踪 | [docs/upstream.md](docs/upstream.md) |
 | 脱敏规则 | [docs/privacy.md](docs/privacy.md) |
 

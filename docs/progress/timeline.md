@@ -67,3 +67,9 @@ boot cmdline只将SELinux改为enforcing，保留已有DSU/AVB修正及其他载
 原生首启与一次正常重启均API36.1、Enforcing、DSU=0；USB和Wi-Fi VALIDATED，兼容修复active。第二次启动亮屏待机63.15秒，四核CPU平均4.68%，MemAvailable约2.89GiB，SoC52.5–53.13℃，核心服务采样PID稳定。历史DSU和测试备份约占17.91GiB保留，/data可用约6.05GiB。
 
 Sensors1.0 VTS此前DSU36通过、0失败；官方CTS已展开、完整VTS已构建，临时AppArmor例外卸载删除。用户要求Android16到此结束，未在原生安装上继续套件，临时ADB转发关闭。Android17未开始。详见 [阶段总结](../android16/summary-20261003.md)。
+
+## 2026-10-03：Android17 准备启动
+
+按系统版本建立 `android-17` 独立分支，选择官方 `android-17.0.0_r1`，manifest提交锁定为 `5bc9a7ce1cd78dd53613bbfd0ebf506e1e4adb0f`。核对构建虚拟机CPU绑定和空间；旧浅克隆引用导致manifest缺对象，保留失败证据后改为独立浅克隆，已进入项目同步。user namespace探测仍受限，正式构建沙箱待验证。
+
+官方17仍有AVC码率溢出路径，已重新生成版本专用补丁与4个回归用例，文件应用检查通过但尚未编译。GPU-work的构造abort问题已被上游修复，不重复旧生产补丁。GSI仍有vendor API33兼容组件；VINTF、SELinux、RIL版本guard和实际板测均未验证。板上Android16和私有恢复基线保持保留，本轮没有刷机。详见 [准备记录](../android17/preparation-20261003.md)。
