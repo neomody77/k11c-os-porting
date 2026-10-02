@@ -1,0 +1,30 @@
+{
+  "checked_on": "2026-10-03",
+  "stage": "source_and_environment_preparation_verified",
+  "source_ref": "android-17.0.0_r1",
+  "manifest_commit": "5bc9a7ce1cd78dd53613bbfd0ebf506e1e4adb0f",
+  "source_sync_complete": true,
+  "locked_project_count": 1084,
+  "locked_manifest_sha256": "bf899d1468b31536794c54d4ef680102a7eb8a162af84daf6879a63bab79d131",
+  "build_target": "aosp_arm64-cp2a-userdebug",
+  "build_target_verified": true,
+  "sdk": 37,
+  "separate_output_directory_verified": true,
+  "sandbox": {
+    "soong_probe_passed_with_temporary_exact_path_apparmor_exception": true,
+    "nsjail_sha256": "8882d74d4d7f02a26ec6c429fc7428bc6f00ee9bff61111dd84cb366c810bf12",
+    "temporary_profile_unloaded_and_deleted": true,
+    "temporary_exception_required_during_actual_build": true,
+    "global_user_namespace_restriction_unchanged": true
+  },
+  "avc_patch": {
+    "apply_check_on_actual_checkout": true,
+    "compiled": false,
+    "regression_tests_run": false
+  },
+  "gpuwork_production_fix": "already_present_upstream",
+  "system_image_built": false,
+  "android17_device_boot_tested": false,
+  "device_flashed": false,
+  "existing_android16_preserved": true
+}

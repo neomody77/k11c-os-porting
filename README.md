@@ -4,7 +4,7 @@
 
 这是社区实验项目，与 KICKPI、Rockchip 或 Google 无官方关联。启动成功不代表完成原生板级移植或通过 CTS/VTS。
 
-当前分支为 `android-17`：已选择官方 Android17 固定标签并启动独立源码同步，尚未编译或在板上启动。下方 Android16 记录是保留的已验证基线，不能当作 Android17 通过证据。见 [Android17 准备记录](docs/android17/preparation-20261003.md)。
+当前分支为 `android-17`：官方 Android17 固定标签源码已同步，API37与独立GSI目标已验证，Soong沙箱在精确路径临时例外下通过探测，例外已清理。尚未编译系统镜像或在板上启动。下方 Android16 记录是保留的已验证基线，不能当作 Android17 通过证据。见 [Android17 准备记录](docs/android17/preparation-20261003.md)。
 
 ## 分支约定
 
@@ -25,7 +25,7 @@
 | 版本 | 构建与启动 | 完成度 |
 |---|---|---|
 | Android 16 | android-16.0.0_r4；aosp_arm64-bp4a-userdebug；编译成功，eMMC原生首启与正常重启成功，API36.1 | 网络、GPU、媒体、存储等已有实际测试；仍有外设兼容缺口 |
-| Android 17 | android-17.0.0_r1；独立源码同步中；候选目标 aosp_arm64-cp2a-userdebug | AVC 补丁已重新定位，上游已修 GPU-work；尚未编译或板测 |
+| Android 17 | android-17.0.0_r1；源码同步完成；aosp_arm64-cp2a-userdebug/API37已验证 | 环境准备完成，AVC补丁在实际checkout检查通过；尚未编译或板测 |
 
 Android16 修正了 factory first-stage 缺少 vbmeta 节点初始化，以及 AVC High10 Level6.2 码率乘法溢出。保留 UBSan/CFI，32/64 位回归测试各 25 项通过。
 

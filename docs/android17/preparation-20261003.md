@@ -1,6 +1,6 @@
 # Android17 准备记录
 
-截至 2026-10-03，已建立独立 `android-17` 分支、确定官方源码基线、检查构建环境并启动源码同步。尚未编译 Android17，尚未生成可刷镜像，尚未运行 Android17 的 VINTF/CTS/VTS 或板测。Android16 阶段结果保留在 `android-16` 分支。
+截至 2026-10-03，已建立独立 `android-17` 分支并完成固定标签源码同步，逐项目锁定清单含1084个项目引用。实际 `lunch` / API37 / 独立输出目录验证通过；Soong沙箱在精确路径临时AppArmor例外下通过探测，例外已卸载删除并独立核对。尚未编译 Android17 系统镜像，尚未运行 Android17 的 VINTF/CTS/VTS 或板测。Android16 阶段结果保留在 `android-16` 分支。机器结果见 [preparation-results-20261003.json](preparation-results-20261003.json)。
 
 ## 固定基线
 
@@ -10,7 +10,7 @@
 | manifest 标签对象 | `7a9e46ba6ed424f922a3457f4964e67e0b966201` |
 | manifest 提交 | `5bc9a7ce1cd78dd53613bbfd0ebf506e1e4adb0f` |
 | 平台版本 | Android17，API37 |
-| 候选 GSI 目标 | `aosp_arm64-cp2a-userdebug`；release 配置源码确认，实际 lunch 尚未验证 |
+| GSI 目标 | `aosp_arm64-cp2a-userdebug`；实际lunch、API37和独立输出目录已验证 |
 | 内核/vendor 路线 | 先评估现有原厂 kernel 5.10.157 / vendor API33；并未升级内核 |
 
 官方依据：[版本与源码标签](https://source.android.com/docs/setup/reference/build-numbers)、[固定 manifest](https://android.googlesource.com/platform/manifest/+/android-17.0.0_r1/default.xml)、[cp2a release](https://android.googlesource.com/platform/build/release/+/android-17.0.0_r1/release_configs/cp2a.textproto)、[构建环境要求](https://source.android.com/docs/setup/start/requirements)。不使用浮动 `android-latest-release` 代替可复现版本。
@@ -21,7 +21,19 @@
 
 Git、Python3、repo 2.65 launcher、Java21、GCC/G++、make、bison、flex、zip/unzip、rsync 均可用。Android构建使用源码内的固定工具链，系统Java版本不等于最终构建所用版本。
 
-本轮 `unshare -Ur true` 返回权限错误。此前临时 nsjail AppArmor 例外已清理；正式构建前需要验证该源码树的 nsjail 精确路径并处理沙箱权限，不把“源码同步完成”写成“编译环境全部通过”，也不默默禁用沙箱。
+初始 `unshare -Ur true` 返回权限错误，实际lunch也报告Soong关闭沙箱。保留系统全局限制，针对该源码树nsjail精确路径临时加载AppArmor `userns` 例外后，再次lunch/API37验证成功，且没有关闭沙箱警告。验证后例外已卸载删除并核对内核profile列表。正式编译期间仍需临时加载同一精确路径例外，完成后移除；不把恢复全局限制后的普通 `unshare` 当作通过，也不默默禁用沙箱。
+
+本次nsjail SHA256为 `8882d74d4d7f02a26ec6c429fc7428bc6f00ee9bff61111dd84cb366c810bf12`。私有环境保留了本次验证过的profile模板和日志；通用模板如下，实际使用前将路径替换为源码树的真实绝对路径：
+
+```text
+abi <abi/4.0>,
+include <tunables/global>
+profile k11c-android17-nsjail /path/to/aosp17/prebuilts/build-tools/linux-x86/bin/nsjail flags=(unconfined) {
+  userns,
+}
+```
+
+profile仅匹配上述程序路径。以 `apparmor_parser -r` 加载、完成编译后以 `apparmor_parser -R` 卸载并删除任务profile文件；不要改全局 `apparmor_restrict_unprivileged_userns`。本轮只验证了环境，没有执行 `m systemimage`。
 
 ```bash
 bash tools/prepare-android17.sh /path/to/aosp17
@@ -35,13 +47,13 @@ bash tools/prepare-android17.sh /path/to/aosp17
 
 失败任务退出后仍有两个工具链抓取子进程。重试一度与它们重复抓取，已停止重复的进程组，保留原浅克隆传输；恢复任务等待这些子进程结束后才重跑。显式设置 `--no-tags` 避免额外标签传输。再次恢复失败任务前需检查整个任务的子进程，不能只用顶层PID是否退出判断工作空间已空闲。
 
-同步工具每次尝试使用独立进程组，并在结束时清理仍活跃的抓取子进程。隔离的模拟失败命令验证了退出失败后没有活跃下载子进程。私有后台恢复任务在原工具链传输结束后继续同步，成功后自动执行候选 `lunch` 并检查API37，分别保存退出码和日志；该验证尚未完成，不将排队任务计为通过。
+同步工具每次尝试使用独立进程组，并在结束时清理仍活跃的抓取子进程。隔离的模拟失败命令验证了退出失败后没有活跃下载子进程。私有后台恢复任务在原工具链传输结束后继续同步并成功，导出了逐项目锁定清单，随后lunch/API37检查通过。第一次lunch发现沙箱关闭，临时精确路径例外下重测后沙箱探测通过。任务已完成，不留运行中的下载或构建队列。
 
 ## Android16 适配的逐项审查
 
 | 适配 | Android17 源码证据与下一步 |
 |---|---|
-| AVC High10 Level6.2 码率溢出 | 官方标签仍使用32位 `BR` 累乘；新增版本专用补丁 `patches/android17/0001-avc-high10-overflow-and-tests.patch`。新版测试文件增加了其他用例，旧补丁不能原样应用；重新定位后，两个官方源文件的 `git apply --check` 通过，4个回归用例尚未编译或运行 |
+| AVC High10 Level6.2 码率溢出 | 官方标签仍使用32位 `BR` 累乘；新增版本专用补丁 `patches/android17/0001-avc-high10-overflow-and-tests.patch`。新版测试文件增加了其他用例，旧补丁不能原样应用；重新定位后，官方文件正反向检查通过，实际完整checkout再次 `git apply --check` 通过，4个回归用例尚未编译或运行 |
 | GPU-work 缺 BPF map 导致 abort | 官方 `GpuWork.cpp` 已改用默认构造与 `init()`，并注明有参构造失败会 abort。本地旧生产修正无需重复携带；旧内核仍缺统计能力，启动稳定性和统计缺失需分别验证 |
 | FCM / 旧 vendor | 官方 GSI 仍包含 VNDK31–34、`hwservicemanager`、HIDL内存组件以及旧设备的 `wificond`。这是静态兼容基础，不是本板 VINTF 通过结果；仍需用实际 vendor captures 比对 |
 | ARM64 / 页大小 | `generic_arm64` 仍为 `armv8-a`；GSI声明最大支持页大小16384。最大支持值不等于本板kernel已改为16KiB，仍需核对实际ELF布局、kernel页大小和旧vendor库 |
@@ -54,8 +66,8 @@ bash tools/prepare-android17.sh /path/to/aosp17
 
 ## 验收顺序与恢复基线
 
-1. 同步完成、导出全部项目提交清单，并验证 `lunch`、API37与独立输出路径。
-2. 验证编译沙箱，完成基线构建和AVC回归；逐项移植板级模块，避免原样执行 `apply-android16.sh`。
+1. 已同步完成、导出项目提交清单，并验证 `lunch`、API37与独立输出路径。
+2. 临时例外下沙箱探测已通过；编译时加载该例外，完成基线构建和AVC回归后清理。逐项移植板级模块，避免原样执行 `apply-android16.sh`。
 3. 对候选做VINTF、SELinux标签、文件系统、容量、AVB与恢复包离线检查。
 4. 对明确镜像获得刷机授权后进行可恢复的首次启动，再测试正常重启、功能、资源及绘制。
 5. 独立记录17的兼容测试和稳定性结果，不能继承16的“通过”。本板无SIM卡槽，实体modem/SIM功能继续不作为验收范围。
