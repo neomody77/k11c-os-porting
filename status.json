@@ -65,23 +65,35 @@
   },
   "android17": {
     "source_ref": "android-17.0.0_r1",
-    "build": "not_started",
+    "build": "in_progress",
     "device_boot": "not_tested",
     "full_peripheral_validation": false,
     "cts_vts": "not_run",
     "manifest_commit": "5bc9a7ce1cd78dd53613bbfd0ebf506e1e4adb0f",
     "branch": "android-17",
-    "stage": "source_and_environment_preparation_verified",
+    "stage": "board_adaptation_integrated_image_build_running",
     "source_sync": "verified; independent shallow checkout and pinned project manifest exported",
     "build_target_verified": true,
-    "avc_patch": "apply check passed on actual official checkout; not compiled",
+    "avc_patch": "rebased and CodecCapabilitiesTest compiled; not run on Android17",
     "gpuwork_upstream_fix": "present in official tag; do not duplicate Android16 production fix",
-    "sandbox": "Soong probe passed with temporary exact-path AppArmor userns exception; exception unloaded and deleted; load during actual build only",
-    "report": "docs/android17/preparation-20261003.md",
+    "sandbox": "exact-path temporary nsjail exception loaded only during compilation; AVC build cleanup verified; image build active",
+    "report": "docs/android17/build-20261003.md",
     "locked_project_count": 1084,
     "build_target": "aosp_arm64-cp2a-userdebug",
     "sdk": 37,
-    "results": "docs/android17/preparation-results-20261003.json"
+    "results": "docs/android17/preparation-results-20261003.json",
+    "codec_module_build": {
+      "status": "passed",
+      "elapsed_seconds": 565.05,
+      "device_tests_run": false
+    },
+    "ril_candidate": "Android17 release170 only; regenerated from exact factory library; independently byte-compared; Android16 and tampered payload rejection verified",
+    "board_patch_application": "all five patches applied; repeated application verified",
+    "soong_memory_controls": {
+      "GOMEMLIMIT": "24GiB",
+      "GOGC": "50",
+      "forwarding_verified": true
+    }
   },
   "firmware_binaries_in_repository": false,
   "raw_captures_in_repository": false

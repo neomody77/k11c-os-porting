@@ -75,3 +75,9 @@ Sensors1.0 VTS此前DSU36通过、0失败；官方CTS已展开、完整VTS已构
 官方17仍有AVC码率溢出路径，已重新生成版本专用补丁与4个回归用例，文件应用检查通过但尚未编译。GPU-work的构造abort问题已被上游修复，不重复旧生产补丁。GSI仍有vendor API33兼容组件；VINTF、SELinux、RIL版本guard和实际板测均未验证。板上Android16和私有恢复基线保持保留，本轮没有刷机。详见 [准备记录](../android17/preparation-20261003.md)。
 
 本轮最终源码同步成功并导出1084个项目引用的固定清单；实际lunch/API37与独立输出目录通过。精确Android17 nsjail路径临时AppArmor例外下Soong沙箱探测通过，随即卸载删除并核对清理。AVC补丁在实际完整checkout应用检查通过，系统镜像和回归用例尚未编译，板测尚未进行。环境准备验收见 [JSON](../android17/preparation-results-20261003.json)。
+
+## 2026-10-03：Android17 板级适配与首次编译
+
+AVC回归模块编译成功，用时565.05秒，运行验证仍待Android17设备环境。初次Soong图生成内存压力引发大量swap，主动取消后加入仅转发可选Go运行时参数的构建端补丁；实际子进程验证GOMEMLIMIT=24GiB、GOGC=50生效，图生成通过。编译隔离例外清理由专用入口负责，AVC阶段已独立确认卸载和删除。
+
+五补丁与板级源码首次/重复应用通过，guard精确限制SDK37/release17。复核发现Android16厂商RIL候选只接受release160，暂停首次集成生成并从精确原库生成release170候选；独立参考逐字节一致，相对16候选只改变一个比较字节。实际16候选与被篡改17候选均被17打包工具拒绝且不产生输出。完整镜像编译已重新启动，未改写板子或Android16基线。详见 [构建记录](../android17/build-20261003.md)。

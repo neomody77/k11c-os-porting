@@ -4,7 +4,7 @@
 
 这是社区实验项目，与 KICKPI、Rockchip 或 Google 无官方关联。启动成功不代表完成原生板级移植或通过 CTS/VTS。
 
-当前分支为 `android-17`：官方 Android17 固定标签源码已同步，API37与独立GSI目标已验证，Soong沙箱在精确路径临时例外下通过探测，例外已清理。尚未编译系统镜像或在板上启动。下方 Android16 记录是保留的已验证基线，不能当作 Android17 通过证据。见 [Android17 准备记录](docs/android17/preparation-20261003.md)。
+当前分支为 `android-17`：官方固定标签源码和API37已验证，AVC回归模块编译成功，K11C板级补丁及Android17专用RIL候选已集成，完整系统镜像正在编译。临时nsjail例外按构建生命周期加载和清理。尚未在板上启动。下方 Android16 记录是保留的已验证基线，不能当作 Android17 通过证据。见 [Android17 构建记录](docs/android17/build-20261003.md)。
 
 ## 分支约定
 
@@ -14,7 +14,7 @@
 |---|---|
 | `main` | 项目总览、通用记录及首次公开时的 Android16 基线 |
 | `android-16` | Android16 补丁、构建工具、板上验证与阶段总结；本阶段已结束 |
-| `android-17` | Android17 独立开发、补丁审查和验证记录；当前处于准备阶段 |
+| `android-17` | Android17 独立开发、补丁审查和验证记录；当前正在编译阶段 |
 
 复现 Android16 时先执行 `git switch android-16`。后续版本的实现与测试结果在对应版本分支维护，不把 Android16 的验证结果当作其他版本的通过证据。
 
@@ -25,7 +25,7 @@
 | 版本 | 构建与启动 | 完成度 |
 |---|---|---|
 | Android 16 | android-16.0.0_r4；aosp_arm64-bp4a-userdebug；编译成功，eMMC原生首启与正常重启成功，API36.1 | 网络、GPU、媒体、存储等已有实际测试；仍有外设兼容缺口 |
-| Android 17 | android-17.0.0_r1；源码同步完成；aosp_arm64-cp2a-userdebug/API37已验证 | 环境准备完成，AVC补丁在实际checkout检查通过；尚未编译或板测 |
+| Android 17 | android-17.0.0_r1；源码同步完成；aosp_arm64-cp2a-userdebug/API37已验证 | AVC回归模块已编译，板级集成系统镜像编译中；尚未板测 |
 
 Android16 修正了 factory first-stage 缺少 vbmeta 节点初始化，以及 AVC High10 Level6.2 码率乘法溢出。保留 UBSan/CFI，32/64 位回归测试各 25 项通过。
 
@@ -57,6 +57,7 @@ Android16 修正了 factory first-stage 缺少 vbmeta 节点初始化，以及 A
 | Enforcing、传感器声明与回归验收 | [记录](docs/android16/enforcing-sensors-20261002.md) / [JSON](docs/android16/enforcing-sensors-results-20261002.json) |
 | 待修问题 | [docs/android16/known-issues.md](docs/android16/known-issues.md) |
 | Android17 计划 | [docs/android17/roadmap.md](docs/android17/roadmap.md) |
+| Android17 构建与适配 | [docs/android17/build-20261003.md](docs/android17/build-20261003.md) |
 | Android17 环境与补丁准备 | [docs/android17/preparation-20261003.md](docs/android17/preparation-20261003.md) |
 | 上游跟踪 | [docs/upstream.md](docs/upstream.md) |
 | 脱敏规则 | [docs/privacy.md](docs/privacy.md) |

@@ -1,0 +1,2 @@
+# Unified diff context adds a required space before Go tab indentation.
+patches/android17/0004-soong-runtime-memory-controls.patch whitespace=-space-before-tab

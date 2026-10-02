@@ -24,7 +24,7 @@ constexpr char kInput[] = "/dev/k11c-ril/original.so";
 constexpr char kDir[] = "/dev/k11c-ril";
 constexpr char kCopy[] = "/system_ext/lib64/k11c/librk-ril.so";
 constexpr char kBefore[] = "242fe86dfbdb5796674077ac55ffa4f6facc067c4b3e1bf519f0da5d2925ab5b";
-constexpr char kAfter[] = "f61f59dba68563eb9a037b6ac1c42bd3788724fdf9b94a52badc737624aeda8d";
+constexpr char kAfter[] = "9f82653c2da377bd96416cee9f32a9574cb5e73a1249e4f37b606c123fa70010";
 constexpr size_t kSize = 769528;
 
 std::string Digest(const std::string& bytes) {
@@ -69,15 +69,15 @@ bool Prepare(std::string* bytes) {
            Replace(bytes, 422672, Words({0xa9bd57f6, 0xa9014ff4}),
                    Words({0x52800000, 0xd65f03c0})) &&
            Replace(bytes, 177504, Words({0xf0000342, 0x90000363, 0x913aa442, 0x9133e463, 0x52800020}),
-                   Words({0x7102809f, 0x540000c1, 0x52800185, 0xb9000325, 0x17fffecf})) &&
+                   Words({0x7102a89f, 0x540000c1, 0x52800185, 0xb9000325, 0x17fffecf})) &&
            Digest(*bytes) == kAfter;
 }
 
 bool SupportedBoot() {
     using android::base::GetProperty;
     return GetProperty("ro.k11c.compat.enabled", "") == "1" &&
-           GetProperty("ro.build.version.sdk", "") == "36" &&
-           GetProperty("ro.build.version.release", "") == "16" &&
+           GetProperty("ro.build.version.sdk", "") == "37" &&
+           GetProperty("ro.build.version.release", "") == "17" &&
            GetProperty("ro.vendor.api_level", "") == "33" &&
            GetProperty("ro.product.board", "") == "rk30sdk" &&
            GetProperty("ro.debuggable", "") == "1";
