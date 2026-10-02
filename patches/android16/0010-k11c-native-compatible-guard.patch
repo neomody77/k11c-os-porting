@@ -1,0 +1,10 @@
+diff --git a/target/product/aosp_arm64.mk b/target/product/aosp_arm64.mk
+--- a/target/product/aosp_arm64.mk
++++ b/target/product/aosp_arm64.mk
+@@ -61,5 +61,6 @@
+ AB_OTA_UPDATER := true
+ AB_OTA_PARTITIONS ?= system
++PRODUCT_SYSTEM_EXT_PROPERTIES += ro.k11c.compat.enabled=1
+
+ #
+ # Special settings for GSI releasing

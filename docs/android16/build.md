@@ -28,7 +28,7 @@ AOSP_ROOT=/path/to/aosp16 JOBS=12 \
   bash tools/build-android16.sh
 ```
 
-apply 工具校验目标四个项目的 HEAD 对应指定标签，先检查全部九个补丁，再复制板级模块和应用补丁。检测到已应用的同一补丁会跳过；不一致的 overlay 会报错。只允许精确SHA256匹配的已提交旧版Android.bp/RIL helper/rc升级；其它差异仍拒绝。它不清理他人的源码修改。
+apply 工具校验目标四个项目的 HEAD 对应指定标签，先检查全部十个补丁，再复制板级模块和应用补丁。检测到已应用的同一补丁会跳过；不一致的 overlay 会报错。只允许精确SHA256匹配的已提交旧版Android.bp/RIL helper/rc升级；其它差异仍拒绝。它不清理他人的源码修改。
 
 | 文件 | AOSP 目标项目 |
 |---|---|
@@ -41,6 +41,7 @@ apply 工具校验目标四个项目的 HEAD 对应指定标签，先检查全�
 | patches/android16/0007-k11c-no-device-sensors.patch | build/make：安装空传感器HAL与原生RTC服务 |
 | patches/android16/0008-k11c-gsi-image-labels.patch | build/make：合并镜像中的platform/system_ext/product标签 |
 | patches/android16/0009-k11c-immutable-ril-payload.patch | build/make：安装私有验证过的只读RIL库 |
+| patches/android16/0010-k11c-native-compatible-guard.patch | build/make：内嵌 system_ext 只读开关支持原生与 DSU 启动 |
 | device/kickpi/k11c-gsi/ | VINTF、ueventd、framework overlay、受限helper、空HAL、RTC和策略 |
 
 构建过程不刷机。镜像位于 AOSP out/target/product/generic_arm64/system.img，不进入本仓库。每次构建单独记录源码引用、补丁版本、镜像哈希及验证状态；不要把一次成功构建当作适合任意 K11C 固件。

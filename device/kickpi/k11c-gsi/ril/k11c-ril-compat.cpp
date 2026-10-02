@@ -75,7 +75,7 @@ bool Prepare(std::string* bytes) {
 
 bool SupportedBoot() {
     using android::base::GetProperty;
-    return GetProperty("ro.gsid.image_running", "") == "1" &&
+    return GetProperty("ro.k11c.compat.enabled", "") == "1" &&
            GetProperty("ro.build.version.sdk", "") == "36" &&
            GetProperty("ro.build.version.release", "") == "16" &&
            GetProperty("ro.vendor.api_level", "") == "33" &&

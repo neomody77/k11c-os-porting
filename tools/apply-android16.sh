@@ -4,8 +4,8 @@ repo_root="$(cd "$(dirname "$0")/.." && pwd)"
 aosp="${1:?Usage: apply-android16.sh /path/to/aosp16}"
 aosp="$(cd "$aosp" && pwd)"
 tag=android-16.0.0_r4
-projects=(frameworks/av build/make system/core frameworks/native build/make build/make build/make build/make build/make)
-patches=(0001-avc-high10-overflow-and-tests.patch 0002-k11c-framework-matrix.patch 0003-k11c-ueventd-import.patch 0004-gpuwork-missing-map-and-test.patch 0005-k11c-ril-integration.patch 0006-k11c-enforcing-domain.patch 0007-k11c-no-device-sensors.patch 0008-k11c-gsi-image-labels.patch 0009-k11c-immutable-ril-payload.patch)
+projects=(frameworks/av build/make system/core frameworks/native build/make build/make build/make build/make build/make build/make)
+patches=(0001-avc-high10-overflow-and-tests.patch 0002-k11c-framework-matrix.patch 0003-k11c-ueventd-import.patch 0004-gpuwork-missing-map-and-test.patch 0005-k11c-ril-integration.patch 0006-k11c-enforcing-domain.patch 0007-k11c-no-device-sensors.patch 0008-k11c-gsi-image-labels.patch 0009-k11c-immutable-ril-payload.patch 0010-k11c-native-compatible-guard.patch)
 pending=()
 for i in "${!projects[@]}"; do
   project="$aosp/${projects[$i]}"
@@ -33,6 +33,10 @@ import hashlib, sys
 from pathlib import Path
 allowed = {'Android.bp': ['3ea84f860ca8e59d651bb66d25bb16f8f43d5df65044e61cf4793d223df5520e'], 'ril/k11c-ril-compat.cpp': ['512a6ffddf8d9f3d5a6f45ca20c0c485795525ed7493d4e285085c9c86d20096'], 'ril/k11c-ril-compat.rc': ['067caddf3834084cc769701e3f84aef88bbc6794143338177a4907aff3b13901']}
 allowed['Android.bp'].append('117f1df36603a7ecbb65f580d03d8bde34c621715b474188710506c97ea7d806')
+allowed.setdefault('ril/k11c-ril-compat.cpp', []).append('76695867520272b0556a0124d2ecbc53d1c96f2711a0900b1831c05211f20894')
+allowed.setdefault('ril/k11c-ril-compat.rc', []).append('539b5d61a4c10b09535083552625b9ff384feea1093a0fe4890cce510bcd411f')
+allowed.setdefault('sepolicy/property_contexts', []).append('670ac33dd1f7de2a91c354a8670ca5c2ddb4f8f17ec6714398a252d0f9ca0ee1')
+allowed.setdefault('sepolicy/k11c_ril_compat.te', []).append('b8173b87cc35eca7d3a9e3d6fe0da5fa5a451cf3f4758628f9261e17ec989111')
 actual = hashlib.sha256(Path(sys.argv[1]).read_bytes()).hexdigest()
 raise SystemExit(0 if actual in allowed.get(sys.argv[2], []) else 1)
 PYUPGRADE

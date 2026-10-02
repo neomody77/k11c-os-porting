@@ -9,3 +9,4 @@ sys.k11c.bluetooth_prepared u:object_r:k11c_ril_prop:s0 exact string
 sys.k11c.bluetooth_compat u:object_r:k11c_ril_prop:s0 exact string
 sys.k11c.ril_source u:object_r:k11c_ril_prop:s0 exact string
 sys.k11c.sensors_source u:object_r:k11c_ril_prop:s0 exact string
+ro.k11c.compat.enabled u:object_r:k11c_ril_prop:s0 exact bool

@@ -1,9 +1,9 @@
 # Override the vendor init legacy address path before its read-only property is set.
-on early-init && property:ro.gsid.image_running=1 && property:ro.build.version.sdk=36 && property:ro.product.board=rk30sdk
+on early-init && property:ro.k11c.compat.enabled=1 && property:ro.build.version.sdk=36 && property:ro.product.board=rk30sdk
     setprop ro.bt.bdaddr_path /data/vendor/k11c-bluetooth/bdaddr
 
 # The helper only transforms a private tmpfs file; init retains mount authority.
-on post-fs-data && property:ro.gsid.image_running=1 && property:ro.build.version.sdk=36 && property:ro.debuggable=1
+on post-fs-data && property:ro.k11c.compat.enabled=1 && property:ro.build.version.sdk=36 && property:ro.debuggable=1
     mkdir /dev/k11c-ril 0700 root root
     copy /vendor/lib64/librk-ril.so /dev/k11c-ril/original.so
     exec_start k11c-ril-compat

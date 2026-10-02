@@ -19,6 +19,7 @@ runner = load("runner", "run-diagnostics.py")
 ril = load("ril", "prepare-vendor-ril.py")
 enforcing_boot = load("enforcing_boot", "prepare-enforcing-boot.py")
 payload = load("payload", "stage-ril-payload.py")
+native_super = load("native_super", "prepare-native-super.py")
 
 class PayloadTests(unittest.TestCase):
     def test_unknown_payload_creates_no_aosp_directory(self):
@@ -89,6 +90,41 @@ class BootTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             boot.pad_to_original(b"larger", b"small")
 
+NATIVE_FSTAB = FSTAB.replace(b"wait,logical,first_stage_mount\n", b"wait,logical,first_stage_mount,avb=vbmeta\n", 2) + b"system_ext /system_ext erofs ro wait,logical,first_stage_mount\nsystem_ext /system_ext ext4 ro,barrier=1 wait,logical,first_stage_mount\nproduct /product erofs ro wait,logical,first_stage_mount\nproduct /product ext4 ro,barrier=1 wait,logical,first_stage_mount\n"
+
+class NativeBootTests(unittest.TestCase):
+    def test_native_removes_only_legacy_mounts(self):
+        before = list(boot.entries(archive(NATIVE_FSTAB)))
+        after = list(boot.entries(boot.patch_native_ramdisk(archive(NATIVE_FSTAB))))
+        self.assertEqual(before[0], after[0])
+        self.assertEqual(after[1][3], NATIVE_FSTAB.split(b"system_ext /system_ext", 1)[0])
+        self.assertEqual(after[1][3].count(b",avb=vbmeta"), 2)
+        self.assertEqual(before[1][1][:6] + before[1][1][7:], after[1][1][:6] + after[1][1][7:])
+
+    def test_missing_duplicate_or_unexpected_mount_rejected(self):
+        for fstab in (NATIVE_FSTAB.replace(b"product /product erofs ro wait,logical,first_stage_mount\n", b""),
+                      NATIVE_FSTAB + b"product /product erofs ro wait,logical,first_stage_mount\n",
+                      NATIVE_FSTAB.replace(b"product /product", b"product /wrong")):
+            with self.assertRaises(ValueError):
+                boot.patch_native_ramdisk(archive(fstab))
+
+    def test_native_requires_avb_fix_and_refuses_repeat(self):
+        for raw in (archive(NATIVE_FSTAB.replace(b",avb=vbmeta", b"")),
+                    boot.patch_native_ramdisk(archive(NATIVE_FSTAB))):
+            with self.assertRaises(ValueError):
+                boot.patch_native_ramdisk(raw)
+
+    def test_unknown_native_boot_creates_no_output(self):
+        with tempfile.TemporaryDirectory() as directory:
+            original = Path(directory) / "input.img"
+            original.write_bytes(b"unknown native input")
+            output = Path(directory) / "candidate"
+            args = ["prepare-boot.py", "--boot-mode", "native", "--factory-boot", str(original),
+                    "--mkbootimg-dir", str(TOOLS), "--out", str(output)]
+            with mock.patch("sys.argv", args), self.assertRaisesRegex(ValueError, "Unsupported native boot"):
+                boot.main()
+            self.assertFalse(output.exists())
+
 class EnforcingBootTests(unittest.TestCase):
     def test_unknown_boot_is_rejected_without_modifying_input(self):
         original = b"unknown boot revision"
@@ -106,6 +142,31 @@ class EnforcingBootTests(unittest.TestCase):
                 enforcing_boot.main()
             self.assertFalse(output.exists())
             self.assertEqual(original.read_bytes(), b"unsupported firmware")
+
+class NativeSuperTests(unittest.TestCase):
+    def test_unknown_factory_creates_no_output(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            factory = root / "factory.img"
+            factory.write_bytes(b"unknown factory super")
+            output = root / "candidate"
+            args = ["prepare-native-super.py", "--factory-super", str(factory), "--system", str(root / "missing.img"),
+                    "--system-sha256", "a" * 64, "--tools-dir", str(TOOLS), "--out", str(output)]
+            with mock.patch("sys.argv", args), self.assertRaisesRegex(ValueError, "Unsupported factory super"):
+                native_super.main()
+            self.assertFalse(output.exists())
+
+    def test_wrong_system_digest_is_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            factory = root / "factory.img"
+            factory.write_bytes(b"factory fixture")
+            system = root / "system.img"
+            system.write_bytes(b"x" * 4096)
+            with mock.patch.object(native_super, "SUPER_BYTES", factory.stat().st_size), \
+                 mock.patch.object(native_super, "FACTORY_SHA256", native_super.digest(factory)):
+                with self.assertRaisesRegex(ValueError, "System image hash"):
+                    native_super.validate_inputs(factory, system, "0" * 64)
 
 class RilCandidateTests(unittest.TestCase):
     def test_unknown_library_is_rejected_without_modifying_input(self):

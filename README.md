@@ -17,7 +17,7 @@ Android16 修正了 factory first-stage 缺少 vbmeta 节点初始化，以及 A
 
 初版默认绘制31.03FPS；新的默认62Hz配置在两次启动中生效，未固定min/peak时绘制61.88FPS，CPU忙99.31%时61.72FPS。仍有较长帧间隔；这是15秒应用绘制测试。旧完整资源/温度测试与本轮指标分别记录，不作为游戏跑分或长期稳定性认证。
 
-新镜像两次启动验证了蓝牙节点权限与扫描、默认62Hz和GPU-work缺map时不崩溃；安装库原生回归1/1通过。kernel GPU-work统计能力仍未补齐。Android16 当前是单次 DSU，正常重启回原厂 Android13。
+新镜像两次启动验证了蓝牙节点权限与扫描、默认62Hz和GPU-work缺map时不崩溃；安装库原生回归1/1通过。kernel GPU-work统计能力仍未补齐。Android16 当前是单次 DSU，正常重启回原厂 Android13。原生安装候选已完成离线校验并获授权；备份和刷写验收进行中，见 [原生安装记录](docs/android16/native-install-20261002.md)。
 
 后续关闭了AVC能力疑点：原样本超过声明码率，符合范围的1080p60样本自动选择硬件decoder通过。最新候选两次启动均为SELinux Enforcing；受限helper核验私有只读RIL库并由init绑定，保留原radio身份和namespace。旧permissive RTC服务已停止，原生替代服务在独立enforcing域运行。userdebug su仍为permissive，不是生产安全认证。
 

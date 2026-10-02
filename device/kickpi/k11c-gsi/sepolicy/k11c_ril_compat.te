@@ -12,7 +12,6 @@ allow k11c_ril_compat proc_mounts:file r_file_perms;
 get_prop(k11c_ril_compat, build_prop)
 get_prop(k11c_ril_compat, build_vendor_prop)
 get_prop(k11c_ril_compat, userdebug_or_eng_prop)
-get_prop(k11c_ril_compat, gsid_prop)
 set_prop(k11c_ril_compat, k11c_ril_prop)
 allow init k11c_ril_stage:dir create_dir_perms;
 allow init k11c_ril_stage:file create_file_perms;

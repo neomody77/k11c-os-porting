@@ -10,7 +10,7 @@
     "boot_mode": "single-boot DSU",
     "native_codec_tests_passed": 50,
     "full_peripheral_validation": false,
-    "cts_vts": "not_run",
+    "cts_vts": "partial: Sensors 1.0 VTS 36 pass / 0 fail / module complete on DSU; full suites paused for native installation",
     "diagnostic_network_readiness": "callback fix verified on device: 12/12; cold control 0/4",
     "open_work": [
       "actual sensor hardware and matching DT/driver if physical sampling is required",
@@ -37,7 +37,15 @@
       "physical_sampling": "unavailable; probe remains FAIL"
     },
     "cellular_validation": "excluded by user: no SIM slot",
-    "enforcing_report": "docs/android16/enforcing-sensors-results-20261002.json"
+    "enforcing_report": "docs/android16/enforcing-sensors-results-20261002.json",
+    "current_full_api": "36.1",
+    "native_install": {
+      "stage": "backup_verified_fastboot_usb_recovery_pending",
+      "report": "docs/android16/native-install-20261002.md",
+      "device_boot": "not_yet_tested",
+      "userdata_plan": "retain original userdata with offline rollback backup",
+      "userdata_backup": "filesystem-frozen full userdata and metadata; board hashes match"
+    }
   },
   "android17": {
     "source_ref": null,
