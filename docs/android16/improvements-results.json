@@ -27,7 +27,7 @@
     "system_library_replaced": false,
     "gpuwork_statistics_available": false
   },
-  "candidate_boot": "installed_disabled_not_booted",
+  "candidate_boot": "cold_and_second_boot_verified",
   "ril": {
     "wrong_vndk_selected": 31,
     "required_vendor_vndk": 33,
@@ -45,12 +45,124 @@
     "direct_file_restore_stopped": true,
     "old_extent_metadata_preserved": true,
     "restoration_verified": false,
-    "pending_user_data_retention_decision": true
+    "pending_user_data_retention_decision": false,
+    "decision": "user explicitly approved clean DSU test data",
+    "cleaned_with": "stock gsi_tool wipe-data before boot",
+    "old_data_restored": false
   },
   "current_device": {
-    "android_api": 33,
+    "android_api": 36,
     "boot_complete": true,
-    "dsu": "installed_disabled",
-    "boot_partition_hash_unchanged": true
+    "dsu": "single_boot_running",
+    "boot_partition_hash_unchanged": true,
+    "usb_state": "configured",
+    "phy": "otg",
+    "selinux": "Permissive",
+    "screen_timeout_ms": 2147483647,
+    "stay_on_while_plugged_in": 15
+  },
+  "system_mapped_device_sha256_matches_candidate": true,
+  "bluetooth": {
+    "automatic_node_rules_correct": 7,
+    "manually_chmod_chown_after_boot": false,
+    "enabled": true,
+    "scan_packets": 579,
+    "scan_unique_devices": 19,
+    "scan_seconds": 10,
+    "automatic_on_after_second_boot": true
+  },
+  "refresh_rate": {
+    "resource_hz": 62,
+    "render_rate_hz": 62.0,
+    "min_setting": "null",
+    "peak_setting": "null",
+    "normal": {
+      "test": "animation",
+      "frames_drawn": 928,
+      "rendered_fps": 61.87794848912666,
+      "interval_p50_ms": 16.118669,
+      "interval_p95_ms": 18.987502,
+      "interval_max_ms": 55.624922,
+      "frame_duration_p95_ms": 36.288777,
+      "display_refresh_hz": 62,
+      "hardware_accelerated": true,
+      "status": "PASS",
+      "elapsed_ms": 15828
+    },
+    "four_core_load": {
+      "duration_seconds": 17.707745884996257,
+      "cpu_busy_percent": 99.31353320257776,
+      "stress_workers": 4,
+      "probe": {
+        "test": "animation",
+        "frames_drawn": 926,
+        "rendered_fps": 61.72361799557477,
+        "interval_p50_ms": 16.111376,
+        "interval_p95_ms": 16.604877,
+        "interval_max_ms": 51.769964,
+        "frame_duration_p95_ms": 51.850672,
+        "display_refresh_hz": 62,
+        "hardware_accelerated": true,
+        "status": "PASS",
+        "elapsed_ms": 15908
+      }
+    }
+  },
+  "installed_gpuwork_regression": {
+    "tests": 1,
+    "passed": 1,
+    "skipped": 0,
+    "duration_ms": 30002,
+    "loaded_from": "installed system library",
+    "gpuwork_statistics_available": false
+  },
+  "service_stability": {
+    "first_boot_gpu_pid_unchanged": true,
+    "first_boot_system_server_pid_unchanged": true,
+    "second_boot_gpu_elapsed_at_least_seconds": 148,
+    "second_boot_gpu_pid_unchanged": true,
+    "second_boot_system_server_pid_unchanged": true,
+    "system_server_start_count": 1
+  },
+  "network": {
+    "status": "PASS",
+    "network_ready_wait_ms": 13,
+    "https_status": 200,
+    "wifi_autoreconnected_second_boot": true,
+    "temporary_credential_export_removed": true
+  },
+  "graphics": {
+    "renderer": "Mali-G52",
+    "opengl_es_version": "3.2",
+    "frames_verified": 300,
+    "status": "PASS"
+  },
+  "video": {
+    "status": "PASS",
+    "codec": "c2.rk.avc.decoder",
+    "declared_format_supported": false,
+    "output_mode": "Surface",
+    "output_buffers": 180,
+    "eos": true,
+    "decode_ms": 1564
+  },
+  "test_preconditions": {
+    "initial_ui_tests_blocked_by_keyguard": [
+      "animation",
+      "video-hardware-1080p60-surface"
+    ],
+    "warm_load_initially_blocked_by_keyguard": true,
+    "unlocked_before_final_ui_runs": true,
+    "initial_failures_preserved_privately": true
+  },
+  "memory_snapshot": {
+    "mem_total_kib": 3993136,
+    "mem_available_kib": 3045352,
+    "taken_after_first_load_attempt": true
+  },
+  "cleanup": {
+    "diagnostics_uninstalled": true,
+    "stress_workers_stopped": 4,
+    "temporary_native_test_removed": true
   }
 }

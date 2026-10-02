@@ -13,15 +13,14 @@
     "cts_vts": "not_run",
     "diagnostic_network_readiness": "callback fix verified on device: 12/12; cold control 0/4",
     "open_work": [
-      "resolve DSU test-data retention, then boot-test Bluetooth permissions, refresh-rate RRO and GPU-work fix",
       "codec capability declaration",
       "correct ghost sensor declaration or add actual sensor driver",
       "RIL wrong VNDK selection and unchecked initialization failure",
       "GPU-work kernel statistics support",
       "Mac C-to-C investigation paused by user"
     ],
-    "improvements_candidate": "installed disabled; not booted; userdata retention/recovery decision pending",
-    "current_running_api": 33
+    "improvements_candidate": "cold and second boot verified; Bluetooth rules, default62Hz and GPU-work missing-map handling verified",
+    "current_running_api": 36
   },
   "android17": {
     "source_ref": null,

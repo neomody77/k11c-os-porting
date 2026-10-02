@@ -39,7 +39,7 @@ APK的实际编译资源为62，在板上用idmap2按product策略创建映射�
 | 镜像内ueventd import与七条规则 | 存在 |
 | 镜像内RRO资源/idmap映射 | 默认值62，映射成功 |
 | 独立缺map native板测 | 1/1通过，无跳过 |
-| 新候选整镜像启动 | 待验收 |
+| 新候选整镜像启动 | 干净DSU首次启动及第二次启动通过，API36 |
 
 镜像为raw ext4，共1899532288字节；gzip共990764179字节。system.img SHA256为54b9b621ee801070398ef61a08a5cf17d544e0e9c5b10727ffe47b0df9c207b9；gzip SHA256为eb9f6963b5c15bdf0d4cb8053abce218034eb455704bcbe190b0a08c7ff68aa8。哈希标识本次私有候选，不代表仓库分发镜像。
 
@@ -51,12 +51,33 @@ VNDK33的对应库实际存在。没有连接modem节点不解释这次空指针
 
 ## 整镜像验证
 
-新候选已经安装但尚未启动，DSU暂时disabled，板子保持原版Android13正常运行。蓝牙开机权限、默认刷新率和GPU服务跨启动稳定性不计为通过。boot分区哈希与安装前相同。
+新候选已经用干净DSU数据完成首次与第二次启动，API36、boot complete=1。boot分区哈希与安装前相同；从实际映射system_gsi块设备读回的SHA256与候选system.img一致。通过文件路径直接读取backing file会受到下面的metadata加密视图影响，不能拿那个哈希代替映射分区校验。
 
 安装前导出8GiB userdata backing file及旧lp_metadata。安装后的inode/时间戳检查发现原厂gsi_tool重建了userdata；help中的旧--wipe说明不能用来推断省略该参数会保留数据。匹配AOSP的PartitionInstaller会删除已有backing image，重新分配并初始化数据卷。这次在重启前识别，没有让新数据卷完成Android启动。
 
-还发现metadata加密影响备份层级：libfiemap的DSU块映射绕过宿主/data的dm-default-key；直接cat backing file取得的字节与块映射视图不同。只把文件层备份复制到新分配的extent，或只验证文件SHA256相等，都不足以证明旧DSU数据可挂载。当前文件层副本和旧extent元数据作为私有取证材料保留，未称为已成功恢复。文件层直接恢复已停止，等待确认旧测试数据是否必须恢复；数据恢复需要按原映射处理宿主加密。原版13的数据未作清理。
+还发现metadata加密影响备份层级：libfiemap的DSU块映射绕过宿主/data的dm-default-key；直接cat backing file取得的字节与块映射视图不同。只把文件层备份复制到新分配的extent，或只验证文件SHA256相等，都不足以证明旧DSU数据可挂载。当前文件层副本和旧extent元数据作为私有取证材料保留，未称为已成功恢复。文件层直接恢复已停止。用户随后明确批准使用干净DSU测试数据；通过gsi_tool wipe-data初始化后启动新镜像，没有继续尝试恢复旧测试数据。文件层副本和旧extent元数据私有保留。原版13的数据未作清理。
 
 后续更新应使用经实测验证的仅system分区更新流程，或在非运行中的映射块设备层正确备份userdata与必要密钥/metadata；不得把本轮失败的文件层复制方法作为可复现恢复指南。新候选仍保持single-boot恢复路径。
+
+### 实际功能、帧率与重启结果
+
+七个节点在两次启动中都自动为0660 bluetooth:bluetooth，未手工chmod/chown。首次请求开启后蓝牙ON，10秒扫描收579个包、19个邻近设备；第二次启动自动ON。原版保存的Wi-Fi配置用于连接同一网络，临时凭据导出立即删除；第二次启动自动重连，网络回调等待13ms，DNS和HTTPS 200通过。
+
+两次启动config_defaultRefreshRate均为62，DisplayModeDirector的default与active render rate均62；min/peak设置均null。保持系统默认策略的15秒应用绘制如下，不固定刷新率上下限：
+
+| 条件 | 绘制FPS | 间隔P50 ms | 间隔P95 ms | 最大间隔 ms | FrameMetrics总时长P95 ms |
+|---|---:|---:|---:|---:|---:|
+| 常规 | 61.88 | 16.12 | 18.99 | 55.62 | 36.29 |
+| 四核负载，CPU忙99.31% | 61.72 | 16.11 | 16.60 | 51.77 | 51.85 |
+
+负载统计窗口约17.71秒，包括启动测量的开销。绘制频率接近物理62Hz，存在较长帧间隔；FrameMetrics总时长与帧间隔是不同指标，不把此结果写成零掉帧、零延迟或游戏表现。旧31.03FPS结果保留在初版测试快照中。
+
+干净系统初次锁屏覆盖Activity时，动画报too few rendered frames、Surface报not ready；重启后的第一轮负载也遇到锁屏。原始失败没有丢弃。等待SystemUI就绪、唤醒并明确确认Keyguard不再限制输入后，两项UI测试及负载测试通过；没有改测试阈值或关闭保护来算通过。
+
+Mali-G52/OpenGL ES3.2回归绘制300帧通过；1080p60样本通过c2.rk.avc.decoder向Surface输出180帧并到EOS，decode约1564ms。能力声明仍为false，仍是待修问题，不把显式指定decoder成功当作自动选型能力修复。
+
+实际安装的系统libgpuwork直接运行native回归1/1通过、0跳过、约30.002秒，无LD_LIBRARY_PATH替换。首次回归前后gpuservice/system_server PID不变；第二次启动的gpuservice至少连续运行148秒，PID不变，system_server start_count=1。GPU-work dump明确不可用，缺统计map/tracepoint的kernel尚未补齐。vendor rild仍因上述VNDK选择错误崩溃，传感器仍未修复。
+
+一次回归后的MemAvailable为3045352KiB（约2.90GiB），MemTotal3993136KiB；这是短时内存快照。自动熄屏恢复关闭，stay-on设15并跨重启保留。四个压力进程已停止，诊断APK已卸载，板端临时native测试目录已移除。当前板子运行Android16 single-boot DSU，正常重启回原版13；第二次测试是事先重新enable single-boot后进入16。
 
 机器可读结果见 [improvements-results.json](improvements-results.json)。这轮不是CTS/VTS、长时老化、真实蓝牙音频或蜂窝网络认证。

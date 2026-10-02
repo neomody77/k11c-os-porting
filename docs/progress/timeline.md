@@ -34,7 +34,7 @@ USB-A主机连接保持configured/high-speed；运行设备树与厂商规格确
 
 按用户要求暂停Mac C→C排查，接回USB-A后恢复PHY otg。把Seekwave蓝牙权限规则、默认62Hz framework RRO和GPU-work缺map时的错误处理集成到GSI。增量构建2分33秒成功，文件系统/AVB/VINTF与实际packaged规则、资源检查通过；独立GPU-work native回归在板上1/1通过，未替换运行中系统库。
 
-四个源码补丁在精确标签fixture首次与重复应用通过；末项目冲突时验证前三个项目和overlay均未修改。实际厂商RIL反汇编与radio日志定位到误选VNDK31、dlopen被VNDK33 namespace拒绝、property_get空指针调用；这项未修复。新候选安装后发现原厂工具重建userdata，且宿主metadata加密使文件层备份不能直接恢复；已在新镜像重启前停止，DSU disabled，原版13正常。旧文件层副本及extent元数据私有保留，恢复/舍弃旧测试数据尚待决定。新候选的整镜像验收状态见 [改进记录](../android16/improvements-20261002.md)。
+四个源码补丁在精确标签fixture首次与重复应用通过；末项目冲突时验证前三个项目和overlay均未修改。实际厂商RIL反汇编与radio日志定位到误选VNDK31、dlopen被VNDK33 namespace拒绝、property_get空指针调用；这项未修复。新候选安装后发现原厂工具重建userdata，且宿主metadata加密使文件层备份不能直接恢复；已在新镜像重启前停止，DSU disabled，原版13正常。旧文件层副本及extent元数据私有保留。用户明确允许干净DSU后清理测试数据，完成新镜像首次与第二次启动；蓝牙权限自动正确并收包、默认62Hz生效、GPU服务稳定，安装库原生回归1/1通过。默认绘制61.88FPS、四核CPU忙99.31%时61.72FPS；诊断和压力任务已清理。新候选的整镜像验收状态见 [改进记录](../android16/improvements-20261002.md)。
 
 ## 后续：Android17
 
