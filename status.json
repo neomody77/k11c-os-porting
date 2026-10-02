@@ -93,6 +93,12 @@
       "GOMEMLIMIT": "24GiB",
       "GOGC": "50",
       "forwarding_verified": true
+    },
+    "offline_continuation": {
+      "stage": "waiting_for_image_build",
+      "automatic_system_integrity_vintf_capacity_and_native_package_checks": true,
+      "device_access": false,
+      "flashing_performed": false
     }
   },
   "firmware_binaries_in_repository": false,
