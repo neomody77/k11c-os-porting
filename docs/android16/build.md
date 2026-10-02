@@ -48,7 +48,7 @@ apply 工具校验目标四个项目的 HEAD 对应指定标签，先检查全�
 
 仓库不包含厂商库。构建工具只接收精确SHA256匹配的私有候选，放入AOSP板级目录的private子目录并打包为只读system_ext库；已验证的相同副本可以复用。生成的系统镜像含厂商代码，不能仅因源码仓库公开就默认可以分发镜像。
 
-启动时helper核验已知 Android16 DSU/userdebug、vendor API33、原厂库完整哈希和私有候选逐字节一致，才发布给init的挂载源路径。未知固件不发布路径，init不能建立对应bind。空传感器HAL同样直接来自只读镜像；非可执行的XML和蓝牙配置使用专用tmpfs类型。helper使用独立enforcing域，无mount权限或capabilities，init只有两种vendor目标类型的文件mounton权限。AOSP禁止将运行时生成文件重标记为vendor代码，该neverallow保持不变。构建脚本检查实际镜像中的两个可执行文件及两个库的标签。先前使用su域的历史验收见 [RIL集成](ril-integration-20261002.md)，本轮状态见 [enforcing与传感器](enforcing-sensors-20261002.md)。
+启动时helper核验带ro.k11c.compat.enabled=1的已知 Android16 userdebug（原生或DSU）、vendor API33、原厂库完整哈希和私有候选逐字节一致，才发布给init的挂载源路径。未知固件不发布路径，init不能建立对应bind。空传感器HAL同样直接来自只读镜像；非可执行的XML和蓝牙配置使用专用tmpfs类型。helper使用独立enforcing域，无mount权限或capabilities，init只有两种vendor目标类型的文件mounton权限。AOSP禁止将运行时生成文件重标记为vendor代码，该neverallow保持不变。构建脚本检查实际镜像中的两个可执行文件及两个库的标签。先前使用su域的历史验收见 [RIL集成](ril-integration-20261002.md)，本轮状态见 [enforcing与传感器](enforcing-sensors-20261002.md)。
 
 GPU-work 回归程序单独构建，不进入系统镜像的安装文件列表：
 
@@ -87,3 +87,5 @@ python3 tools/prepare-enforcing-boot.py \
 不能假定另一批次镜像也符合这些约束。fstab已变化、ramdisk压缩格式不同或基线不一致时停止，不继续生成“近似”候选。
 
 本仓库不提供自动刷机脚本。准备与验证候选后，再对具体镜像、目标分区和恢复方式逐项确认。单次DSU会在正常重启后回到原厂系统，持久boot修改不会自动回滚。
+
+原生安装还需移除原厂system_ext/product挂载并构造保留七个原厂逻辑分区的super，不能只写旧GSI或只使用上述DSU boot。方法与本次完整读回校验见 [原生安装](native-install-20261002.md)。

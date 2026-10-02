@@ -1,0 +1,172 @@
+{
+  "date": "2026-10-03",
+  "timezone": "Asia/Singapore",
+  "board": "KICKPI K11C / RK3566",
+  "source_ref": "android-16.0.0_r4",
+  "build_target": "aosp_arm64-bp4a-userdebug",
+  "boot_mode": "native eMMC",
+  "checks": {
+    "boot_complete_first_and_normal_reboot": true,
+    "full_boot_super_readback_matches_candidate": true,
+    "vbmeta_readback_matches_preinstall": true,
+    "userdata_and_metadata_backup_frozen_hash_verified": true,
+    "userdata_format_performed": false,
+    "native_postinstall_factory13_rollback_tested": false,
+    "native_hard_power_cycle_tested": false
+  },
+  "final_state": {
+    "boot_complete": true,
+    "api_full": "36.1",
+    "dsu_running": false,
+    "selinux": "Enforcing",
+    "wifi_validated": true,
+    "ril": "active",
+    "bluetooth_compat": "active",
+    "sensors_compat": "no-configured-device",
+    "accelerometer_feature": false,
+    "legacy_rtc_service": "stopped",
+    "developer_enabled": "1",
+    "usb_debugging_enabled": "1",
+    "screen_timeout_ms": "2147483647",
+    "system_server_start_count": "1",
+    "cpu_online": "0-3",
+    "kernel": "5.10.157"
+  },
+  "resources": {
+    "context": "Second native Android16 boot, screen on, no intentional workload; 30 second settle, 7 snapshots at 10 second intervals; includes ADB sampling overhead",
+    "sample_duration_seconds": 63.15,
+    "cpu_busy_percent": 4.68,
+    "cpu_interval_busy_percent": [
+      4.56,
+      5.2,
+      4.58,
+      4.56,
+      4.38,
+      4.81
+    ],
+    "cpu_iowait_interval_percent": [
+      0.0,
+      0.0,
+      0.0,
+      0.02,
+      0.0,
+      0.0
+    ],
+    "memory_kib": {
+      "MemTotal": {
+        "min": 3993136,
+        "max": 3993136
+      },
+      "MemAvailable": {
+        "min": 3033224,
+        "max": 3036492
+      },
+      "MemFree": {
+        "min": 1694248,
+        "max": 1698208
+      },
+      "SwapTotal": {
+        "min": 1996564,
+        "max": 1996564
+      },
+      "SwapFree": {
+        "min": 1871124,
+        "max": 1871124
+      }
+    },
+    "temperature_c": {
+      "soc-thermal": {
+        "min": 52.5,
+        "max": 53.125
+      },
+      "gpu-thermal": {
+        "min": 48.888,
+        "max": 48.888
+      }
+    },
+    "load_first": [
+      "0.74",
+      "0.80",
+      "0.36"
+    ],
+    "load_last": [
+      "0.45",
+      "0.70",
+      "0.36"
+    ],
+    "memory_psi_first": [
+      "some avg10=0.00 avg60=0.00 avg300=0.00 total=6283",
+      "full avg10=0.00 avg60=0.00 avg300=0.00 total=54"
+    ],
+    "memory_psi_last": [
+      "some avg10=0.00 avg60=0.00 avg300=0.00 total=6535",
+      "full avg10=0.00 avg60=0.00 avg300=0.00 total=54"
+    ]
+  },
+  "android_memory_ledger_kib": {
+    "used_ram": 1248050,
+    "free_ram": 2732866,
+    "zram_physical_used": 37424,
+    "zram_swapped_payload": 91136
+  },
+  "processes": {
+    "system_server": {
+      "pid_unchanged_during_sampling": true,
+      "rss_kib_min": 391420,
+      "rss_kib_max": 394568
+    },
+    "surfaceflinger": {
+      "pid_unchanged_during_sampling": true,
+      "rss_kib_min": 79016,
+      "rss_kib_max": 79016
+    },
+    "rild": {
+      "pid_unchanged_during_sampling": true,
+      "rss_kib_min": 13612,
+      "rss_kib_max": 13612
+    },
+    "gpuservice": {
+      "pid_unchanged_during_sampling": true,
+      "rss_kib_min": 8788,
+      "rss_kib_max": 8788
+    },
+    "k11c-rtc-timer": {
+      "pid_unchanged_during_sampling": true,
+      "rss_kib_min": 3004,
+      "rss_kib_max": 3004
+    }
+  },
+  "storage_kib": {
+    "userdata_total": 25532416,
+    "userdata_used": 19191044,
+    "userdata_available": 6341372,
+    "inactive_dsu_directory": 10256243,
+    "earlier_test_backups_data_local": 8519919
+  },
+  "compatibility_tests": {
+    "sensor_vts10": {
+      "boot_mode": "DSU",
+      "passed": 36,
+      "failed": 0,
+      "modules_completed": 1,
+      "modules_total": 1
+    },
+    "official_cts": "16.1 R4 ARM downloaded and extracted; not run",
+    "full_vts": "same-source complete suite built; not run on native installation",
+    "paused_by_user": true
+  },
+  "limitations": [
+    "Short idle sampling only; no native stress or long duration test",
+    "Prior animation/media/Keystore/Bluetooth RF measurements were made on DSU; full native regression not repeated",
+    "Physical sensor sampling unavailable",
+    "userdebug su and inactive legacy vendor RTC type declared permissive",
+    "SIM/cellular excluded by user; Mac C-to-C investigation paused"
+  ],
+  "cleanup": {
+    "test_or_build_jobs_running": false,
+    "temporary_nsjail_apparmor_exception_removed": true,
+    "temporary_adb_forward_connections_closed": true,
+    "historical_data_and_backups_retained": true,
+    "temporary_device_reboot_helper_removed": true
+  }
+}

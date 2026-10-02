@@ -184,4 +184,8 @@ AOSP已有同类Gerrit，维护者备注内部合入，见 [upstream](upstream.m
 
 Android17仍未构建/启动。本项目first API33、保留旧vendor/kernel的GSI实验，和新设备出厂认证的kernel要求不同；也不能忽略ACK支持周期与新userspace需要的kernel/BPF/接口功能。查看[ACK兼容表](https://source.android.com/docs/core/architecture/kernel/android-common#compatibility-matrix)，结合具体目标版本验证，不能只用CPU是ARM64判断全部可用。
 
-最终设备保持Android16单次DSU、接电常亮、蓝牙临时权限修复；下次正常重启回Android13，持久boot补丁仍在。测试APK和压力进程清理，临时刷新率设置恢复。原始captures与可恢复固件留在私有存储，公开仓库只保存脱敏方法和结论。
+该早期阶段结束时设备保持Android16单次DSU、接电常亮、蓝牙临时权限修复；下次正常重启回Android13，持久boot补丁仍在。测试APK和压力进程清理，临时刷新率设置恢复。原始captures与可恢复固件留在私有存储，公开仓库只保存脱敏方法和结论。
+
+## 13. 原生安装后最终状态
+
+后续已持久化蓝牙/刷新率/RIL/RTC/SELinux修复，并于2026-10-02至03完成boot/super原生刷写及完整板端哈希校验，正常重启仍为16。Loader重复字节假备份、冻结userdata/metadata备份、旧U-Boot fastboot入口与getvar all卡死均留有记录。当前结论、资源实测及未验收项以 [阶段总结](android16/summary-20261003.md) 和 [原生安装](android16/native-install-20261002.md) 为准；前文保留历史排障顺序。

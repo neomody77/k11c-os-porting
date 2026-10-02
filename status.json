@@ -1,5 +1,5 @@
 {
-  "updated_on": "2026-10-02",
+  "updated_on": "2026-10-03",
   "board": "KICKPI K11C / RK3566",
   "scope": "AOSP ARM64 GSI on factory kernel/vendor",
   "android16": {
@@ -7,10 +7,10 @@
     "build_target": "aosp_arm64-bp4a-userdebug",
     "build": "verified",
     "device_boot": "verified",
-    "boot_mode": "single-boot DSU",
+    "boot_mode": "native eMMC",
     "native_codec_tests_passed": 50,
     "full_peripheral_validation": false,
-    "cts_vts": "partial: Sensors 1.0 VTS 36 pass / 0 fail / module complete on DSU; full suites paused for native installation",
+    "cts_vts": "partial: Sensors1.0 VTS 36 pass / 0 fail on DSU; CTS extracted and full VTS built; native suites not run; paused by user",
     "diagnostic_network_readiness": "callback fix verified on device: 12/12; cold control 0/4",
     "open_work": [
       "actual sensor hardware and matching DT/driver if physical sampling is required",
@@ -40,11 +40,27 @@
     "enforcing_report": "docs/android16/enforcing-sensors-results-20261002.json",
     "current_full_api": "36.1",
     "native_install": {
-      "stage": "backup_verified_fastboot_usb_recovery_pending",
+      "stage": "native_boot_and_normal_reboot_verified",
       "report": "docs/android16/native-install-20261002.md",
-      "device_boot": "not_yet_tested",
-      "userdata_plan": "retain original userdata with offline rollback backup",
-      "userdata_backup": "filesystem-frozen full userdata and metadata; board hashes match"
+      "device_boot": "first_and_normal_reboot_verified",
+      "userdata_plan": "retained and used by Android16; no format",
+      "userdata_backup": "filesystem-frozen full userdata and metadata; board hashes match",
+      "readback": "full boot/super SHA256 matches; vbmeta unchanged",
+      "hard_power_cycle": "not_tested",
+      "post_native_factory13_rollback": "not_tested"
+    },
+    "work_status": "stopped_at_user_requested_checkpoint",
+    "summary": "docs/android16/summary-20261003.md",
+    "native_resource_report": "docs/android16/native-results-20261003.json",
+    "native_idle_resources": {
+      "sample_seconds": 63.15,
+      "cpu_busy_percent": 4.68,
+      "mem_available_min_kib": 3033224,
+      "soc_temperature_range_c": [
+        52.5,
+        53.125
+      ],
+      "userdata_available_kib": 6341372
     }
   },
   "android17": {

@@ -59,3 +59,11 @@ boot cmdline只将SELinux改为enforcing，保留已有DSU/AVB修正及其他载
 ## 后续：Android17
 
 尚未选择源码引用、构建或刷入Android17。先完成Android16剩余兼容问题并保持可恢复基线，再按 [roadmap](../android17/roadmap.md)推进。
+
+## 2026-10-02至03：原生安装与阶段结束
+
+完整userdata/metadata在原厂13停止界面服务、冻结文件系统后备份，并与板端完整哈希匹配。初次Loader读取返回0xCC填充，已隔离为无效证据；旧U-Boot getvar all及后续USB重置也曾卡死，彻底上电并改用单项查询后恢复。第十补丁和原生boot/super解决原厂system_ext/product遮盖与DSU专用兼容开关；仅写boot/super，未格式化数据。实际板端完整哈希与候选匹配，vbmeta保持原值。
+
+原生首启与一次正常重启均API36.1、Enforcing、DSU=0；USB和Wi-Fi VALIDATED，兼容修复active。第二次启动亮屏待机63.15秒，四核CPU平均4.68%，MemAvailable约2.89GiB，SoC52.5–53.13℃，核心服务采样PID稳定。历史DSU和测试备份约占17.91GiB保留，/data可用约6.05GiB。
+
+Sensors1.0 VTS此前DSU36通过、0失败；官方CTS已展开、完整VTS已构建，临时AppArmor例外卸载删除。用户要求Android16到此结束，未在原生安装上继续套件，临时ADB转发关闭。Android17未开始。详见 [阶段总结](../android16/summary-20261003.md)。

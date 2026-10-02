@@ -6,18 +6,18 @@
 
 ## 当前状态
 
-截至 2026-10-02，公开记录是一次具体固件组合的测试快照。
+截至 2026-10-03，记录是一次具体固件组合的测试快照。Android16本阶段已按用户要求结束，见 [总结与原生资源实测](docs/android16/summary-20261003.md)。
 
 | 版本 | 构建与启动 | 完成度 |
 |---|---|---|
-| Android 16 | android-16.0.0_r4；aosp_arm64-bp4a-userdebug；编译成功，K11C DSU 启动成功，API 36 | 网络、GPU、媒体、存储等已有实际测试；仍有外设兼容缺口 |
+| Android 16 | android-16.0.0_r4；aosp_arm64-bp4a-userdebug；编译成功，eMMC原生首启与正常重启成功，API36.1 | 网络、GPU、媒体、存储等已有实际测试；仍有外设兼容缺口 |
 | Android 17 | 尚未选择具体源码版本；尚未构建或板测 | 调研与验证计划已建立，不复用 Android16 成功结论 |
 
 Android16 修正了 factory first-stage 缺少 vbmeta 节点初始化，以及 AVC High10 Level6.2 码率乘法溢出。保留 UBSan/CFI，32/64 位回归测试各 25 项通过。
 
 初版默认绘制31.03FPS；新的默认62Hz配置在两次启动中生效，未固定min/peak时绘制61.88FPS，CPU忙99.31%时61.72FPS。仍有较长帧间隔；这是15秒应用绘制测试。旧完整资源/温度测试与本轮指标分别记录，不作为游戏跑分或长期稳定性认证。
 
-新镜像两次启动验证了蓝牙节点权限与扫描、默认62Hz和GPU-work缺map时不崩溃；安装库原生回归1/1通过。kernel GPU-work统计能力仍未补齐。Android16 当前是单次 DSU，正常重启回原厂 Android13。原生安装候选已完成离线校验并获授权；备份和刷写验收进行中，见 [原生安装记录](docs/android16/native-install-20261002.md)。
+新镜像两次启动验证了蓝牙节点权限与扫描、默认62Hz和GPU-work缺map时不崩溃；安装库原生回归1/1通过。kernel GPU-work统计能力仍未补齐。上述指标来自DSU阶段。当前boot/super已完成原生刷写和板端完整哈希校验，正常重启继续Android16，SELinux Enforcing；原厂userdata保留，完整块级备份已验证。原生亮屏待机63秒CPU平均4.68%、MemAvailable约2.89GiB、SoC约52.5–53.1℃。见 [原生安装记录](docs/android16/native-install-20261002.md)。
 
 后续关闭了AVC能力疑点：原样本超过声明码率，符合范围的1080p60样本自动选择硬件decoder通过。最新候选两次启动均为SELinux Enforcing；受限helper核验私有只读RIL库并由init绑定，保留原radio身份和namespace。旧permissive RTC服务已停止，原生替代服务在独立enforcing域运行。userdebug su仍为permissive，不是生产安全认证。
 
@@ -31,6 +31,8 @@ Android16 修正了 factory first-stage 缺少 vbmeta 节点初始化，以及 A
 | 工作时间线 | [docs/progress/timeline.md](docs/progress/timeline.md) |
 | 完整会话排障复盘 | [docs/troubleshooting.md](docs/troubleshooting.md) |
 | 当前机器状态 | [status.json](status.json) |
+| Android16 阶段总结与原生资源 | [总结](docs/android16/summary-20261003.md) / [JSON](docs/android16/native-results-20261003.json) |
+| Android16 原生安装与恢复边界 | [记录](docs/android16/native-install-20261002.md) |
 | Android16 构建复现 | [docs/android16/build.md](docs/android16/build.md) |
 | 启动与崩溃根因 | [docs/android16/boot-and-codec.md](docs/android16/boot-and-codec.md) |
 | 功能、性能与流畅度测试 | [docs/android16/test-report.md](docs/android16/test-report.md) / [JSON](docs/android16/test-results.json) |

@@ -1,4 +1,4 @@
-# Android 16 原生安装准备与验收
+# Android 16 原生安装与验收
 
 ## 为什么从 DSU 转为原生安装
 
@@ -44,12 +44,31 @@ python3 tools/prepare-native-super.py \
 
 授权写入范围为 boot 和 super。userdata/metadata 先保留，不主动格式化；Android16 首次启动可能升级原厂 userdata，因此回退不能只恢复 system，需核对是否要恢复离线 userdata/metadata。uboot/trust/DTBO/vbmeta/GPT 不在候选写入范围。
 
-状态：候选构建、boot 和 super 离线校验已完成；原厂 Android13 已恢复并完成启动。27,012,857,856 字节 userdata 和 16,777,216 字节 metadata 的冻结备份均已与板端完整哈希匹配，已解冻并恢复服务。原生镜像尚未写入：旧 U-Boot 的 getvar all 未完成，后续 flash 停在镜像打开前的查询阶段（进程虚拟内存仅约 9.5 MB，无 boot 文件打开或映射、无 Sending/Writing）。软件 USB 重置后设备描述符出现 -71，需重新上电恢复，然后使用单项查询。该观察不能单独归因为线材或硬件损坏。此记录不构成原生启动成功声明。
+状态：候选构建、boot 和 super 离线校验已完成；原厂 Android13 已恢复并完成启动。27,012,857,856 字节 userdata 和 16,777,216 字节 metadata 的冻结备份均已与板端完整哈希匹配，已解冻并恢复服务。首次 fastboot 尝试中，旧 U-Boot 的 getvar all 未完成，后续 flash 停在镜像打开前的查询阶段（进程虚拟内存仅约 9.5 MB，无 boot 文件打开或映射、无 Sending/Writing）。软件 USB 重置后设备描述符出现 -71；彻底重新上电恢复。该观察不能单独归因为线材或硬件损坏。改为单项查询后所有实际传输正常，已完成原生刷写。
+
+## 实际刷写与启动结果
+
+进入的是U-Boot bootloader fastboot（is-userspace=no），使用板端内核直接restart2("fastboot")传递已核实的重启原因，避免bootloader别名进入Loader。同步、冻结数据后重启，没有通过解锁或格式化改变数据。普通adb reboot fastboot可能由init转为recovery/fastbootd，不能把这些入口混为一谈。
+
+本次bootloader最大下载64MiB，super使用32MiB分块：
+
+```sh
+# 先核对具体设备、候选完整哈希、分区容量与已验证的恢复备份。
+fastboot -s "$ANDROID_SERIAL" flash boot /path/to/validated-native-boot.img
+fastboot -s "$ANDROID_SERIAL" -S 32M flash super /path/to/validated-native-super.img
+fastboot -s "$ANDROID_SERIAL" reboot
+```
+
+boot传输/写入约1.60秒；super分81块全部OKAY，约116.16秒。首启后板端boot、super完整SHA256与上表完全一致，vbmeta完整SHA256与刷写前一致。未执行unlock、erase、wipe或format。
+
+2026-10-02首启与2026-10-03一次正常重启均boot complete。两轮root读取确认API36.1、ro.gsid.image_running=0、ro.k11c.compat.enabled=1、SELinux Enforcing；RIL/蓝牙兼容状态active、传感器no-configured-device，Wi-Fi网络VALIDATED，USB ADB正常。旧DSU仍installed但disabled，其文件保留，不参与当前启动。部分内部属性的普通shell读取会因SELinux权限返回空，不能把空值当成其实际状态。
+
+保留的userdata使开发者选项、USB调试与授权继承，自动熄屏禁用设置也保留。原生阶段没有验证硬断电冷启动或升级数据后回退13，不能将正常重启和旧DSU阶段回退结果冒充这两项验收。用户要求Android16本阶段结束；汇总和待机资源见 [阶段总结](summary-20261003.md)。
 
 ## CTS/VTS 前置结果
 
 设备 full API 是36.1，官方 CTS 选用16.1 R4 ARM，未把它当成36.0测试。Sensors 1.0 VTS 同源16.1 R1一轮完整结束：36项通过、0失败、1/1模块完成；它验证 HAL 行为，不证明板子存在物理传感器。首次运行有主机依赖缺失；另一次主机隧道中断的未完成结果保留，不能计为板子兼容性结论。
 
-完整 VTS 编译起初在 构建虚拟机 的 AppArmor/nsjail 条件处受阻。用户批准精确程序路径的临时例外，原生候选完成后恢复构建。最后的打包冲突来自此前局部测试临时建立的 JAR 链接；移除这些链接后完整 VTS ZIP 构建成功。临时 AppArmor 例外已卸载并删除。测试改动的三个全局验证设置已按事先保存快照恢复原值。官方完整 CTS ZIP 已展开，完整 VTS ZIP 已构建；这不等于测试通过。完整 CTS/VTS 尚未通过；原生启动验收后继续，SIM/实体 modem 相关功能按用户要求排除。
+完整 VTS 编译起初在 构建虚拟机 的 AppArmor/nsjail 条件处受阻。用户批准精确程序路径的临时例外，原生候选完成后恢复构建。最后的打包冲突来自此前局部测试临时建立的 JAR 链接；移除这些链接后完整 VTS ZIP 构建成功。临时 AppArmor 例外已卸载并删除。测试改动的三个全局验证设置已按事先保存快照恢复原值。官方完整 CTS ZIP 已展开，完整 VTS ZIP 已构建；这不等于测试通过。完整 CTS/VTS 尚未通过，原生安装上尚未运行；用户要求本阶段结束，已暂停后续测试并关闭临时ADB转发。SIM/实体 modem 相关功能按用户要求排除。
 
 官方参考：[K11C 安装说明](https://doc.kickpi.com/products/beginner_guide/kickpi_k11c/)、[CTS 下载](https://source.android.com/docs/compatibility/cts/downloads)、[VTS 设置](https://source.android.com/docs/core/tests/vts/setup11)。
