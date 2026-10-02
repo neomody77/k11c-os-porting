@@ -65,23 +65,23 @@
   },
   "android17": {
     "source_ref": "android-17.0.0_r1",
-    "build": "in_progress",
+    "build": "verified",
     "device_boot": "not_tested",
     "full_peripheral_validation": false,
     "cts_vts": "not_run",
     "manifest_commit": "5bc9a7ce1cd78dd53613bbfd0ebf506e1e4adb0f",
     "branch": "android-17",
-    "stage": "board_adaptation_integrated_image_build_running",
+    "stage": "offline_native_candidate_verified",
     "source_sync": "verified; independent shallow checkout and pinned project manifest exported",
     "build_target_verified": true,
     "avc_patch": "rebased and CodecCapabilitiesTest compiled; not run on Android17",
     "gpuwork_upstream_fix": "present in official tag; do not duplicate Android16 production fix",
-    "sandbox": "exact-path temporary nsjail exception loaded only during compilation; AVC build cleanup verified; image build active",
+    "sandbox": "all build phases completed; temporary exact-path nsjail profile independently verified unloaded and deleted",
     "report": "docs/android17/build-20261003.md",
     "locked_project_count": 1084,
     "build_target": "aosp_arm64-cp2a-userdebug",
     "sdk": 37,
-    "results": "docs/android17/preparation-results-20261003.json",
+    "results": "docs/android17/build-results-20261003.json",
     "codec_module_build": {
       "status": "passed",
       "elapsed_seconds": 565.05,
@@ -95,11 +95,20 @@
       "forwarding_verified": true
     },
     "offline_continuation": {
-      "stage": "waiting_for_image_build",
+      "stage": "completed_offline_native_candidate_verified",
       "automatic_system_integrity_vintf_capacity_and_native_package_checks": true,
       "device_access": false,
-      "flashing_performed": false
-    }
+      "flashing_performed": false,
+      "all_eight_super_partitions_hash_verified": true
+    },
+    "system_sha256": "a9c446041375331ebb829d5a8e214bb0c3ad1ee10c1ea0c31181e07da7e4a379",
+    "super_sha256": "8e4d13a8502b3fc977497092e704353f04f5a9731849631a3cb1e7c11e2360dd",
+    "boot_sha256": "a3e9620f0938450d67b9f2a047422efc1f6f129ada0c3253b8af5ef012caf0f5",
+    "build_elapsed_seconds": 7653.56,
+    "system_image_bytes": 1910353920,
+    "native_group_free_bytes": 565399552,
+    "offline_validation": "ext4, AVB, labels, private payload, factory kernel/vendor static VINTF and native super unpacked hashes passed; runtime APEX not tested",
+    "gpuwork_test_module": "arm64 compiled; not run on Android17"
   },
   "firmware_binaries_in_repository": false,
   "raw_captures_in_repository": false

@@ -81,3 +81,9 @@ Sensors1.0 VTS此前DSU36通过、0失败；官方CTS已展开、完整VTS已构
 AVC回归模块编译成功，用时565.05秒，运行验证仍待Android17设备环境。初次Soong图生成内存压力引发大量swap，主动取消后加入仅转发可选Go运行时参数的构建端补丁；实际子进程验证GOMEMLIMIT=24GiB、GOGC=50生效，图生成通过。编译隔离例外清理由专用入口负责，AVC阶段已独立确认卸载和删除。
 
 五补丁与板级源码首次/重复应用通过，guard精确限制SDK37/release17。复核发现Android16厂商RIL候选只接受release160，暂停首次集成生成并从精确原库生成release170候选；独立参考逐字节一致，相对16候选只改变一个比较字节。实际16候选与被篡改17候选均被17打包工具拒绝且不产生输出。完整镜像编译已重新启动，未改写板子或Android16基线。详见 [构建记录](../android17/build-20261003.md)。
+
+## 2026-10-03：Android17 完整构建与离线原生候选验收
+
+完整构建02:07:29成功，同版本静态验证工具编译成功；AVC arm/arm64与GPU-work arm64回归模块产物均已核验，运行待测。system为1910353920字节，ext4、AVB、标签、SDK37/release17、精确私有RIL载荷与真实vendor/5.10.157 kernel配置静态VINTF通过。原生super已构建，全部八个解包分区哈希独立核验，七个原厂逻辑分区保留，组内剩余565399552字节。
+
+候选system/super/boot完整哈希、Android16恢复super哈希和临时nsjail权限清理再次核验通过。构建与续跑进程均结束。Android17尚未刷入或启动、runtime APEX及CTS/VTS未验证；后续需具体候选写入授权和当前userdata备份。见 [构建验收](../android17/build-20261003.md) / [JSON](../android17/build-results-20261003.json)。

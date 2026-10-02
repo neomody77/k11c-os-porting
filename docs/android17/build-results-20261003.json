@@ -1,0 +1,56 @@
+{
+  "checked_on": "2026-10-03",
+  "stage": "offline_native_candidate_verified",
+  "source_ref": "android-17.0.0_r1",
+  "build_target": "aosp_arm64-cp2a-userdebug",
+  "sdk": 37,
+  "build_succeeded": true,
+  "build_elapsed_seconds": 7653.56,
+  "system_image_bytes": 1910353920,
+  "system_sha256": "a9c446041375331ebb829d5a8e214bb0c3ad1ee10c1ea0c31181e07da7e4a379",
+  "super_bytes": 3263168512,
+  "super_sha256": "8e4d13a8502b3fc977497092e704353f04f5a9731849631a3cb1e7c11e2360dd",
+  "boot_bytes": 41943040,
+  "boot_sha256": "a3e9620f0938450d67b9f2a047422efc1f6f129ada0c3253b8af5ef012caf0f5",
+  "boot_reused_from_verified_android16_native_candidate": true,
+  "maximum_native_system_bytes": 2475753472,
+  "native_group_free_bytes": 565399552,
+  "all_eight_super_partitions_hash_verified": true,
+  "seven_factory_logical_partitions_preserved": true,
+  "ext4_readonly_check": "passed",
+  "avb_signature_and_hashtree": "passed",
+  "image_selinux_labels": "passed",
+  "packaged_version_and_compat_guard": "passed",
+  "packaged_ril_hash": "passed",
+  "vintf_static_with_factory_kernel_config": "passed",
+  "factory_kernel": "5.10.157",
+  "runtime_apex_validation": "not_tested",
+  "test_modules_compiled": {
+    "CodecCapabilitiesTest": [
+      {
+        "arch": "arm",
+        "bytes": 276224,
+        "sha256": "ad5950a456e04064d6e1baaeee549af4f33958bb01ef457345e8509950d88f3a"
+      },
+      {
+        "arch": "arm64",
+        "bytes": 422480,
+        "sha256": "e95b5d672c329b6aa6fc695f9644f2607a80327966557c0b929655b9217279d1"
+      }
+    ],
+    "k11c_gpuwork_regression_test": [
+      {
+        "arch": "arm64",
+        "bytes": 287928,
+        "sha256": "a2561291d2937f39106768a42a3850f530a7d1d32d05c050b0f92d9ebfceacf6"
+      }
+    ]
+  },
+  "android17_device_tests_run": false,
+  "device_boot_tested": false,
+  "device_flashed": false,
+  "cts_vts": "not_run",
+  "sandbox_profile_unloaded_and_deleted": true,
+  "existing_android16_preserved": true,
+  "android16_restore_super_hash_verified": true
+}
