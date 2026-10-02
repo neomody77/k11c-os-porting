@@ -1,8 +1,20 @@
-# K11C Android 移植进度
+# K11C OS 移植进度
 
 记录 KICKPI K11C（RK3566）运行 Android 16，以及后续探索 Android 17 的构建、兼容性修正和板上验证。项目采用 AOSP ARM64 GSI + 原厂 kernel/vendor 的路线。这里保存补丁、配置、诊断工具和脱敏后的进度，不镜像整套 AOSP，也不分发原厂固件或设备数据。
 
 这是社区实验项目，与 KICKPI、Rockchip 或 Google 无官方关联。启动成功不代表完成原生板级移植或通过 CTS/VTS。
+
+## 分支约定
+
+公开仓库：[neomody77/k11c-os-porting](https://github.com/neomody77/k11c-os-porting)。每个系统版本使用独立分支，命名为 `系统-版本`。
+
+| 分支 | 用途 |
+|---|---|
+| `main` | 项目总览、通用记录及首次公开时的 Android16 基线 |
+| `android-16` | Android16 补丁、构建工具、板上验证与阶段总结；本阶段已结束 |
+| `android-17` | 后续 Android17 开发；开始实际工作时创建，目前尚不存在 |
+
+复现 Android16 时先执行 `git switch android-16`。后续版本的实现与测试结果在对应版本分支维护，不把 Android16 的验证结果当作其他版本的通过证据。
 
 ## 当前状态
 
