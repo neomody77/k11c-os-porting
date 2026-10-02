@@ -1,0 +1,17 @@
+diff --git a/target/product/aosp_arm64.mk b/target/product/aosp_arm64.mk
+--- a/target/product/aosp_arm64.mk
++++ b/target/product/aosp_arm64.mk
+@@ -55,3 +55,4 @@
+ PRODUCT_DEVICE := generic_arm64
+ PRODUCT_BRAND := Android
++PRODUCT_PACKAGES += k11c_ril_payload
+ PRODUCT_MODEL := AOSP on ARM64
+diff --git a/target/product/gsi/Android.bp b/target/product/gsi/Android.bp
+--- a/target/product/gsi/Android.bp
++++ b/target/product/gsi/Android.bp
+@@ -190,4 +190,5 @@
+         // telephony_system_ext
+         "EmergencyInfo",
++        "k11c_ril_payload",
+
+         // handheld_product

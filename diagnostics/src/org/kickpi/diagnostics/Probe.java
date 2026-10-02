@@ -40,6 +40,7 @@ public class Probe extends Instrumentation {
         case "network": network(true); break;
         case "network-cold": network(false); break;
         case "sensor": sensor(); break;
+        case "sensor-declarations": sensorDeclarations(); break;
         case "bluetooth-scan": bluetoothScan(); break;
         case "animation": animation(); break;
         case "video-hardware": decode(true,"video/"); break;
@@ -124,8 +125,17 @@ public class Probe extends Instrumentation {
     try {int code=c.getResponseCode();put("https_status",code);require(code==200,"HTTPS status");int bytes=0;byte[] buf=new byte[4096];try(InputStream in=c.getInputStream()){int n;while((n=in.read(buf))!=-1)bytes+=n;}require(bytes>0,"empty HTTPS body");put("https_bytes",bytes);}finally{c.disconnect();}
     require(dnsOk,"DNS resolution failed");
   }
+  void sensorDeclarations() throws Exception {
+    SensorManager sm=(SensorManager)ctx.getSystemService(Context.SENSOR_SERVICE);
+    boolean present=sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)!=null;
+    boolean declared=ctx.getPackageManager().hasSystemFeature("android.hardware.sensor.accelerometer");
+    put("sensor_count",sm.getSensorList(Sensor.TYPE_ALL).size());
+    put("accelerometer_in_hal_list",present);put("accelerometer_feature",declared);
+    require(present==declared,"accelerometer HAL list and feature disagree");
+    put("physical_sampling_test",false);
+  }
   void sensor() throws Exception {
-    SensorManager sm=(SensorManager)ctx.getSystemService(Context.SENSOR_SERVICE);Sensor s=sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);require(s!=null,"no accelerometer");
+    SensorManager sm=(SensorManager)ctx.getSystemService(Context.SENSOR_SERVICE);Sensor s=sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);put("accelerometer_present",s!=null);put("accelerometer_feature",ctx.getPackageManager().hasSystemFeature("android.hardware.sensor.accelerometer"));require(s!=null,"no accelerometer");
     CountDownLatch done=new CountDownLatch(10);float[] last=new float[3];
     SensorEventListener l=new SensorEventListener(){public void onAccuracyChanged(Sensor sensor,int accuracy){}public void onSensorChanged(SensorEvent e){System.arraycopy(e.values,0,last,0,3);done.countDown();}};
     try {require(sm.registerListener(l,s,SensorManager.SENSOR_DELAY_NORMAL),"sensor registration failed");require(done.await(5,TimeUnit.SECONDS),"sensor event timeout");put("samples",10);put("xyz",new JSONArray(new double[]{last[0],last[1],last[2]}));}finally{sm.unregisterListener(l);}

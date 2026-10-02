@@ -48,6 +48,14 @@ RIL隔离实验确认第二层故障：VNDK33加载成功后，厂商库仍不�
 
 使用system-only分区更新，板上只读块备份与更新前后全部userdata哈希一致，backing身份、extents和密钥元数据不变；密钥与完整数据未导出。两次16启动自动集成通过，canary/设置保留，原版13回退启动及原库/boot哈希核验通过。RIL/GPU/system_server首轮24次、第二轮12次均无重启。解锁后绘制61.92FPS、Surface180帧通过；符合声明码率自动硬解180帧、网络、蓝牙和存储回归通过。保留普通锁屏导致的初次显示测试失败及重测证据。enforcing、断电冷启动、实体modem仍待测，详见 [集成记录](../android16/ril-integration-20261002.md)。
 
+## 2026-10-02：Enforcing与传感器声明修复
+
+boot cmdline只将SELinux改为enforcing，保留已有DSU/AVB修正及其他载荷。原版13 init硬编码退回Permissive；16 AOSP init进入Enforcing。首次候选发现GSI未打包system_ext执行标签，增加platform/system_ext/product合并标签与实际ext4 xattr检查。第二候选暴露init无法重标记vendor类型及缺少mounton；详细日志确认Permission denied。保留AOSP neverallow，将RIL候选和空传感器HAL改为镜像内只读库、非执行配置使用专用tmpfs类型。闭源候选仅存在私有构建环境，源码仓库不包含。
+
+两次16启动四处只读bind自动生效，原radio身份及namespace保持；旧permissive RTC脚本停止，独立enforcing原生服务运行且capabilities为0。传感器列表0与Accel feature=false一致，物理采样仍明确FAIL。首轮17项16PASS，第二轮关键5/5PASS；绘制61.92/61.99FPS，蓝牙实际收到770/646包。24/12次服务采样稳定，相关AVC未观察到。system-only更新前后userdata完整哈希一致，原版13回退完整启动。工具19项、九补丁首次/重复/五补丁升级/冲突保护通过。
+
+用户确认本板无SIM卡槽，实体modem、SIM和蜂窝功能移出范围。断电冷启动、RTC关机/唤醒、CTS/VTS与长时验证未做。脱敏证据见 [Enforcing记录](../android16/enforcing-sensors-20261002.md)。
+
 ## 后续：Android17
 
 尚未选择源码引用、构建或刷入Android17。先完成Android16剩余兼容问题并保持可恢复基线，再按 [roadmap](../android17/roadmap.md)推进。

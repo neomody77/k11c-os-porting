@@ -1,0 +1,14 @@
+# Only replace the vendor script after exact RIL firmware guards succeeded.
+on property:sys.k11c.ril_compat=active
+    stop rtc_boot_timer
+    start k11c-rtc-timer
+
+on property:sys.k11c.scheduled_shutdown=1
+    setprop sys.powerctl shutdown
+
+service k11c-rtc-timer /system_ext/bin/k11c-rtc-timer
+    disabled
+    oneshot
+    user root
+    group root
+    capabilities

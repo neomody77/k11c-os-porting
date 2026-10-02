@@ -20,10 +20,15 @@ repo launcher 的新版本提示与构建失败不是同一个问题；不要因
 ```bash
 cd /path/to/k11c-android
 bash tools/apply-android16.sh /path/to/aosp16
-AOSP_ROOT=/path/to/aosp16 JOBS=12 bash tools/build-android16.sh
+python3 tools/prepare-vendor-ril.py \
+  --factory-library /path/to/private/factory-librk-ril.so \
+  --out /path/to/private/ril-candidate
+AOSP_ROOT=/path/to/aosp16 JOBS=12 \
+  K11C_RIL_LIBRARY=/path/to/private/ril-candidate/librk-ril.so \
+  bash tools/build-android16.sh
 ```
 
-apply 工具校验目标四个项目的 HEAD 对应指定标签，先检查全部五个补丁，再复制板级模块和应用补丁。检测到已应用的同一补丁会跳过；不一致的 overlay 会报错。唯一允许的旧版 overlay 升级是已知 SHA256 的上一版 Android.bp，便于添加 RIL 模块；其它差异仍拒绝。它不清理他人的源码修改。
+apply 工具校验目标四个项目的 HEAD 对应指定标签，先检查全部九个补丁，再复制板级模块和应用补丁。检测到已应用的同一补丁会跳过；不一致的 overlay 会报错。只允许精确SHA256匹配的已提交旧版Android.bp/RIL helper/rc升级；其它差异仍拒绝。它不清理他人的源码修改。
 
 | 文件 | AOSP 目标项目 |
 |---|---|
@@ -32,11 +37,17 @@ apply 工具校验目标四个项目的 HEAD 对应指定标签，先检查全�
 | patches/android16/0003-k11c-ueventd-import.patch | system/core |
 | patches/android16/0004-gpuwork-missing-map-and-test.patch | frameworks/native |
 | patches/android16/0005-k11c-ril-integration.patch | build/make：安装原生 RIL 兼容 helper 与 init rc |
-| device/kickpi/k11c-gsi/ | VINTF、ueventd、product framework overlay 和 RIL helper |
+| patches/android16/0006-k11c-enforcing-domain.patch | build/make：安装system_ext私有SELinux策略 |
+| patches/android16/0007-k11c-no-device-sensors.patch | build/make：安装空传感器HAL与原生RTC服务 |
+| patches/android16/0008-k11c-gsi-image-labels.patch | build/make：合并镜像中的platform/system_ext/product标签 |
+| patches/android16/0009-k11c-immutable-ril-payload.patch | build/make：安装私有验证过的只读RIL库 |
+| device/kickpi/k11c-gsi/ | VINTF、ueventd、framework overlay、受限helper、空HAL、RTC和策略 |
 
 构建过程不刷机。镜像位于 AOSP out/target/product/generic_arm64/system.img，不进入本仓库。每次构建单独记录源码引用、补丁版本、镜像哈希及验证状态；不要把一次成功构建当作适合任意 K11C 固件。
 
-RIL 模块不包含厂商库；启动时只在已知 Android16 DSU/userdebug、vendor API33 与精确厂商库哈希匹配时生成 tmpfs 副本，并在原 RIL 服务启动前只读 bind。该 helper 使用现有 userdebug `su` SELinux 域，当前不宣称适用于 enforcing 的正式发布镜像。支持条件与板上验收见 [RIL 集成](ril-integration-20261002.md)。
+仓库不包含厂商库。构建工具只接收精确SHA256匹配的私有候选，放入AOSP板级目录的private子目录并打包为只读system_ext库；已验证的相同副本可以复用。生成的系统镜像含厂商代码，不能仅因源码仓库公开就默认可以分发镜像。
+
+启动时helper核验已知 Android16 DSU/userdebug、vendor API33、原厂库完整哈希和私有候选逐字节一致，才发布给init的挂载源路径。未知固件不发布路径，init不能建立对应bind。空传感器HAL同样直接来自只读镜像；非可执行的XML和蓝牙配置使用专用tmpfs类型。helper使用独立enforcing域，无mount权限或capabilities，init只有两种vendor目标类型的文件mounton权限。AOSP禁止将运行时生成文件重标记为vendor代码，该neverallow保持不变。构建脚本检查实际镜像中的两个可执行文件及两个库的标签。先前使用su域的历史验收见 [RIL集成](ril-integration-20261002.md)，本轮状态见 [enforcing与传感器](enforcing-sensors-20261002.md)。
 
 GPU-work 回归程序单独构建，不进入系统镜像的安装文件列表：
 
@@ -61,6 +72,16 @@ python3 tools/prepare-boot.py \
   --mkbootimg-dir /path/to/aosp16/system/tools/mkbootimg \
   --out /path/to/private/patched-boot
 ```
+
+enforcing boot候选在上述已知DSU/AVB修补boot上，只替换cmdline中的SELinux模式：
+
+```bash
+python3 tools/prepare-enforcing-boot.py \
+  --boot /path/to/private/patched-boot.img \
+  --out /path/to/private/enforcing-boot
+```
+
+工具要求精确完整输入哈希，并验证其它字节不变；不会写设备。factory13 init自身强制Permissive，不能把cmdline修改当成13也已enforcing。
 
 不能假定另一批次镜像也符合这些约束。fstab已变化、ramdisk压缩格式不同或基线不一致时停止，不继续生成“近似”候选。
 

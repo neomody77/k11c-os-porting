@@ -4,9 +4,7 @@
 #include <android-base/properties.h>
 #include <android-base/unique_fd.h>
 #include <openssl/sha.h>
-#include <selinux/selinux.h>
 
-#include <sys/mount.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -16,13 +14,15 @@
 #include <cstdint>
 #include <cstdlib>
 #include <cstring>
+#include <sstream>
 #include <string>
 #include <vector>
 
 namespace {
 constexpr char kSource[] = "/vendor/lib64/librk-ril.so";
+constexpr char kInput[] = "/dev/k11c-ril/original.so";
 constexpr char kDir[] = "/dev/k11c-ril";
-constexpr char kCopy[] = "/dev/k11c-ril/librk-ril.so";
+constexpr char kCopy[] = "/system_ext/lib64/k11c/librk-ril.so";
 constexpr char kBefore[] = "242fe86dfbdb5796674077ac55ffa4f6facc067c4b3e1bf519f0da5d2925ab5b";
 constexpr char kAfter[] = "f61f59dba68563eb9a037b6ac1c42bd3788724fdf9b94a52badc737624aeda8d";
 constexpr size_t kSize = 769528;
@@ -87,67 +87,166 @@ int Fail(const char* reason) {
     LOG(ERROR) << "K11C RIL compatibility: " << reason;
     return 1;
 }
+bool ReadOnlyBind(const std::string& root, const std::string& target, const std::string& filesystem = "tmpfs") {
+    std::string mounts;
+    if (!android::base::ReadFileToString("/proc/self/mountinfo", &mounts)) return false;
+    size_t matches = 0;
+    std::istringstream lines(mounts);
+    std::string line;
+    while (std::getline(lines, line)) {
+        std::istringstream fields(line);
+        std::string id, parent, device, sourceRoot, point, options, token, fs;
+        if (!(fields >> id >> parent >> device >> sourceRoot >> point >> options)) continue;
+        if (sourceRoot != root || point != target ||
+            (options != "ro" && options.compare(0, 3, "ro,") != 0)) continue;
+        while (fields >> token && token != "-") {}
+        if (token == "-" && fields >> fs && fs == filesystem) ++matches;
+    }
+    return matches == 1;
+}
+
+bool WriteStaged(const std::string& path, const std::string& bytes) {
+    std::string name = path + ".XXXXXX";
+    std::vector<char> temporary(name.begin(), name.end());
+    temporary.push_back('\0');
+    android::base::unique_fd output(mkstemp(temporary.data()));
+    if (output.get() < 0) return false;
+    if (!android::base::WriteStringToFd(bytes, output.get()) ||
+        fchmod(output.get(), 0444) || fsync(output.get()) || rename(temporary.data(), path.c_str())) {
+        unlink(temporary.data());
+        return false;
+    }
+    return true;
+}
+
+int Bluetooth(bool mounted) {
+    constexpr char source[] = "/vendor/etc/bluetooth/skwbt.conf";
+    constexpr char stage[] = "/dev/k11c-bluetooth";
+    const std::string config = std::string(stage) + "/skwbt.conf";
+    if (mounted) {
+        if (android::base::GetProperty("sys.k11c.bluetooth_prepared", "") != "1" ||
+            !ReadOnlyBind("/k11c-bluetooth/skwbt.conf", source))
+            return Fail("Bluetooth init configuration bind not verified");
+        return android::base::SetProperty("sys.k11c.bluetooth_compat", "active") ? 0 : 1;
+    }
+    struct stat directory{};
+    if (lstat(stage, &directory) || !S_ISDIR(directory.st_mode) || directory.st_uid != 0 ||
+        (directory.st_mode & 0077)) return Fail("unsafe Bluetooth stage directory");
+    std::string bytes;
+    if (!android::base::ReadFileToString(std::string(stage) + "/original.conf", &bytes) ||
+        Digest(bytes) != "1f4ddff789ec0246d90d642ddb7272448e027c2cb19ebe6bfa34c3b656085241")
+        return Fail("unsupported Seekwave configuration; original retained");
+    const std::string before = "BtSnoopFileName=/data/misc/bluedroid/btsnoop_hci.cfa";
+    const auto offset = bytes.find(before);
+    if (offset == std::string::npos || bytes.find(before, offset + before.size()) != std::string::npos)
+        return Fail("unexpected Seekwave data path");
+    bytes.replace(offset, before.size(), "BtSnoopFileName=/data/vendor/k11c-bluetooth/btsnoop_hci.cfa");
+    if (Digest(bytes) != "b6814e5dc945d84873154aaba219b5d7946db4ef3a639201257ad026c130dca0" ||
+        !android::base::SetProperty("sys.k11c.bluetooth_prepared", "0") ||
+        !WriteStaged(config, bytes) ||
+        !android::base::SetProperty("sys.k11c.bluetooth_prepared", "1"))
+        return Fail("prepare vendor-only Bluetooth data path");
+    return 0;
+}
+
+int Sensors(bool mounted) {
+    constexpr char source[] = "/vendor/lib64/hw/sensors.rk30board.so";
+    constexpr char features[] = "/vendor/etc/permissions/tablet_core_hardware.xml";
+    constexpr char stage[] = "/dev/k11c-sensors";
+    const std::string xml = std::string(stage) + "/features.xml";
+    if (mounted) {
+        if (android::base::GetProperty("sys.k11c.sensors_prepared", "") != "1" ||
+            !ReadOnlyBind("/system/system_ext/lib64/sensors.k11c-empty.so", source, "ext4") ||
+            !ReadOnlyBind("/k11c-sensors/features.xml", features))
+            return Fail("no-device sensors init binds not verified");
+        if (!android::base::SetProperty("sys.k11c.sensors_compat", "no-configured-device"))
+            return Fail("publish sensor declaration status");
+        LOG(INFO) << "K11C sensors: no configured device; empty list and absent feature active";
+        return 0;
+    }
+    struct stat node{}, directory{};
+    if (lstat("/dev/mma8452_daemon", &node) == 0 || errno != ENOENT)
+        return Fail("sensor node present or not safely inspectable; original retained");
+    if (lstat(stage, &directory) || !S_ISDIR(directory.st_mode) || directory.st_uid != 0 ||
+        (directory.st_mode & 0077)) return Fail("unsafe sensor stage directory");
+    std::string original, permissions, empty;
+    if (!android::base::ReadFileToString(std::string(stage) + "/original.so", &original) ||
+        Digest(original) != "952e59fd625c0825fe6fd24f4020f27b68229d6e98bef89bea3476b4a4c7731f" ||
+        !android::base::ReadFileToString(std::string(stage) + "/original.xml", &permissions) ||
+        Digest(permissions) != "9ac57b570e4880907985e2d2cb4ce2d47d7f08985eaed2318dd61919c838b4cf")
+        return Fail("unsupported sensor HAL or feature XML; original retained");
+    const std::string declared = "<feature name=\"android.hardware.sensor.accelerometer\" />";
+    const auto offset = permissions.find(declared);
+    if (offset == std::string::npos || permissions.find(declared, offset + declared.size()) != std::string::npos)
+        return Fail("unexpected accelerometer feature declaration");
+    permissions.replace(offset, declared.size(),
+                        "<unavailable-feature name=\"android.hardware.sensor.accelerometer\" />");
+    if (!android::base::ReadFileToString("/system_ext/lib64/sensors.k11c-empty.so", &empty) ||
+        empty.size() < 64 || empty.compare(0, 4, "\177ELF") != 0 ||
+        !android::base::SetProperty("sys.k11c.sensors_prepared", "0"))
+        return Fail("read compiled empty sensors module");
+    if (!WriteStaged(xml, permissions) ||
+        !android::base::SetProperty("sys.k11c.sensors_source", "/system_ext/lib64/sensors.k11c-empty.so") ||
+        !android::base::SetProperty("sys.k11c.sensors_prepared", "1")) {
+        unlink(xml.c_str());
+        return Fail("prepare no-device sensor module and declarations");
+    }
+    LOG(INFO) << "K11C sensors: exact absent-device firmware prepared; no samples synthesized";
+    return 0;
+}
 }  // namespace
 
 int main(int argc, char** argv) {
     android::base::InitLogging(argv, android::base::LogdLogger());
     const bool verifyOnly = argc == 2 && std::strcmp(argv[1], "--verify-only") == 0;
-    if (argc != 1 && !verifyOnly) return 2;
+    const bool mounted = argc == 2 && std::strcmp(argv[1], "--check-mounted") == 0;
+    const bool sensorsPrepare = argc == 2 && std::strcmp(argv[1], "--sensors-prepare") == 0;
+    const bool sensorsCheck = argc == 2 && std::strcmp(argv[1], "--sensors-check") == 0;
+    const bool bluetoothPrepare = argc == 2 && std::strcmp(argv[1], "--bluetooth-prepare") == 0;
+    const bool bluetoothCheck = argc == 2 && std::strcmp(argv[1], "--bluetooth-check") == 0;
+    if (argc != 1 && !bluetoothPrepare && !bluetoothCheck && !verifyOnly && !mounted && !sensorsPrepare && !sensorsCheck) return 2;
     if (!SupportedBoot()) {
         LOG(INFO) << "K11C RIL compatibility: unsupported boot; skipped";
         return 0;
     }
-    android::base::unique_fd input(open(kSource, O_RDONLY | O_CLOEXEC | O_NOFOLLOW));
+    if (bluetoothPrepare || bluetoothCheck) return Bluetooth(bluetoothCheck);
+    if (sensorsPrepare || sensorsCheck) return Sensors(sensorsCheck);
+    if (mounted) {
+        if (android::base::GetProperty("sys.k11c.ril_prepared", "") != "1" ||
+            !ReadOnlyBind("/system/system_ext/lib64/k11c/librk-ril.so", kSource, "ext4"))
+            return Fail("init read-only bind not verified");
+        if (!android::base::SetProperty("sys.k11c.ril_compat", "active"))
+            return Fail("publish activation status");
+        LOG(INFO) << "K11C RIL compatibility: init read-only bind verified in enforcing domain";
+        return 0;
+    }
+    // Init copies the immutable vendor input into private tmpfs. This domain
+    // never opens vendor libraries, relabels files, or mounts filesystems.
+    android::base::unique_fd input(open(kInput, O_RDONLY | O_CLOEXEC | O_NOFOLLOW));
     struct stat sourceStat{};
     std::string bytes;
     if (input.get() < 0 || fstat(input.get(), &sourceStat) ||
-        !S_ISREG(sourceStat.st_mode) || sourceStat.st_size != static_cast<off_t>(kSize) ||
-        !android::base::ReadFdToString(input.get(), &bytes)) return Fail("read original library");
-    if (Digest(bytes) == kAfter) {
-        LOG(INFO) << "K11C RIL compatibility: candidate already active";
-        if (!verifyOnly) android::base::SetProperty("sys.k11c.ril_compat", "active");
-        return 0;
-    }
+        !S_ISREG(sourceStat.st_mode) || sourceStat.st_uid != 0 ||
+        sourceStat.st_size != static_cast<off_t>(kSize) ||
+        !android::base::ReadFdToString(input.get(), &bytes)) return Fail("read init-staged original");
     if (!Prepare(&bytes)) return Fail("unsupported vendor library or transformation mismatch");
     if (verifyOnly) {
-        LOG(INFO) << "K11C RIL compatibility: exact candidate verified; no mount performed";
+        LOG(INFO) << "K11C RIL compatibility: exact candidate verified; no output written";
         return 0;
     }
-    const std::string state = android::base::GetProperty("init.svc.vendor.ril-daemon", "");
-    if (!state.empty() && state != "stopped") return Fail("RIL must be stopped before mounting");
-    char* rawContext = nullptr;
-    if (fgetfilecon(input.get(), &rawContext) < 0) return Fail("read vendor SELinux context");
-    const std::string context(rawContext);
-    freecon(rawContext);
-    if (context != "u:object_r:vendor_file:s0") return Fail("unexpected vendor SELinux context");
-    if (mkdir(kDir, 0700) && errno != EEXIST) return Fail("create tmpfs directory");
+    if (!android::base::SetProperty("sys.k11c.ril_prepared", "0"))
+        return Fail("reset preparation status");
     struct stat dirStat{};
     if (lstat(kDir, &dirStat) || !S_ISDIR(dirStat.st_mode) || dirStat.st_uid != 0 ||
-        (dirStat.st_mode & 0022)) return Fail("unsafe tmpfs directory");
-    char temporary[] = "/dev/k11c-ril/.ril-XXXXXX";
-    android::base::unique_fd output(mkstemp(temporary));
-    if (output.get() < 0) return Fail("create candidate file");
-    if (!android::base::WriteStringToFd(bytes, output.get()) ||
-        fchown(output.get(), sourceStat.st_uid, sourceStat.st_gid) ||
-        fchmod(output.get(), 0444) || fsetfilecon(output.get(), context.c_str()) ||
-        fsync(output.get()) || rename(temporary, kCopy)) {
-        unlink(temporary);
-        return Fail("write or label candidate file");
-    }
-    if (mount(kCopy, kSource, nullptr, MS_BIND, nullptr)) {
-        unlink(kCopy);
-        return Fail("bind candidate library");
-    }
-    if (mount(nullptr, kSource, nullptr, MS_BIND | MS_REMOUNT | MS_RDONLY, nullptr)) {
-        umount(kSource);
-        unlink(kCopy);
-        return Fail("make bind read-only");
-    }
-    if (!android::base::SetProperty("sys.k11c.ril_compat", "active")) {
-        umount(kSource);
-        unlink(kCopy);
-        return Fail("publish activation status");
-    }
-    LOG(INFO) << "K11C RIL compatibility: verified read-only tmpfs bind active";
+        (dirStat.st_mode & 0077)) return Fail("unsafe init tmpfs directory");
+    // Runtime-generated executable files cannot be relabeled as immutable vendor
+    // code under AOSP neverallow rules. Verify the privately prepared image copy.
+    std::string immutable;
+    if (!android::base::ReadFileToString(kCopy, &immutable) || immutable != bytes)
+        return Fail("immutable image payload differs from exact candidate");
+    if (!android::base::SetProperty("sys.k11c.ril_source", kCopy) ||
+        !android::base::SetProperty("sys.k11c.ril_prepared", "1"))
+        return Fail("publish verified image payload");
+    LOG(INFO) << "K11C RIL compatibility: exact candidate prepared for init";
     return 0;
 }

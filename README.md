@@ -17,9 +17,11 @@ Android16 修正了 factory first-stage 缺少 vbmeta 节点初始化，以及 A
 
 初版默认绘制31.03FPS；新的默认62Hz配置在两次启动中生效，未固定min/peak时绘制61.88FPS，CPU忙99.31%时61.72FPS。仍有较长帧间隔；这是15秒应用绘制测试。旧完整资源/温度测试与本轮指标分别记录，不作为游戏跑分或长期稳定性认证。
 
-新镜像两次启动验证了蓝牙节点权限与扫描、默认62Hz和GPU-work缺map时不崩溃；安装库原生回归1/1通过。传感器注册和kernel GPU-work统计能力仍未修复。Android16 当前是单次 DSU，正常重启回原厂 Android13。
+新镜像两次启动验证了蓝牙节点权限与扫描、默认62Hz和GPU-work缺map时不崩溃；安装库原生回归1/1通过。kernel GPU-work统计能力仍未补齐。Android16 当前是单次 DSU，正常重启回原厂 Android13。
 
-后续关闭了AVC能力疑点：原样本超过声明码率，符合范围的1080p60样本自动选择硬件decoder通过。RIL两层故障已修正并集成启动 helper，按精确固件哈希生成只读 tmpfs 副本，保留原 init/radio 服务。集成使用 userdebug `su` 域，enforcing 与实体modem仍待验收；详见 [集成记录](docs/android16/ril-integration-20261002.md)。
+后续关闭了AVC能力疑点：原样本超过声明码率，符合范围的1080p60样本自动选择硬件decoder通过。最新候选两次启动均为SELinux Enforcing；受限helper核验私有只读RIL库并由init绑定，保留原radio身份和namespace。旧permissive RTC服务已停止，原生替代服务在独立enforcing域运行。userdebug su仍为permissive，不是生产安全认证。
+
+传感器HAL返回0且系统不再声明加速度计，声明一致性两次通过；真实采样测试保留“无加速度计”的失败。完整17项中16项通过，第二次关键复测5/5通过；绘制61.92/61.99FPS，蓝牙实际收包。原版13回退及system-only更新前后userdata哈希一致均已验证。用户确认本板无SIM卡槽，蜂窝测试移出范围。详见 [enforcing与传感器记录](docs/android16/enforcing-sensors-20261002.md)。
 
 ## 导航
 
@@ -36,6 +38,7 @@ Android16 修正了 factory first-stage 缺少 vbmeta 节点初始化，以及 A
 | 持久改进与候选验收 | [docs/android16/improvements-20261002.md](docs/android16/improvements-20261002.md) |
 | RIL兼容候选与AVC能力复测 | [docs/android16/ril-codec-20261002.md](docs/android16/ril-codec-20261002.md) |
 | RIL启动集成与userdata保留验收 | [docs/android16/ril-integration-20261002.md](docs/android16/ril-integration-20261002.md) |
+| Enforcing、传感器声明与回归验收 | [记录](docs/android16/enforcing-sensors-20261002.md) / [JSON](docs/android16/enforcing-sensors-results-20261002.json) |
 | 待修问题 | [docs/android16/known-issues.md](docs/android16/known-issues.md) |
 | Android17 计划 | [docs/android17/roadmap.md](docs/android17/roadmap.md) |
 | 上游跟踪 | [docs/upstream.md](docs/upstream.md) |
@@ -49,7 +52,9 @@ Android16 修正了 factory first-stage 缺少 vbmeta 节点初始化，以及 A
 python3 tools/check-publication.py
 python3 -m unittest discover -s tools/tests
 bash tools/apply-android16.sh /path/to/aosp16
-AOSP_ROOT=/path/to/aosp16 JOBS=12 bash tools/build-android16.sh
+AOSP_ROOT=/path/to/aosp16 JOBS=12 \
+  K11C_RIL_LIBRARY=/path/to/private/ril-candidate/librk-ril.so \
+  bash tools/build-android16.sh
 ```
 
 贡献新的进度时请同时更新 status.json、对应版本文档和时间线，写明源码版本、固件组合、验证方法和局限。把“已构建”“已启动”“功能通过”“长期稳定”分别记录；不把未验证项目标成通过。

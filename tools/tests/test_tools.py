@@ -17,6 +17,25 @@ privacy = load("privacy", "check-publication.py")
 boot = load("boot", "prepare-boot.py")
 runner = load("runner", "run-diagnostics.py")
 ril = load("ril", "prepare-vendor-ril.py")
+enforcing_boot = load("enforcing_boot", "prepare-enforcing-boot.py")
+payload = load("payload", "stage-ril-payload.py")
+
+class PayloadTests(unittest.TestCase):
+    def test_unknown_payload_creates_no_aosp_directory(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            candidate = root / "candidate.so"
+            candidate.write_bytes(b"unknown firmware")
+            with self.assertRaises(ValueError):
+                payload.stage(root / "aosp", candidate)
+            self.assertFalse((root / "aosp").exists())
+
+    def test_missing_payload_creates_no_aosp_directory(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / "aosp"
+            with self.assertRaises(FileNotFoundError):
+                payload.stage(root)
+            self.assertFalse(root.exists())
 
 def cpio(name, payload):
     fields = [1, 0o100644, 0, 0, 1, 0, len(payload), 0, 0, 0, 0, len(name) + 1, 0]
@@ -69,6 +88,24 @@ class BootTests(unittest.TestCase):
     def test_oversized_output_is_rejected(self):
         with self.assertRaises(ValueError):
             boot.pad_to_original(b"larger", b"small")
+
+class EnforcingBootTests(unittest.TestCase):
+    def test_unknown_boot_is_rejected_without_modifying_input(self):
+        original = b"unknown boot revision"
+        with self.assertRaisesRegex(ValueError, "Unsupported boot baseline"):
+            enforcing_boot.prepare(original)
+        self.assertEqual(original, b"unknown boot revision")
+
+    def test_rejected_boot_creates_no_candidate_directory(self):
+        with tempfile.TemporaryDirectory() as directory:
+            original = Path(directory) / "boot.img"
+            original.write_bytes(b"unsupported firmware")
+            output = Path(directory) / "candidate"
+            args = ["prepare-enforcing-boot.py", "--boot", str(original), "--out", str(output)]
+            with mock.patch("sys.argv", args), self.assertRaises(ValueError):
+                enforcing_boot.main()
+            self.assertFalse(output.exists())
+            self.assertEqual(original.read_bytes(), b"unsupported firmware")
 
 class RilCandidateTests(unittest.TestCase):
     def test_unknown_library_is_rejected_without_modifying_input(self):

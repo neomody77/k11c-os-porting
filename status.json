@@ -13,15 +13,31 @@
     "cts_vts": "not_run",
     "diagnostic_network_readiness": "callback fix verified on device: 12/12; cold control 0/4",
     "open_work": [
-      "correct ghost sensor declaration or add actual sensor driver",
-      "RIL enforcing SELinux, power-cycle and physical modem validation",
+      "actual sensor hardware and matching DT/driver if physical sampling is required",
       "GPU-work kernel statistics support",
+      "physical hard power-cycle, RTC shutdown/wakeup and long-duration validation",
+      "CTS/VTS",
       "Mac C-to-C investigation paused by user"
     ],
     "improvements_candidate": "cold and second boot verified; Bluetooth rules, default62Hz and GPU-work missing-map handling verified",
     "current_running_api": 36,
     "codec_capability_query": "1080p60 within declared bitrate supported; automatic hardware selection verified",
-    "ril_candidate": "startup integration verified on two Android16 boots, factory13 rollback and final Android16 boot; exact-hash read-only tmpfs copy under original init/radio; enforcing and physical modem pending"
+    "ril_candidate": "two enforcing Android16 boots verified: exact privately prepared immutable system_ext payload, read-only bind under original init/radio; factory13 rollback verified; physical modem excluded",
+    "selinux": {
+      "global_mode": "Enforcing",
+      "two_boots_verified": true,
+      "compat_helper_and_native_rtc_domains": "enforcing",
+      "legacy_rtc_service": "stopped",
+      "userdebug_su_permissive": true
+    },
+    "sensors": {
+      "configured_count": 0,
+      "accelerometer_feature": false,
+      "declaration_consistency": "verified on two boots",
+      "physical_sampling": "unavailable; probe remains FAIL"
+    },
+    "cellular_validation": "excluded by user: no SIM slot",
+    "enforcing_report": "docs/android16/enforcing-sensors-results-20261002.json"
   },
   "android17": {
     "source_ref": null,

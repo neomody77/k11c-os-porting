@@ -12,11 +12,7 @@ diff --git a/target/product/aosp_arm64.mk b/target/product/aosp_arm64.mk
 diff --git a/target/product/gsi/Android.bp b/target/product/gsi/Android.bp
 --- a/target/product/gsi/Android.bp
 +++ b/target/product/gsi/Android.bp
-@@ -208,6 +208,7 @@ android_system_image {
-         "PhotoTable",
-         "preinstalled-packages-platform-aosp-product.xml",
+@@ -210,2 +210,3 @@
          "ThemePicker",
 +        "k11c-ril-compat",
      ] + select(product_variable("debuggable"), {
-         true: ["frameworks-base-overlays-debug"],
-         default: [],

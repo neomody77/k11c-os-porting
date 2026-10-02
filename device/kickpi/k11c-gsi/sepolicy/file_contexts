@@ -1,0 +1,11 @@
+/(system_ext|system/system_ext)/bin/k11c-ril-compat   u:object_r:k11c_ril_compat_exec:s0
+/dev/k11c-ril(/.*)?              u:object_r:k11c_ril_stage:s0
+/dev/k11c-sensors(/.*)?         u:object_r:k11c_ril_stage:s0
+/dev/k11c-sensors/features\.xml u:object_r:k11c_config_payload:s0
+/(system_ext|system/system_ext)/bin/k11c-rtc-timer u:object_r:k11c_rtc_timer_exec:s0
+/data/vendor/k11c-bluetooth(/.*)? u:object_r:k11c_bluetooth_data:s0
+/dev/k11c-bluetooth(/.*)? u:object_r:k11c_ril_stage:s0
+/dev/k11c-bluetooth/skwbt\.conf u:object_r:k11c_config_payload:s0
+/dev/BTISOC u:object_r:hci_attach_dev:s0
+/dev/BTLOG u:object_r:hci_attach_dev:s0
+/dev/SKWBT_LOG u:object_r:hci_attach_dev:s0

@@ -1,0 +1,109 @@
+{
+  "date": "2026-10-02",
+  "source_ref": "android-16.0.0_r4",
+  "api": 36,
+  "board": "KICKPI K11C / RK3566",
+  "system_image": {
+    "bytes": 1900462080,
+    "sha256": "0e90ce5c146004b6ba78ba9b10d049b5fd836d284404190eebef0815adb6bedb"
+  },
+  "checks": {
+    "offline_filesystem_avb_vintf": true,
+    "actual_image_exec_and_library_labels": true,
+    "nine_patch_apply_repeat_upgrade_conflict_guards": true,
+    "tool_unit_tests_passed": 19,
+    "userdata_full_hash_equal_before_after_system_only_update": true,
+    "factory13_rollback_boot": true,
+    "android16_two_boots": true,
+    "global_selinux": "Enforcing",
+    "four_read_only_binds": true,
+    "legacy_rtc_service": "stopped",
+    "native_rtc_linux_capabilities": "none",
+    "rtc_parser_valid_cases": 2,
+    "rtc_parser_invalid_cases": 5,
+    "related_avc_denials_observed": 0,
+    "test_apk_removed": true
+  },
+  "stability_samples": {
+    "first_boot": 24,
+    "second_boot": 12,
+    "interval_seconds": 5,
+    "rild_system_server_gpu_rtc_pids_unchanged_within_each_boot": true
+  },
+  "diagnostics": {
+    "first_boot": {
+      "inventory": "PASS",
+      "storage": "PASS",
+      "keystore": "PASS",
+      "gpu": "PASS",
+      "network": "PASS",
+      "video-hardware": "PASS",
+      "video-software": "PASS",
+      "audio-decode": "PASS",
+      "audio-play": "PASS",
+      "audio-record": "PASS",
+      "webview": "PASS",
+      "sensor-declarations": "PASS",
+      "sensor": "FAIL",
+      "animation": "PASS",
+      "video-hardware-1080p60-surface": "PASS",
+      "video-hardware-1080p60-bounded": "PASS",
+      "bluetooth-scan": "PASS"
+    },
+    "second_boot": {
+      "sensor-declarations": "PASS",
+      "network": "PASS",
+      "animation": "PASS",
+      "video-hardware-1080p60-surface": "PASS",
+      "bluetooth-scan": "PASS"
+    }
+  },
+  "metrics": {
+    "first_boot": {
+      "animation": {
+        "frames_drawn": 929,
+        "rendered_fps": 61.921669596945314,
+        "interval_p95_ms": 16.74371,
+        "interval_max_ms": 35.03617,
+        "frame_duration_p95_ms": 36.14734,
+        "display_refresh_hz": 62
+      },
+      "bluetooth_scan": {
+        "packets": 770,
+        "unique_devices": 25,
+        "rf_reception_verified": true
+      },
+      "sensor_count": 0,
+      "accelerometer_feature": false
+    },
+    "second_boot": {
+      "animation": {
+        "frames_drawn": 930,
+        "rendered_fps": 61.99007971766707,
+        "interval_p95_ms": 16.402752,
+        "interval_max_ms": 47.339839,
+        "frame_duration_p95_ms": 36.175512,
+        "display_refresh_hz": 62
+      },
+      "bluetooth_scan": {
+        "packets": 646,
+        "unique_devices": 26,
+        "rf_reception_verified": true
+      },
+      "sensor_count": 0,
+      "accelerometer_feature": false
+    }
+  },
+  "memory_snapshot_kib": {
+    "total": 3993136,
+    "available": 2985672,
+    "context": "during second boot verification; not an idle or stress benchmark"
+  },
+  "limitations": [
+    "Physical accelerometer sampling remains unavailable; observed probe FAIL was not converted to PASS",
+    "userdebug su and inactive legacy rtc_boot_timer remain declared permissive in vendor-linked policy",
+    "Physical hard power-cycle, RTC shutdown/wakeup, CTS/VTS and long-duration stability not tested",
+    "SIM, physical modem and cellular tests excluded by user because this board has no SIM slot",
+    "Proprietary RIL payload remains private; repository has no firmware binaries"
+  ]
+}

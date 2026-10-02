@@ -1,0 +1,14 @@
+# The matching factory policy declares this type but omits its HAL access.
+# CIL is linked with -m, merging the identical vendor type declaration.
+type skwbt_device, dev_type;
+allow hal_bluetooth_server skwbt_device:chr_file rw_file_perms;
+# Enumerating /dev is required by the immutable Seekwave SDIO HAL.
+allow hal_bluetooth_server device:dir r_dir_perms;
+# Vendor-private data, without access to core Bluetooth directories.
+type k11c_bluetooth_data, file_type, data_file_type;
+allow hal_bluetooth_server k11c_bluetooth_data:dir create_dir_perms;
+allow hal_bluetooth_server k11c_bluetooth_data:file create_file_perms;
+allow init k11c_bluetooth_data:dir create_dir_perms;
+allow init k11c_bluetooth_data:file create_file_perms;
+vendor_internal_prop(k11c_skwbt_prop)
+set_prop(hal_bluetooth_server, k11c_skwbt_prop)

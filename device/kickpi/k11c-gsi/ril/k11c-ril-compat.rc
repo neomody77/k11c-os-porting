@@ -1,11 +1,84 @@
-# userdebug bring-up helper; runs before class main starts the stock RIL service.
+# Override the vendor init legacy address path before its read-only property is set.
+on early-init && property:ro.gsid.image_running=1 && property:ro.build.version.sdk=36 && property:ro.product.board=rk30sdk
+    setprop ro.bt.bdaddr_path /data/vendor/k11c-bluetooth/bdaddr
+
+# The helper only transforms a private tmpfs file; init retains mount authority.
 on post-fs-data && property:ro.gsid.image_running=1 && property:ro.build.version.sdk=36 && property:ro.debuggable=1
+    mkdir /dev/k11c-ril 0700 root root
+    copy /vendor/lib64/librk-ril.so /dev/k11c-ril/original.so
     exec_start k11c-ril-compat
+    mount none ${sys.k11c.ril_source} /vendor/lib64/librk-ril.so bind
+    mount none none /vendor/lib64/librk-ril.so remount bind ro
+    exec_start k11c-ril-check
+    rm /dev/k11c-ril/original.so
+    mkdir /dev/k11c-sensors 0700 root root
+    copy /vendor/lib64/hw/sensors.rk30board.so /dev/k11c-sensors/original.so
+    copy /vendor/etc/permissions/tablet_core_hardware.xml /dev/k11c-sensors/original.xml
+    exec_start k11c-sensors-prepare
+    restorecon /dev/k11c-sensors/features.xml
+    mount none ${sys.k11c.sensors_source} /vendor/lib64/hw/sensors.rk30board.so bind
+    mount none none /vendor/lib64/hw/sensors.rk30board.so remount bind ro
+    mount none /dev/k11c-sensors/features.xml /vendor/etc/permissions/tablet_core_hardware.xml bind
+    mount none none /vendor/etc/permissions/tablet_core_hardware.xml remount bind ro
+    exec_start k11c-sensors-check
+    rm /dev/k11c-sensors/original.so
+    rm /dev/k11c-sensors/original.xml
+    mkdir /dev/k11c-bluetooth 0700 root root
+    copy /vendor/etc/bluetooth/skwbt.conf /dev/k11c-bluetooth/original.conf
+    exec_start k11c-bluetooth-prepare
+    restorecon /dev/k11c-bluetooth/skwbt.conf
+    mount none /dev/k11c-bluetooth/skwbt.conf /vendor/etc/bluetooth/skwbt.conf bind
+    mount none none /vendor/etc/bluetooth/skwbt.conf remount bind ro
+    exec_start k11c-bluetooth-check
+    rm /dev/k11c-bluetooth/original.conf
 
 service k11c-ril-compat /system_ext/bin/k11c-ril-compat
     disabled
     oneshot
     user root
     group root
-    seclabel u:r:su:s0
-    capabilities SYS_ADMIN DAC_OVERRIDE DAC_READ_SEARCH CHOWN FOWNER
+    capabilities
+
+service k11c-ril-check /system_ext/bin/k11c-ril-compat --check-mounted
+    disabled
+    oneshot
+    user root
+    group root
+    capabilities
+
+service k11c-sensors-prepare /system_ext/bin/k11c-ril-compat --sensors-prepare
+    disabled
+    oneshot
+    user root
+    group root
+    capabilities
+
+service k11c-sensors-check /system_ext/bin/k11c-ril-compat --sensors-check
+    disabled
+    oneshot
+    user root
+    group root
+    capabilities
+
+# Exact board/firmware guards have passed before these legacy Bluetooth fixes.
+on property:sys.k11c.bluetooth_compat=active
+    mkdir /data/vendor/k11c-bluetooth 0770 bluetooth bluetooth
+    copy /data/misc/bluedroid/skwbdaddr.txt /data/vendor/k11c-bluetooth/skwbdaddr.txt
+    chown bluetooth bluetooth /data/vendor/k11c-bluetooth/skwbdaddr.txt
+    chmod 0600 /data/vendor/k11c-bluetooth/skwbdaddr.txt
+    restorecon /data/vendor/k11c-bluetooth/skwbdaddr.txt
+    restorecon /dev/BTISOC /dev/BTLOG /dev/SKWBT_LOG
+
+service k11c-bluetooth-prepare /system_ext/bin/k11c-ril-compat --bluetooth-prepare
+    disabled
+    oneshot
+    user root
+    group root
+    capabilities
+
+service k11c-bluetooth-check /system_ext/bin/k11c-ril-compat --bluetooth-check
+    disabled
+    oneshot
+    user root
+    group root
+    capabilities

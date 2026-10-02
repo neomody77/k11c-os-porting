@@ -8,7 +8,7 @@ cc_binary {
     init_rc: ["ril/k11c-ril-compat.rc"],
     system_ext_specific: true,
     compile_multilib: "64",
-    shared_libs: ["libbase", "libcrypto", "libselinux"],
+    shared_libs: ["libbase", "libcrypto"],
     cflags: ["-Wall", "-Wextra", "-Werror"],
 }
 
@@ -31,4 +31,55 @@ vintf_compatibility_matrix {
     stem: "compatibility_matrix.k11c.xml",
     srcs: ["compatibility_matrix.k11c.xml"],
     system_ext_specific: true,
+}
+
+cc_library_shared {
+    name: "sensors.k11c-empty",
+    srcs: ["sensors/empty.c"],
+    system_ext_specific: true,
+    compile_multilib: "64",
+    header_libs: ["libhardware_headers"],
+    stl: "none",
+    cflags: ["-Wall", "-Wextra", "-Werror"],
+}
+
+cc_binary {
+    name: "k11c-rtc-timer",
+    srcs: ["rtc/timer.cpp"],
+    init_rc: ["rtc/timer.rc"],
+    system_ext_specific: true,
+    compile_multilib: "64",
+    shared_libs: ["libbase"],
+    cflags: ["-Wall", "-Wextra", "-Werror"],
+}
+
+// GSI packs system_ext/product inside system.img; label their custom executables too.
+genrule {
+    name: "k11c_gsi_file_contexts",
+    device_common_srcs: [
+        ":plat_file_contexts",
+        ":system_ext_file_contexts",
+        ":product_file_contexts",
+    ],
+    out: ["file_contexts"],
+    cmd: "cat $(in) > $(out)",
+}
+
+// Kept outside this repository; tools/prepare-vendor-ril.py verifies the firmware.
+license {
+    name: "k11c_vendor_ril_license",
+    license_kinds: ["legacy_proprietary"],
+}
+
+cc_prebuilt_library_shared {
+    name: "k11c_ril_payload",
+    licenses: ["k11c_vendor_ril_license"],
+    srcs: ["private/librk-ril.so"],
+    stem: "librk-ril",
+    relative_install_path: "k11c",
+    system_ext_specific: true,
+    compile_multilib: "64",
+    check_elf_files: false,
+    strip: { none: true },
+    stl: "none",
 }

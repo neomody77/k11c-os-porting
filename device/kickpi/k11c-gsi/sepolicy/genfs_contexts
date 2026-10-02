@@ -1,0 +1,2 @@
+# The class symlink resolves here; only this exact alarm attribute is relabeled.
+genfscon sysfs /devices/platform/fe5d0000.i2c/i2c-4/4-0051/rtc/rtc0/wakealarm u:object_r:sysfs_rtc:s0

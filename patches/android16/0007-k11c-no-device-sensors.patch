@@ -1,0 +1,16 @@
+diff --git a/target/product/aosp_arm64.mk b/target/product/aosp_arm64.mk
+--- a/target/product/aosp_arm64.mk
++++ b/target/product/aosp_arm64.mk
+@@ -19,3 +19,4 @@
+ $(call inherit-product, $(SRC_TARGET_DIR)/product/generic_system.mk)
++PRODUCT_PACKAGES += sensors.k11c-empty k11c-rtc-timer
+
+ # Enable mainline checking for excat this product name
+diff --git a/target/product/gsi/Android.bp b/target/product/gsi/Android.bp
+--- a/target/product/gsi/Android.bp
++++ b/target/product/gsi/Android.bp
+@@ -207,2 +207,4 @@
+         "PhotoTable",
++        "sensors.k11c-empty",
++        "k11c-rtc-timer",
+         "preinstalled-packages-platform-aosp-product.xml",

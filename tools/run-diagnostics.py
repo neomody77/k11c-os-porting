@@ -8,7 +8,7 @@ import datetime
 
 FEATURES = ("inventory", "storage", "keystore", "gpu", "network", "video-hardware",
             "video-software", "audio-decode", "audio-play", "audio-record", "webview",
-            "sensor", "animation", "video-hardware-1080p60-surface", "video-hardware-1080p60-bounded")
+            "sensor-declarations", "sensor", "animation", "video-hardware-1080p60-surface", "video-hardware-1080p60-bounded")
 
 def probe_status(text, feature, exit_code):
     """Instrumentation may exit zero even when the probe reports FAIL."""

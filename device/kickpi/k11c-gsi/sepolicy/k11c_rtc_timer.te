@@ -1,0 +1,11 @@
+type k11c_rtc_timer, domain, coredomain;
+type k11c_rtc_timer_exec, exec_type, file_type, system_file_type;
+system_internal_prop(k11c_rtc_prop)
+init_daemon_domain(k11c_rtc_timer)
+get_prop(k11c_rtc_timer, k11c_ril_prop)
+get_prop(k11c_rtc_timer, system_prop)
+set_prop(k11c_rtc_timer, k11c_rtc_prop)
+allow k11c_rtc_timer sysfs:dir search;
+allow k11c_rtc_timer sysfs:lnk_file read;
+allow k11c_rtc_timer sysfs_rtc:dir search;
+allow k11c_rtc_timer sysfs_rtc:file { open write };

@@ -1,0 +1,26 @@
+# Enforcing preparation domain: no vendor file reads/writes, mounts or capabilities.
+type k11c_ril_compat, domain, coredomain;
+type k11c_ril_compat_exec, exec_type, file_type, system_file_type;
+type k11c_ril_stage, file_type;
+system_internal_prop(k11c_ril_prop)
+init_daemon_domain(k11c_ril_compat)
+allow k11c_ril_compat device:dir search;
+allow k11c_ril_compat k11c_ril_stage:dir { search getattr write add_name remove_name };
+allow k11c_ril_compat k11c_ril_stage:file create_file_perms;
+# Mounted verification reads the mount table, never accesses vendor files.
+allow k11c_ril_compat proc_mounts:file r_file_perms;
+get_prop(k11c_ril_compat, build_prop)
+get_prop(k11c_ril_compat, build_vendor_prop)
+get_prop(k11c_ril_compat, userdebug_or_eng_prop)
+get_prop(k11c_ril_compat, gsid_prop)
+set_prop(k11c_ril_compat, k11c_ril_prop)
+allow init k11c_ril_stage:dir create_dir_perms;
+allow init k11c_ril_stage:file create_file_perms;
+allow init k11c_ril_stage:file relabelfrom;
+
+# Init binds immutable image code and read-only, non-executable tmpfs config.
+# Relabeling generated files to vendor_file_type is intentionally not allowed.
+type k11c_config_payload, file_type;
+allow init { vendor_file vendor_configs_file }:file mounton;
+allow hal_bluetooth_server k11c_config_payload:file r_file_perms;
+allow system_server k11c_config_payload:file r_file_perms;
