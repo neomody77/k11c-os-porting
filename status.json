@@ -64,11 +64,19 @@
     }
   },
   "android17": {
-    "source_ref": null,
-    "build": "not_started",
+    "source_ref": "android-17.0.0_r1",
+    "build": "verified",
     "device_boot": "not_tested",
     "full_peripheral_validation": false,
-    "cts_vts": "not_run"
+    "cts_vts": "not_run",
+    "build_target": "aosp_arm64-cp2a-userdebug",
+    "sdk": 37,
+    "stage": "offline_native_candidate_verified",
+    "branch": "android-17",
+    "report": "https://github.com/neomody77/k11c-os-porting/blob/android-17/docs/android17/build-20261003.md",
+    "offline_validation": "ext4, AVB, labels, private payload, factory vendor/kernel static VINTF, capacity and native super unpacked hashes passed",
+    "runtime_apex_validation": "not_tested",
+    "flashing_performed": false
   },
   "firmware_binaries_in_repository": false,
   "raw_captures_in_repository": false
