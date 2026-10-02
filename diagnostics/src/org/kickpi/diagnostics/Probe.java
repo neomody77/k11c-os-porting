@@ -44,6 +44,7 @@ public class Probe extends Instrumentation {
         case "animation": animation(); break;
         case "video-hardware": decode(true,"video/"); break;
         case "video-hardware-1080p60": decode(true,"video/","sample-1080p60.mp4"); break;
+        case "video-hardware-1080p60-bounded": decode(true,"video/","sample-1080p60-bounded.mp4"); break;
         case "video-hardware-1080p60-surface": decodeSurface(); break;
         case "video-software": decode(false,"video/"); break;
         case "audio-decode": decode(false,"audio/"); break;
@@ -176,6 +177,27 @@ public class Probe extends Instrumentation {
       require(track>=0,"no sample track");String name=null,fallback=null;JSONArray names=new JSONArray();
       for(MediaCodecInfo ci:new MediaCodecList(MediaCodecList.ALL_CODECS).getCodecInfos())if(!ci.isEncoder())for(String m:ci.getSupportedTypes())if(m.equals(mime)){names.put(ci.getName());if(ci.isHardwareAccelerated()==hardware){if(fallback==null)fallback=ci.getName();if(name==null&&ci.getCapabilitiesForType(m).isFormatSupported(format))name=ci.getName();}}
       put("declared_format_supported",name!=null);if(name==null)name=fallback;
+      if(asset.equals("sample-1080p60-bounded.mp4")) {
+        String automatic=new MediaCodecList(MediaCodecList.REGULAR_CODECS).findDecoderForFormat(format);
+        put("automatic_decoder",automatic);require(name!=null&&name.equals(automatic),"automatic selection did not choose declared hardware decoder");
+      }
+      if(mime.startsWith("video/")) {
+        MediaCodecInfo.CodecCapabilities caps=null;
+        for(MediaCodecInfo ci:new MediaCodecList(MediaCodecList.ALL_CODECS).getCodecInfos())if(ci.getName().equals(name))caps=ci.getCapabilitiesForType(mime);
+        if(caps!=null) {
+          JSONObject checks=new JSONObject();JSONArray levels=new JSONArray();
+          for(MediaCodecInfo.CodecProfileLevel pl:caps.profileLevels)levels.put(new JSONObject().put("profile",pl.profile).put("level",pl.level));
+          checks.put("profile_levels",levels);checks.put("bitrate_range",caps.getVideoCapabilities().getBitrateRange().toString());
+          MediaFormat base=MediaFormat.createVideoFormat(mime,format.getInteger(MediaFormat.KEY_WIDTH),format.getInteger(MediaFormat.KEY_HEIGHT));
+          checks.put("size",caps.isFormatSupported(base));
+          base.setFloat(MediaFormat.KEY_FRAME_RATE,format.getNumber(MediaFormat.KEY_FRAME_RATE).floatValue());checks.put("size_and_rate",caps.isFormatSupported(base));
+          for(String key:new String[]{MediaFormat.KEY_BIT_RATE,MediaFormat.KEY_PROFILE,MediaFormat.KEY_LEVEL})if(format.containsKey(key)) {
+            base.setInteger(key,format.getInteger(key));checks.put("with_"+key,caps.isFormatSupported(base));base.removeKey(key);
+          }
+          checks.put("full",caps.isFormatSupported(format));put("capability_checks",checks);
+          if(asset.equals("sample-1080p60-bounded.mp4"))require(caps.isFormatSupported(format),"bounded sample outside declared capability");
+        }
+      }
       put("input_format",format.toString());put("available",names);require(name!=null,"no matching "+(hardware?"hardware":"software")+" decoder");put("codec",name);put("mime",mime);ex.selectTrack(track);
       put("output_mode",surface==null?"YUV ByteBuffer":"Surface");codec=MediaCodec.createByCodecName(name);codec.configure(format,surface,null,0);codec.start();boolean inDone=false,outDone=false;int frames=0;long bytes=0,decodeStart=SystemClock.elapsedRealtime(),end=decodeStart+20000;MediaCodec.BufferInfo info=new MediaCodec.BufferInfo();
       while(!outDone&&SystemClock.elapsedRealtime()<end){

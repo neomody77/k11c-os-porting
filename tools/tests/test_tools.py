@@ -16,6 +16,7 @@ def load(name, filename):
 privacy = load("privacy", "check-publication.py")
 boot = load("boot", "prepare-boot.py")
 runner = load("runner", "run-diagnostics.py")
+ril = load("ril", "prepare-vendor-ril.py")
 
 def cpio(name, payload):
     fields = [1, 0o100644, 0, 0, 1, 0, len(payload), 0, 0, 0, 0, len(name) + 1, 0]
@@ -69,7 +70,36 @@ class BootTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             boot.pad_to_original(b"larger", b"small")
 
+class RilCandidateTests(unittest.TestCase):
+    def test_unknown_library_is_rejected_without_modifying_input(self):
+        raw = bytearray(b"unrecognized vendor library")
+        before = bytes(raw)
+        with self.assertRaisesRegex(ValueError, "Unsupported factory library"):
+            ril.prepare(raw)
+        self.assertEqual(bytes(raw), before)
+
+    def test_failed_preparation_creates_no_output(self):
+        with tempfile.TemporaryDirectory() as directory:
+            original = Path(directory) / "factory.so"
+            original.write_bytes(b"wrong firmware revision")
+            output = Path(directory) / "candidate"
+            args = ["prepare-vendor-ril.py", "--factory-library", str(original), "--out", str(output)]
+            with mock.patch("sys.argv", args), self.assertRaises(ValueError):
+                ril.main()
+            self.assertFalse(output.exists())
+            self.assertEqual(original.read_bytes(), b"wrong firmware revision")
+
 class RunnerTests(unittest.TestCase):
+    def test_probe_fail_with_successful_instrumentation_is_failure(self):
+        report = '{"test":"inventory","status":"FAIL","error":"actual failure"}'
+        self.assertEqual(runner.probe_status(report, "inventory", 0), {"status": "FAIL", "error": "actual failure"})
+
+    def test_pass_requires_matching_json_and_successful_exit(self):
+        report = '{"test":"inventory","status":"PASS"}'
+        self.assertEqual(runner.probe_status(report, "inventory", 0), {"status": "PASS"})
+        for text, feature, code in ((report, "gpu", 0), ("no JSON", "inventory", 0), (report, "inventory", 1)):
+            self.assertEqual(runner.probe_status(text, feature, code)["status"], "FAIL")
+
     def invoke(self, output, packages="", timeout=False):
         commands = []
         def run(command, **kwargs):

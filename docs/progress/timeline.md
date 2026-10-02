@@ -36,6 +36,12 @@ USB-A主机连接保持configured/high-speed；运行设备树与厂商规格确
 
 四个源码补丁在精确标签fixture首次与重复应用通过；末项目冲突时验证前三个项目和overlay均未修改。实际厂商RIL反汇编与radio日志定位到误选VNDK31、dlopen被VNDK33 namespace拒绝、property_get空指针调用；这项未修复。新候选安装后发现原厂工具重建userdata，且宿主metadata加密使文件层备份不能直接恢复；已在新镜像重启前停止，DSU disabled，原版13正常。旧文件层副本及extent元数据私有保留。用户明确允许干净DSU后清理测试数据，完成新镜像首次与第二次启动；蓝牙权限自动正确并收包、默认62Hz生效、GPU服务稳定，安装库原生回归1/1通过。默认绘制61.88FPS、四核CPU忙99.31%时61.72FPS；诊断和压力任务已清理。新候选的整镜像验收状态见 [改进记录](../android16/improvements-20261002.md)。
 
+## 2026-10-02：RIL兼容与AVC能力复测
+
+AVC逐项能力查询确认原27.7Mbps测试片超过20Mbps声明范围，符合范围的1080p60样本完整查询、自动选择c2.rk.avc.decoder、180帧解码均通过，关闭能力声明错误的疑点。修复诊断读取Integer帧率的异常，并让runner按probe JSON判断结果。
+
+RIL隔离实验确认第二层故障：VNDK33加载成功后，厂商库仍不识别Android16，RIL版本0触发HIDL中止。准备精确哈希限制的厂商库副本候选，使用SONAME解析并只为release160选择原有RIL协议12。原init/radio服务连续120秒同PID、IRadio1.5注册成功；卸载临时bind后原库哈希恢复、原重启循环返回，因果对照成立。未写入固件分区或重新安装DSU。候选仍需持久集成、enforcing与实体modem验证，见 [本轮记录](../android16/ril-codec-20261002.md)。
+
 ## 后续：Android17
 
 尚未选择源码引用、构建或刷入Android17。先完成Android16剩余兼容问题并保持可恢复基线，再按 [roadmap](../android17/roadmap.md)推进。

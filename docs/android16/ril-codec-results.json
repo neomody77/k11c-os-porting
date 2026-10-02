@@ -1,0 +1,90 @@
+{
+  "tested_on": "2026-10-02",
+  "android_api": 36,
+  "scope": "runtime experiments on existing Android16 DSU; no firmware partition writes or userdata reset",
+  "codec": {
+    "status": "capability mismatch suspicion closed",
+    "declared_bitrate_bps": [
+      1,
+      20000000
+    ],
+    "old_sample": {
+      "size": [
+        1920,
+        1080
+      ],
+      "fps": 60,
+      "bitrate_bps": 27744162,
+      "full_format_supported": false,
+      "size_rate_profile_level_supported": true,
+      "bitrate_supported": false,
+      "frames": 180,
+      "eos": true,
+      "decode_ms": 1826
+    },
+    "bounded_sample": {
+      "size": [
+        1920,
+        1080
+      ],
+      "fps": 60,
+      "target_bitrate_bps": 8000000,
+      "max_bitrate_bps": 16000000,
+      "measured_bitrate_bps": 9347464,
+      "full_format_supported": true,
+      "automatic_decoder": "c2.rk.avc.decoder",
+      "frames": 180,
+      "eos": true,
+      "decode_ms": 1766,
+      "output_mode": "YUV ByteBuffer"
+    }
+  },
+  "ril": {
+    "status": "experimental vendor library copy verified; persistent integration pending",
+    "source_available": false,
+    "input_sha256": "242fe86dfbdb5796674077ac55ffa4f6facc067c4b3e1bf519f0da5d2925ab5b",
+    "candidate_sha256": "f61f59dba68563eb9a037b6ac1c42bd3788724fdf9b94a52badc737624aeda8d",
+    "region_count": 4,
+    "region_bytes": 84,
+    "namespace_rules_changed": false,
+    "system_release_property_changed": false,
+    "protocol_version": 12,
+    "vndk_libraries_selected": 33,
+    "original_init_service_used": true,
+    "original_radio_user_and_capabilities_retained": true,
+    "stable_observation_seconds": 120,
+    "same_pid_running_samples": 24,
+    "radio_interfaces_registered": [
+      "1.0",
+      "1.1",
+      "1.2",
+      "1.3",
+      "1.4",
+      "1.5"
+    ],
+    "experimental_bind_unmounted": true,
+    "original_vendor_library_hash_restored": true,
+    "original_restart_loop_returns": true,
+    "firmware_partition_writes": false,
+    "userdata_reset": false,
+    "cold_boot_test": false,
+    "selinux_enforcing_test": false,
+    "physical_modem_test": false,
+    "android17_support": false,
+    "repeat_process_start_stable_seconds": 60,
+    "repeat_same_pid_samples": 12,
+    "regression_during_candidate": {
+      "network_status": "PASS",
+      "https_status": 200,
+      "gpu_status": "PASS",
+      "gpu_frames_verified": 300,
+      "bounded_video_status": "PASS",
+      "bounded_video_frames": 180,
+      "bounded_video_decode_ms": 1745
+    }
+  },
+  "diagnostics": {
+    "instrumentation_exit_zero_is_not_pass": true,
+    "frame_rate_integer_float_reading_fixed": true
+  }
+}

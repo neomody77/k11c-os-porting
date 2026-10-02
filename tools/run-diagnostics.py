@@ -8,7 +8,20 @@ import datetime
 
 FEATURES = ("inventory", "storage", "keystore", "gpu", "network", "video-hardware",
             "video-software", "audio-decode", "audio-play", "audio-record", "webview",
-            "sensor", "animation", "video-hardware-1080p60-surface")
+            "sensor", "animation", "video-hardware-1080p60-surface", "video-hardware-1080p60-bounded")
+
+def probe_status(text, feature, exit_code):
+    """Instrumentation may exit zero even when the probe reports FAIL."""
+    for line in reversed(text.splitlines()):
+        try:
+            report = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(report, dict) and report.get("test") == feature:
+            if exit_code == 0 and report.get("status") == "PASS":
+                return {"status": "PASS"}
+            return {"status": "FAIL", "error": report.get("error", "probe or instrumentation failed")}
+    return {"status": "FAIL", "error": "missing probe JSON result"}
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
@@ -40,9 +53,10 @@ def main():
                 run = subprocess.run(adb + ["shell", "am", "instrument", "-w", "-e", "test", feature, package + "/.Probe"], capture_output=True, text=True, timeout=45)
                 text = run.stdout + run.stderr
                 results[feature] = {"exit_code": run.returncode}
+                results[feature].update(probe_status(text, feature, run.returncode))
                 (out / (feature + ".txt")).write_text(text)
             except subprocess.TimeoutExpired:
-                results[feature] = {"timeout_seconds": 45}
+                results[feature] = {"status": "FAIL", "timeout_seconds": 45}
             finally:
                 subprocess.run(adb + ["shell", "am", "force-stop", package], check=True)
     finally:

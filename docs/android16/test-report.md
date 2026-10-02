@@ -48,7 +48,7 @@ H.264 的 Rockchip 硬件解码和 Android 软件解码均完成 320×240 / 30fp
 
 样本为 3 秒、1920×1080 / 60fps、AVC Constrained Baseline Level 4.2，平均码率约 27.7Mbps。直接显示路径能解完这个样本，数据拷贝路径明显慢。这里是无实时节奏限制的解码吞吐，不能将 109FPS 当成显示器帧率，也未做音画同步、长视频或 4K 验收。
 
-还有一个实际兼容问题：isFormatSupported 对这个 1080p60 样本返回 false，但直接指定 c2.rk.avc.decoder 后，ByteBuffer 和 Surface 两条路径均成功解完。自动依赖能力声明选择解码器的应用可能因此选择软件路径；需要继续检查 vendor 的能力声明。
+当时这个1080p60样本isFormatSupported=false，而指定硬件decoder后能解完。后续逐项复测确认其27.7Mbps超过厂商20Mbps声明范围；符合范围的1080p60样本完整能力查询通过，自动选择硬件decoder并解完180帧。能力声明错误的疑点已关闭，见 [后续复测](ril-codec-20261002.md)。旧样本测试数据保留，不据此扩大厂商声明上限。
 
 AudioTrack 写入并播放 48,000 个 PCM 采样，播放位置正常推进。AudioRecord 一秒获得 48,000 个采样，RMS 约 19.61。两项验证音频 API 和流推进；未由人耳验证实际扬声器/耳机音质，也未验证外接麦克风的有效声音。
 

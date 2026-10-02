@@ -7,6 +7,7 @@ sdk="$aosp/prebuilts/sdk/tools/linux/bin"
 mkdir -p build/classes assets
 ffmpeg -hide_banner -loglevel error -y -f lavfi -i testsrc2=size=320x240:rate=30 -f lavfi -i sine=frequency=1000:sample_rate=48000 -t 2 -c:v libx264 -pix_fmt yuv420p -profile:v baseline -c:a aac assets/sample.mp4
 ffmpeg -hide_banner -loglevel error -y -f lavfi -i testsrc2=size=1920x1080:rate=60 -t 3 -c:v libx264 -preset ultrafast -pix_fmt yuv420p -profile:v baseline -an assets/sample-1080p60.mp4
+ffmpeg -hide_banner -loglevel error -y -f lavfi -i testsrc2=size=1920x1080:rate=60 -t 3 -c:v libx264 -preset ultrafast -pix_fmt yuv420p -profile:v baseline -level:v 4.2 -b:v 8M -maxrate 16M -bufsize 16M -an assets/sample-1080p60-bounded.mp4
 "$java/javac" -source 8 -target 8 -classpath "$aosp/prebuilts/sdk/current/public/android.jar" -d build/classes src/org/kickpi/diagnostics/*.java
 "$java/jar" cf build/classes.jar -C build/classes .
 "$aosp/out/host/linux-x86/bin/d8" --lib "$aosp/prebuilts/sdk/current/public/android.jar" --min-api 29 --output build build/classes.jar
