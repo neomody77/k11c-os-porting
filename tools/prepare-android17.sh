@@ -49,7 +49,31 @@ repo init "${init_args[@]}"
 }
 synced=false
 for attempt in 1 2 3 4 5; do
-  if repo sync -c -j"$jobs" --fail-fast --no-clone-bundle; then
+  if python3 - "$jobs" <<'PYSYNC'
+import os
+import signal
+import subprocess
+import sys
+import time
+
+process = subprocess.Popen([
+    'repo', 'sync', '-c', '-j' + sys.argv[1], '--fail-fast',
+    '--no-clone-bundle', '--no-tags',
+], start_new_session=True)
+try:
+    result = process.wait()
+finally:
+    # repo can return after an error while Git fetch grandchildren remain alive.
+    # Each attempt owns a separate process group, so a retry never overlaps it.
+    try:
+        os.killpg(process.pid, signal.SIGTERM)
+        time.sleep(1)
+        os.killpg(process.pid, signal.SIGKILL)
+    except ProcessLookupError:
+        pass
+sys.exit(0 if result == 0 else 1)
+PYSYNC
+  then
     synced=true
     break
   fi
