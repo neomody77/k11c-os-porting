@@ -1,0 +1,340 @@
+{
+  "device": "KICKPI K11C / RK3566",
+  "android": 16,
+  "api": 36,
+  "capture_date_utc": "2026-10-02",
+  "resources": {
+    "idle": {
+      "cpu_busy_percent_all_cores_normalized": 7.93,
+      "before_memory_kib": {
+        "MemTotal": 3993136,
+        "MemAvailable": 2903824,
+        "SwapTotal": 1996564,
+        "SwapFree": 1929748
+      },
+      "after_memory_kib": {
+        "MemTotal": 3993136,
+        "MemAvailable": 2904048,
+        "SwapTotal": 1996564,
+        "SwapFree": 1929748
+      }
+    },
+    "ui-idle": {
+      "cpu_busy_percent_all_cores_normalized": 40.14,
+      "before_memory_kib": {
+        "MemTotal": 3993136,
+        "MemAvailable": 2896888,
+        "SwapTotal": 1996564,
+        "SwapFree": 1936404
+      },
+      "after_memory_kib": {
+        "MemTotal": 3993136,
+        "MemAvailable": 2895164,
+        "SwapTotal": 1996564,
+        "SwapFree": 1936404
+      }
+    },
+    "ui-loaded": {
+      "cpu_busy_percent_all_cores_normalized": 99.178,
+      "before_memory_kib": {
+        "MemTotal": 3993136,
+        "MemAvailable": 2879624,
+        "SwapTotal": 1996564,
+        "SwapFree": 1936660
+      },
+      "after_memory_kib": {
+        "MemTotal": 3993136,
+        "MemAvailable": 2870560,
+        "SwapTotal": 1996564,
+        "SwapFree": 1931284
+      }
+    },
+    "animation-loaded": {
+      "cpu_busy_percent_all_cores_normalized": 99.361,
+      "before_memory_kib": {
+        "MemTotal": 3993136,
+        "MemAvailable": 2872544,
+        "SwapTotal": 1996564,
+        "SwapFree": 1929748
+      },
+      "after_memory_kib": {
+        "MemTotal": 3993136,
+        "MemAvailable": 2840268,
+        "SwapTotal": 1996564,
+        "SwapFree": 1929748
+      }
+    }
+  },
+  "settings_scrolling": {
+    "idle": {
+      "uptime_ms": "1576667",
+      "since_ns": "1558345390140",
+      "frames": "549",
+      "janky_frames": "1 (0.18%)",
+      "frame_duration_p50_ms": "34",
+      "frame_duration_p95_ms": "36",
+      "gpu_duration_p95_ms": "19",
+      "sample_window_seconds": 18.321609859999853,
+      "average_rendered_frames_per_window_second": 29.964615784041392,
+      "measurement_note": "Window includes gesture injection and capture overhead; use continuous-animation FPS for pacing."
+    },
+    "loaded": {
+      "uptime_ms": "1605242",
+      "since_ns": "1582655909999",
+      "frames": "637",
+      "janky_frames": "0 (0.00%)",
+      "frame_duration_p50_ms": "15",
+      "frame_duration_p95_ms": "18",
+      "gpu_duration_p95_ms": "7",
+      "sample_window_seconds": 22.586090001000002,
+      "average_rendered_frames_per_window_second": 28.203199401569584,
+      "measurement_note": "Window includes gesture injection and capture overhead; use continuous-animation FPS for pacing."
+    }
+  },
+  "functional_probes": {
+    "inventory.result": {
+      "test": "inventory",
+      "camera_ids": [],
+      "sensors": [
+        "Accelerometer sensor"
+      ],
+      "usb_host_devices": [],
+      "abis": [
+        "arm64-v8a",
+        "armeabi-v7a",
+        "armeabi"
+      ],
+      "api": 36,
+      "status": "PASS",
+      "elapsed_ms": 12
+    },
+    "storage.result": {
+      "test": "storage",
+      "write_fsync_ms": 686,
+      "bytes_verified": 67108864,
+      "sqlite_rows_verified": 1000,
+      "status": "PASS",
+      "elapsed_ms": 1016
+    },
+    "keystore.result": {
+      "test": "keystore",
+      "security_level": 1,
+      "inside_secure_hardware": true,
+      "status": "PASS",
+      "elapsed_ms": 33
+    },
+    "gpu.result": {
+      "test": "gpu",
+      "renderer": "Mali-G52",
+      "version": "OpenGL ES 3.2 v1.g7p1-01bet0.61f8f676f6f71b93e7210cdf8954eda2",
+      "frames_verified": 300,
+      "status": "PASS",
+      "elapsed_ms": 111
+    },
+    "network.result": {
+      "test": "network",
+      "status": "FAIL",
+      "error": "java.net.UnknownHostException: Unable to resolve host \"example.com\": No address associated with hostname",
+      "elapsed_ms": 2
+    },
+    "network-v2.result": {
+      "test": "network",
+      "https_status": 200,
+      "https_bytes": 713,
+      "status": "PASS",
+      "elapsed_ms": 1215,
+      "dns_answer_count": 2
+    },
+    "network-v3.result": {
+      "test": "network",
+      "https_status": 200,
+      "https_bytes": 713,
+      "status": "PASS",
+      "elapsed_ms": 1313,
+      "dns_answer_count": 2
+    },
+    "video-hardware.result": {
+      "test": "video-hardware",
+      "available": [
+        "c2.rk.avc.decoder",
+        "c2.android.avc.decoder",
+        "OMX.google.h264.decoder"
+      ],
+      "codec": "c2.rk.avc.decoder",
+      "mime": "video/avc",
+      "output_buffers": 60,
+      "output_bytes": 6912000,
+      "eos": true,
+      "status": "PASS",
+      "elapsed_ms": 480
+    },
+    "video-software.result": {
+      "test": "video-software",
+      "available": [
+        "c2.rk.avc.decoder",
+        "c2.android.avc.decoder",
+        "OMX.google.h264.decoder"
+      ],
+      "codec": "c2.android.avc.decoder",
+      "mime": "video/avc",
+      "output_buffers": 60,
+      "output_bytes": 6912000,
+      "eos": true,
+      "status": "PASS",
+      "elapsed_ms": 473
+    },
+    "audio-decode.result": {
+      "test": "audio-decode",
+      "available": [
+        "c2.android.aac.decoder",
+        "OMX.google.aac.decoder"
+      ],
+      "codec": "c2.android.aac.decoder",
+      "mime": "audio/mp4a-latm",
+      "output_buffers": 94,
+      "output_bytes": 192512,
+      "eos": true,
+      "status": "PASS",
+      "elapsed_ms": 425
+    },
+    "audio-play-v2.result": {
+      "test": "audio-play",
+      "playback_frames": 48000,
+      "status": "PASS",
+      "elapsed_ms": 1663
+    },
+    "audio-record.result": {
+      "test": "audio-record",
+      "capture_samples": 48000,
+      "rms": 19.614874776556693,
+      "status": "PASS",
+      "elapsed_ms": 1162
+    },
+    "webview.result": {
+      "test": "webview",
+      "javascript_result": "\"K11C:42\"",
+      "status": "PASS",
+      "elapsed_ms": 2319
+    },
+    "sensor-v2.result": {
+      "test": "sensor",
+      "status": "FAIL",
+      "error": "java.lang.IllegalStateException: sensor registration failed",
+      "elapsed_ms": 9
+    },
+    "bluetooth-scan-v3.result": {
+      "test": "bluetooth-scan",
+      "packets": 921,
+      "unique_devices": 29,
+      "rf_reception_verified": true,
+      "status": "PASS",
+      "elapsed_ms": 10056
+    },
+    "animation-v3.result": {
+      "test": "animation",
+      "frames_drawn": 466,
+      "rendered_fps": 31.027191011868435,
+      "interval_p50_ms": 32.228878,
+      "interval_p95_ms": 32.784212,
+      "interval_max_ms": 33.667378,
+      "frame_duration_p95_ms": 33.770362,
+      "display_refresh_hz": 31,
+      "hardware_accelerated": true,
+      "status": "PASS",
+      "elapsed_ms": 15897
+    },
+    "animation-force62.result": {
+      "test": "animation",
+      "frames_drawn": 930,
+      "rendered_fps": 61.98641934174047,
+      "interval_p50_ms": 16.109626,
+      "interval_p95_ms": 16.690627,
+      "interval_max_ms": 31.791087,
+      "frame_duration_p95_ms": 20.943635,
+      "display_refresh_hz": 62,
+      "hardware_accelerated": true,
+      "status": "PASS",
+      "elapsed_ms": 15761
+    },
+    "animation-force62-loaded.result": {
+      "test": "animation",
+      "frames_drawn": 928,
+      "rendered_fps": 61.854417603244016,
+      "interval_p50_ms": 16.119544,
+      "interval_p95_ms": 17.102752,
+      "interval_max_ms": 38.083795,
+      "frame_duration_p95_ms": 49.375057,
+      "display_refresh_hz": 62,
+      "hardware_accelerated": true,
+      "status": "PASS",
+      "elapsed_ms": 15958
+    },
+    "video-hardware-1080p60-v3.result": {
+      "test": "video-hardware-1080p60",
+      "available": [
+        "c2.rk.avc.decoder",
+        "c2.android.avc.decoder",
+        "OMX.google.h264.decoder"
+      ],
+      "status": "FAIL",
+      "error": "java.lang.IllegalStateException: no matching hardware decoder",
+      "elapsed_ms": 158
+    },
+    "video-hardware-1080p60-v4.result": {
+      "test": "video-hardware-1080p60",
+      "declared_format_supported": false,
+      "available": [
+        "c2.rk.avc.decoder",
+        "c2.android.avc.decoder",
+        "OMX.google.h264.decoder"
+      ],
+      "codec": "c2.rk.avc.decoder",
+      "mime": "video/avc",
+      "output_buffers": 180,
+      "output_bytes": 559872000,
+      "eos": true,
+      "decode_ms": 9220,
+      "status": "PASS",
+      "elapsed_ms": 9452,
+      "decoder_throughput_buffers_per_second": 19.522776572668114
+    },
+    "video-hardware-1080p60-surface.result": {
+      "test": "video-hardware-1080p60-surface",
+      "declared_format_supported": false,
+      "available": [
+        "c2.rk.avc.decoder",
+        "c2.android.avc.decoder",
+        "OMX.google.h264.decoder"
+      ],
+      "codec": "c2.rk.avc.decoder",
+      "mime": "video/avc",
+      "output_mode": "Surface",
+      "output_buffers": 180,
+      "output_bytes": 180,
+      "eos": true,
+      "decode_ms": 1650,
+      "status": "PASS",
+      "elapsed_ms": 2787,
+      "decoder_throughput_buffers_per_second": 109.0909090909091
+    }
+  },
+  "refresh_policy_restored": {
+    "min_refresh_rate": "null",
+    "peak_refresh_rate": "null"
+  },
+  "cleanup": "Success",
+  "remaining_issues": [
+    "Bluetooth permissions fixed only in current /dev",
+    "Vendor codec rejects 1080p60 capability query although actual decoding succeeds",
+    "Sensor registration PERMISSION_DENIED",
+    "rild crash/restart",
+    "gpuservice GPU-work statistics abort"
+  ],
+  "limits": [
+    "Short samples on this Android16 DSU only",
+    "App redraw FPS, not a game benchmark or compositor present-time certification",
+    "Surface decode throughput is not paced video playback or A/V sync",
+    "No CTS/VTS, power meter, attached camera, Ethernet, SD or USB-host peripheral test"
+  ],
+  "evidence_scope": "Sanitized aggregate metrics and test outcomes only; raw captures retained privately."
+}

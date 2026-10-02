@@ -1,0 +1,25 @@
+{
+  "updated_on": "2026-10-02",
+  "board": "KICKPI K11C / RK3566",
+  "scope": "AOSP ARM64 GSI on factory kernel/vendor",
+  "android16": {
+    "source_ref": "android-16.0.0_r4",
+    "build_target": "aosp_arm64-bp4a-userdebug",
+    "build": "verified",
+    "device_boot": "verified",
+    "boot_mode": "single-boot DSU",
+    "native_codec_tests_passed": 50,
+    "full_peripheral_validation": false,
+    "cts_vts": "not_run",
+    "open_work": ["persist Bluetooth node permissions", "refresh-rate policy", "codec capability declaration", "sensor registration", "rild compatibility", "GPU-work statistics"]
+  },
+  "android17": {
+    "source_ref": null,
+    "build": "not_started",
+    "device_boot": "not_tested",
+    "full_peripheral_validation": false,
+    "cts_vts": "not_run"
+  },
+  "firmware_binaries_in_repository": false,
+  "raw_captures_in_repository": false
+}

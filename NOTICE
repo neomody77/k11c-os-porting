@@ -1,0 +1,10 @@
+K11C Android porting progress
+
+Community documentation, local adaptations and diagnostics.
+
+The Android16 patches modify Android Open Source Project code distributed
+under the Apache License, Version 2.0. Patch paths are relative to their
+respective AOSP projects. Original source notices and licenses remain applicable.
+
+The boot-image tooling invokes AOSP mkbootimg/unpack_bootimg supplied by a
+separate AOSP checkout. Those tools and firmware images are not bundled here.

@@ -1,0 +1,109 @@
+import importlib.util
+from pathlib import Path
+import subprocess
+import tempfile
+import unittest
+from unittest import mock
+
+TOOLS = Path(__file__).resolve().parents[1]
+
+def load(name, filename):
+    spec = importlib.util.spec_from_file_location(name, TOOLS / filename)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+privacy = load("privacy", "check-publication.py")
+boot = load("boot", "prepare-boot.py")
+runner = load("runner", "run-diagnostics.py")
+
+def cpio(name, payload):
+    fields = [1, 0o100644, 0, 0, 1, 0, len(payload), 0, 0, 0, 0, len(name) + 1, 0]
+    prefix = b"070701" + b"".join(f"{value:08x}".encode() for value in fields) + name.encode() + b"\0"
+    prefix += b"\0" * (-len(prefix) % 4)
+    return prefix + payload + b"\0" * (-len(payload) % 4)
+
+def archive(fstab):
+    return cpio("init", b"unchanged payload") + cpio("fstab.rk30board", fstab) + cpio("TRAILER!!!", b"")
+
+FSTAB = b"system /system erofs ro wait,logical,first_stage_mount\nsystem /system ext4 ro wait,logical,first_stage_mount\nvendor /vendor ext4 ro wait,logical,first_stage_mount\n"
+
+class PrivacyTests(unittest.TestCase):
+    def test_actual_identifiers_rejected_without_echoing(self):
+        value = "/" + "Users" + "/example\n" + "person" + "@" + "mail.example\n" + ":".join(["ab"] * 6)
+        rules = {rule for _, rule in privacy.findings(value)}
+        self.assertTrue({"personal-home-path", "email", "mac-address"} <= rules)
+
+    def test_private_and_public_addresses_rejected(self):
+        for chunks in (("10", "2", "3", "4"), ("8", "8", "8", "8")):
+            self.assertIn("network-address", {rule for _, rule in privacy.findings(".".join(chunks))})
+
+    def test_placeholders_and_noreply_are_allowed(self):
+        text = "/path/to/aosp16 192.0.2.1 " + "123+example" + "@users.noreply.github.com"
+        self.assertEqual(privacy.findings(text), [])
+
+    def test_secrets_and_capture_files_rejected(self):
+        self.assertTrue(privacy.findings("gh" + "p_" + "x" * 30))
+        self.assertFalse(privacy.path_allowed(Path("docs/raw/trace.txt")))
+        self.assertFalse(privacy.path_allowed(Path("system.img")))
+
+class BootTests(unittest.TestCase):
+    def test_only_system_fstab_changes_and_payload_metadata_preserved(self):
+        before = list(boot.entries(archive(FSTAB)))
+        after = list(boot.entries(boot.patch_ramdisk(archive(FSTAB))))
+        self.assertEqual(before[0], after[0])
+        self.assertEqual(after[1][3].count(b",avb=vbmeta"), 2)
+        self.assertIn(b"vendor /vendor ext4 ro wait,logical,first_stage_mount\n", after[1][3])
+
+    def test_unexpected_or_already_patched_layout_fails(self):
+        for fstab in (FSTAB.splitlines(keepends=True)[0], FSTAB.replace(b"first_stage_mount", b"first_stage_mount,avb=vbmeta")):
+            with self.assertRaises(ValueError):
+                boot.patch_ramdisk(archive(fstab))
+
+    def test_truncated_or_missing_fstab_fails(self):
+        for raw in (archive(FSTAB)[:50], cpio("TRAILER!!!", b"")):
+            with self.assertRaises(ValueError):
+                boot.patch_ramdisk(raw)
+
+    def test_oversized_output_is_rejected(self):
+        with self.assertRaises(ValueError):
+            boot.pad_to_original(b"larger", b"small")
+
+class RunnerTests(unittest.TestCase):
+    def invoke(self, output, packages="", timeout=False):
+        commands = []
+        def run(command, **kwargs):
+            commands.append(command)
+            if timeout and "instrument" in command:
+                raise subprocess.TimeoutExpired(command, 45)
+            return subprocess.CompletedProcess(command, 0, "probe output", "")
+        args = ["run-diagnostics.py", "--serial", "DOCUMENTATION_DEVICE", "--apk", "local.apk", "--out", str(output)]
+        with mock.patch("sys.argv", args), mock.patch.object(runner, "FEATURES", ("inventory",)), mock.patch.object(runner.subprocess, "check_output", return_value=packages) as listing, mock.patch.object(runner.subprocess, "run", side_effect=run), mock.patch("builtins.print"):
+            runner.main()
+            self.assertEqual(listing.call_args.args[0][-4:], ["pm", "list", "packages", "org.kickpi.diagnostics"])
+        return commands
+
+    def test_absent_package_is_installed_and_cleaned_up(self):
+        with tempfile.TemporaryDirectory() as directory:
+            commands = self.invoke(Path(directory) / "captures")
+            self.assertTrue(any("install" in command for command in commands))
+            self.assertEqual(commands[-1][-2:], ["uninstall", "org.kickpi.diagnostics"])
+
+    def test_existing_package_is_not_replaced(self):
+        with tempfile.TemporaryDirectory() as directory:
+            args = ["run-diagnostics.py", "--serial", "DOCUMENTATION_DEVICE", "--apk", "local.apk", "--out", str(Path(directory) / "captures")]
+            with mock.patch("sys.argv", args), mock.patch.object(runner.subprocess, "check_output", return_value="package:org.kickpi.diagnostics\n"), mock.patch.object(runner.subprocess, "run") as run:
+                with self.assertRaises(SystemExit):
+                    runner.main()
+                run.assert_not_called()
+
+    def test_timeout_stops_probe_and_uninstalls_package(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "captures"
+            commands = self.invoke(output, timeout=True)
+            self.assertEqual(commands[-2][-2:], ["force-stop", "org.kickpi.diagnostics"])
+            self.assertEqual(commands[-1][-2:], ["uninstall", "org.kickpi.diagnostics"])
+            self.assertIn('"timeout_seconds": 45', (output / "run-status.json").read_text())
+
+if __name__ == "__main__":
+    unittest.main()

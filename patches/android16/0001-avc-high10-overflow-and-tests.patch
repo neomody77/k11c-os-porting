@@ -1,0 +1,67 @@
+diff --git a/media/libmedia/VideoCapabilities.cpp b/media/libmedia/VideoCapabilities.cpp
+index ce15c0a..af475ed 100644
+--- a/media/libmedia/VideoCapabilities.cpp
++++ b/media/libmedia/VideoCapabilities.cpp
+@@ -1073,7 +1073,8 @@ void VideoCapabilities::applyLevelLimits() {
+         maxBps = 64000;
+         maxDPBBlocks = 396;
+         for (ProfileLevel profileLevel: mProfileLevels) {
+-            int32_t MBPS = 0, FS = 0, BR = 0, DPB = 0;
++            int32_t MBPS = 0, FS = 0, DPB = 0;
++            int64_t BR = 0;
+             bool supported = true;
+             switch (profileLevel.mLevel) {
+                 case AVCLevel1:
+@@ -1150,7 +1151,8 @@ void VideoCapabilities::applyLevelLimits() {
+             }
+             maxBlocksPerSecond = std::max((int64_t)MBPS, maxBlocksPerSecond);
+             maxBlocks = std::max(FS, maxBlocks);
+-            maxBps = std::max(BR, maxBps);
++            // The public bitrate range uses int32_t, but High10 Level 6.2 exceeds it.
++            maxBps = std::max(static_cast<int32_t>(std::min<int64_t>(BR, INT32_MAX)), maxBps);
+             maxDPBBlocks = std::max(maxDPBBlocks, DPB);
+         }
+ 
+diff --git a/media/libmedia/tests/codeccapabilities/CodecCapabilitiesTest.cpp b/media/libmedia/tests/codeccapabilities/CodecCapabilitiesTest.cpp
+index e59d4d6..4c13b02 100644
+--- a/media/libmedia/tests/codeccapabilities/CodecCapabilitiesTest.cpp
++++ b/media/libmedia/tests/codeccapabilities/CodecCapabilitiesTest.cpp
+@@ -371,3 +371,38 @@ TEST_F(EncoderCapsHevcTest, EncoderCaps_HEVC_SupportedBitrateMode) {
+     EXPECT_TRUE(encoderCaps->isBitrateModeSupported(BITRATE_MODE_CQ));
+     EXPECT_TRUE(encoderCaps->isBitrateModeSupported(BITRATE_MODE_CBR_FD));
+ }
++
++
++TEST(VideoCapsAvcTest, High10Level62BitrateClampedToInt32) {
++    sp<AMessage> details = new AMessage;
++    auto caps = VideoCapabilities::Create(MIMETYPE_VIDEO_AVC,
++            {ProfileLevel(AVCProfileHigh10, AVCLevel62)}, details);
++    ASSERT_NE(caps, nullptr);
++    EXPECT_EQ(caps->getBitrateRange().lower(), 1);
++    EXPECT_EQ(caps->getBitrateRange().upper(), INT32_MAX);
++}
++
++TEST(VideoCapsAvcTest, High10Level61BitrateUnchanged) {
++    sp<AMessage> details = new AMessage;
++    auto caps = VideoCapabilities::Create(MIMETYPE_VIDEO_AVC,
++            {ProfileLevel(AVCProfileHigh10, AVCLevel61)}, details);
++    ASSERT_NE(caps, nullptr);
++    EXPECT_EQ(caps->getBitrateRange().upper(), 1440000000);
++}
++
++TEST(VideoCapsAvcTest, High10Level62VendorBitrateRangePreserved) {
++    sp<AMessage> details = new AMessage;
++    details->setString("bitrate-range", "1-120000000");
++    auto caps = VideoCapabilities::Create(MIMETYPE_VIDEO_AVC,
++            {ProfileLevel(AVCProfileHigh10, AVCLevel62)}, details);
++    ASSERT_NE(caps, nullptr);
++    EXPECT_EQ(caps->getBitrateRange().upper(), 120000000);
++}
++
++TEST(VideoCapsAvcTest, BaselineLevel4BitrateUnchanged) {
++    sp<AMessage> details = new AMessage;
++    auto caps = VideoCapabilities::Create(MIMETYPE_VIDEO_AVC,
++            {ProfileLevel(AVCProfileBaseline, AVCLevel4)}, details);
++    ASSERT_NE(caps, nullptr);
++    EXPECT_EQ(caps->getBitrateRange().upper(), 20000000);
++}

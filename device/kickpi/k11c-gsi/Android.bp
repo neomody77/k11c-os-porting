@@ -1,0 +1,10 @@
+package {
+    default_applicable_licenses: ["Android-Apache-2.0"],
+}
+
+vintf_compatibility_matrix {
+    name: "k11c_framework_compatibility_matrix",
+    stem: "compatibility_matrix.k11c.xml",
+    srcs: ["compatibility_matrix.k11c.xml"],
+    system_ext_specific: true,
+}
