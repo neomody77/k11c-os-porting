@@ -1,0 +1,39 @@
+{
+  "sdk": 36,
+  "navigation_mode": "three_button",
+  "buttons": {
+    "recent_apps": [
+      636,
+      542,
+      912,
+      597
+    ],
+    "home": [
+      386,
+      542,
+      635,
+      597
+    ],
+    "back": [
+      111,
+      542,
+      385,
+      597
+    ]
+  },
+  "bounds_source": "taskbar_touch_regions",
+  "back_and_home_tap_verified": true,
+  "recents_screenshot_captured": true,
+  "density": "Physical density: 200",
+  "selinux": "Enforcing",
+  "checked_on": "2026-10-24",
+  "source_ref": "android-16.0.0_r4",
+  "recents_verified_by_screenshot": true,
+  "native_partitions_written": false,
+  "delivery": "userdata system-app update; original system APK retained",
+  "launcher_apk_sha256": "7db8cef4dddc4bed2b10f76c68cb891c7b248d4624668b63476921c7d51bf94b",
+  "display_rotation_tested": [
+    0
+  ],
+  "patch": "patches/android16/0011-navbar-natural-landscape-rotation.patch"
+}

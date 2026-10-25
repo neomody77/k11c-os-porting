@@ -35,6 +35,7 @@ public class Probe extends Instrumentation {
       put("test",test);
       switch(test) {
         case "storage": storage(); break;
+        case "compute": compute(); break;
         case "keystore": keystore(); break;
         case "gpu": gpu(); break;
         case "network": network(true); break;
@@ -65,15 +66,44 @@ public class Probe extends Instrumentation {
     long t=SystemClock.elapsedRealtime();
     try(FileOutputStream out=new FileOutputStream(f)) { for(int i=0;i<64;i++){out.write(chunk);a.update(chunk);} out.getFD().sync(); }
     put("write_fsync_ms",SystemClock.elapsedRealtime()-t);
+    t=SystemClock.elapsedRealtime();
     try(FileInputStream in=new FileInputStream(f)) {int n;while((n=in.read(chunk))!=-1)b.update(chunk,0,n);}
+    put("cached_read_hash_ms",SystemClock.elapsedRealtime()-t);
     require(Arrays.equals(a.digest(),b.digest()),"storage checksum mismatch"); require(f.delete(),"cannot delete test file");
     File dbFile=new File(ctx.getFilesDir(),"probe.db"); SQLiteDatabase db=SQLiteDatabase.openOrCreateDatabase(dbFile,null);
+    t=SystemClock.elapsedRealtime();
     try { db.execSQL("CREATE TABLE t (id INTEGER PRIMARY KEY, value TEXT)");db.beginTransaction();
       for(int i=0;i<1000;i++) db.execSQL("INSERT INTO t VALUES (?,?)",new Object[]{i,"row"+i});
       db.setTransactionSuccessful(); db.endTransaction();
       try(Cursor c=db.rawQuery("SELECT COUNT(*), SUM(id) FROM t",null)){c.moveToFirst();require(c.getInt(0)==1000&&c.getInt(1)==499500,"SQLite mismatch");}
     } finally {db.close(); SQLiteDatabase.deleteDatabase(dbFile);}
+    put("sqlite_transaction_ms",SystemClock.elapsedRealtime()-t);
     put("bytes_verified",64*1024*1024);put("sqlite_rows_verified",1000);
+  }
+  void compute() throws Exception {
+    // Fixed duration, private buffers per worker. This measures this Java/SHA
+    // workload, including the selected crypto provider, rather than a CPU score.
+    for(int workers:new int[]{1,4}) {
+      ExecutorService pool=Executors.newFixedThreadPool(workers);
+      CountDownLatch ready=new CountDownLatch(workers),go=new CountDownLatch(1);
+      List<Future<Long>> tasks=new ArrayList<>();
+      final long[] deadline=new long[1];
+      try {
+        for(int i=0;i<workers;i++) tasks.add(pool.submit(()->{
+          byte[] buffer=new byte[1024*1024];new Random(42).nextBytes(buffer);
+          MessageDigest hash=MessageDigest.getInstance("SHA-256");
+          ready.countDown();go.await();long count=0;
+          do {hash.update(buffer);byte[] digest=hash.digest();if(digest.length!=32)throw new IllegalStateException("SHA256 output");count++;}while(SystemClock.elapsedRealtimeNanos()<deadline[0]);
+          return count;
+        }));
+        require(ready.await(10,TimeUnit.SECONDS),"compute workers not ready");
+        long start=SystemClock.elapsedRealtimeNanos();deadline[0]=start+5000000000L;go.countDown();
+        long mib=0;for(Future<Long> task:tasks)mib+=task.get(15,TimeUnit.SECONDS);
+        double seconds=(SystemClock.elapsedRealtimeNanos()-start)/1e9;
+        put("sha256_"+workers+"_workers_mib_per_second",mib/seconds);
+        put("sha256_"+workers+"_workers_seconds",seconds);
+      }finally{go.countDown();pool.shutdownNow();}
+    }
   }
   void keystore() throws Exception {
     String alias="k11c-probe"; KeyStore ks=KeyStore.getInstance("AndroidKeyStore");ks.load(null);
@@ -152,14 +182,20 @@ public class Probe extends Instrumentation {
     Activity a=startActivitySync(new Intent(ctx,ProbeActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
     List<Long> times=Collections.synchronizedList(new ArrayList<>()),totals=Collections.synchronizedList(new ArrayList<>()),gpuTimes=Collections.synchronizedList(new ArrayList<>());
     HandlerThread thread=new HandlerThread("FrameMetrics");thread.start();
-    android.view.Window.OnFrameMetricsAvailableListener listener=(window,metrics,dropped)->{totals.add(metrics.getMetric(android.view.FrameMetrics.TOTAL_DURATION));gpuTimes.add(metrics.getMetric(android.view.FrameMetrics.GPU_DURATION));};
+    final long measureStart=System.nanoTime()+1000000000L;
+    java.util.concurrent.atomic.AtomicInteger droppedReports=new java.util.concurrent.atomic.AtomicInteger();
+    android.view.Window.OnFrameMetricsAvailableListener listener=(window,metrics,dropped)->{if(System.nanoTime()>=measureStart){totals.add(metrics.getMetric(android.view.FrameMetrics.TOTAL_DURATION));gpuTimes.add(metrics.getMetric(android.view.FrameMetrics.GPU_DURATION));droppedReports.addAndGet(dropped);}};
     android.view.View[] view=new android.view.View[1];
     try {
-      runOnMainSync(()->{a.getWindow().addOnFrameMetricsAvailableListener(listener,new Handler(thread.getLooper()));view[0]=new android.view.View(a){android.graphics.Paint paint=new android.graphics.Paint();protected void onDraw(android.graphics.Canvas canvas){long t=System.nanoTime();times.add(t);canvas.drawColor(0xff102030);for(int i=0;i<100;i++){paint.setColor(0xff000000|((i*167771+times.size()*500)&0xffffff));float x=(times.size()*4+i*37)%getWidth(),y=(i*41)%getHeight();canvas.drawRect(x,y,x+24,y+24,paint);}paint.setColor(0xffffffff);paint.setTextSize(30);canvas.drawText("K11C Android16 continuous animation",20,50,paint);postInvalidateOnAnimation();}};a.setContentView(view[0]);});
-      SystemClock.sleep(15000);
+      runOnMainSync(()->{a.getWindow().addOnFrameMetricsAvailableListener(listener,new Handler(thread.getLooper()));view[0]=new android.view.View(a){android.graphics.Paint paint=new android.graphics.Paint();protected void onDraw(android.graphics.Canvas canvas){long t=System.nanoTime();if(t>=measureStart)times.add(t);canvas.drawColor(0xff102030);for(int i=0;i<100;i++){paint.setColor(0xff000000|((i*167771+times.size()*500)&0xffffff));float x=(times.size()*4+i*37)%getWidth(),y=(i*41)%getHeight();canvas.drawRect(x,y,x+24,y+24,paint);}paint.setColor(0xffffffff);paint.setTextSize(30);canvas.drawText("K11C continuous animation",20,50,paint);postInvalidateOnAnimation();}};a.setContentView(view[0]);});
+      SystemClock.sleep(Long.parseLong(args.getString("duration_ms","15000"))+1000);
       List<Long> captured;synchronized(times){captured=new ArrayList<>(times);}require(captured.size()>100,"too few rendered frames");
       put("frames_drawn",captured.size());put("rendered_fps",(captured.size()-1)*1e9/(captured.get(captured.size()-1)-captured.get(0)));
       List<Double> intervals=new ArrayList<>();for(int i=1;i<captured.size();i++)intervals.add((captured.get(i)-captured.get(i-1))/1e6);Collections.sort(intervals);put("interval_p50_ms",intervals.get(intervals.size()/2));put("interval_p95_ms",intervals.get((int)(intervals.size()*0.95)));put("interval_max_ms",intervals.get(intervals.size()-1));
+      put("interval_p99_ms",intervals.get((int)(intervals.size()*0.99)));
+      double period=1000.0/a.getDisplay().getRefreshRate();int late=0,over50=0,over100=0;
+      for(double ms:intervals){if(ms>period*1.5)late++;if(ms>50)over50++;if(ms>100)over100++;}
+      put("interval_count",intervals.size());put("intervals_over_1_5_vsync",late);put("intervals_over_50_ms",over50);put("intervals_over_100_ms",over100);put("frame_metrics_reports_dropped",droppedReports.get());
       List<Long> durations;synchronized(totals){durations=new ArrayList<>(totals);}Collections.sort(durations);if(!durations.isEmpty())put("frame_duration_p95_ms",durations.get((int)(durations.size()*0.95))/1e6);
       put("display_refresh_hz",a.getDisplay().getRefreshRate());put("hardware_accelerated",view[0].isHardwareAccelerated());
     } finally {runOnMainSync(()->{a.getWindow().removeOnFrameMetricsAvailableListener(listener);a.finish();});thread.quitSafely();}

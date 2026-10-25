@@ -4,8 +4,8 @@ repo_root="$(cd "$(dirname "$0")/.." && pwd)"
 aosp="${1:?Usage: apply-android16.sh /path/to/aosp16}"
 aosp="$(cd "$aosp" && pwd)"
 tag=android-16.0.0_r4
-projects=(frameworks/av build/make system/core frameworks/native build/make build/make build/make build/make build/make build/make)
-patches=(0001-avc-high10-overflow-and-tests.patch 0002-k11c-framework-matrix.patch 0003-k11c-ueventd-import.patch 0004-gpuwork-missing-map-and-test.patch 0005-k11c-ril-integration.patch 0006-k11c-enforcing-domain.patch 0007-k11c-no-device-sensors.patch 0008-k11c-gsi-image-labels.patch 0009-k11c-immutable-ril-payload.patch 0010-k11c-native-compatible-guard.patch)
+projects=(frameworks/av build/make system/core frameworks/native build/make build/make build/make build/make build/make build/make packages/apps/Launcher3)
+patches=(0001-avc-high10-overflow-and-tests.patch 0002-k11c-framework-matrix.patch 0003-k11c-ueventd-import.patch 0004-gpuwork-missing-map-and-test.patch 0005-k11c-ril-integration.patch 0006-k11c-enforcing-domain.patch 0007-k11c-no-device-sensors.patch 0008-k11c-gsi-image-labels.patch 0009-k11c-immutable-ril-payload.patch 0010-k11c-native-compatible-guard.patch 0011-navbar-natural-landscape-rotation.patch)
 pending=()
 for i in "${!projects[@]}"; do
   project="$aosp/${projects[$i]}"

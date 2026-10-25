@@ -1,0 +1,1255 @@
+{
+  "checked_on": "2026-10-25",
+  "test_window_local_dates": [
+    "2026-10-24",
+    "2026-10-25"
+  ],
+  "timezone": "Asia/Singapore",
+  "board": "KICKPI K11C / RK3566 / 4GB",
+  "display": {
+    "resolution": "1024x600",
+    "density_dpi": 200,
+    "physical_refresh_hz": 62,
+    "navigation": "three-button",
+    "brightness_setting": 102,
+    "animation_scales": 1.0
+  },
+  "method": {
+    "same_apk": true,
+    "repetitions_per_probe": 3,
+    "animation_measured_seconds_per_trial": 30,
+    "animation_warmup_seconds": 1,
+    "settings_launch_repetitions": 10,
+    "idle_sample_seconds": 60,
+    "monitor_interval_seconds": 3,
+    "stress": "four sha256sum workers reading zero bytes",
+    "thermal_stop_c": 85,
+    "thermal_passive_trips_c": [
+      75,
+      85
+    ],
+    "thermal_critical_trip_c": 115,
+    "cooldown_target_c": 56.5,
+    "cooldown_timeout_seconds": 240,
+    "stress_start_temperature_recorded": true,
+    "cpu_busy_excludes_idle_and_iowait": true,
+    "runtime_and_userdata_differ": true,
+    "frame_metrics_are_app_draw_and_framework_counters_not_game_or_power_scores": true
+  },
+  "systems": {
+    "android17": {
+      "sdk": 37,
+      "complete": true,
+      "settings_restored": true,
+      "core_pids_stable": true,
+      "safety_events": [],
+      "apk_sha256": "eeb52e3b1d1923e05ff0a8162961e1febd1fd2a30a95d565e4931d91d7a29599",
+      "idle": {
+        "seconds": 60.28,
+        "cpu_busy_percent": 4.751,
+        "mem_kib": {
+          "MemTotal": 3993136,
+          "MemFree": 1680168,
+          "MemAvailable": 2978156,
+          "Cached": 1313420,
+          "SwapTotal": 1996564,
+          "SwapFree": 1903892,
+          "Slab": 224848
+        },
+        "temperature_c": {
+          "soc-thermal": 55.0,
+          "gpu-thermal": 51.25
+        },
+        "memory_psi_avg10": {
+          "some": 0.0,
+          "full": 0.0
+        }
+      },
+      "animation_default": {
+        "rendered_fps": {
+          "median": 62.052,
+          "min": 62.051,
+          "max": 62.053,
+          "samples": 3
+        },
+        "interval_p50_ms": {
+          "median": 16.154,
+          "min": 16.146,
+          "max": 16.16,
+          "samples": 3
+        },
+        "interval_p95_ms": {
+          "median": 16.92,
+          "min": 16.913,
+          "max": 16.931,
+          "samples": 3
+        },
+        "interval_p99_ms": {
+          "median": 17.246,
+          "min": 17.242,
+          "max": 17.266,
+          "samples": 3
+        },
+        "interval_max_ms": {
+          "median": 18.642,
+          "min": 17.761,
+          "max": 21.921,
+          "samples": 3
+        },
+        "frame_duration_p95_ms": {
+          "median": 21.82,
+          "min": 21.804,
+          "max": 21.884,
+          "samples": 3
+        },
+        "frames_drawn": 5586,
+        "interval_count": 5583,
+        "intervals_over_1_5_vsync": 0,
+        "intervals_over_50_ms": 0,
+        "intervals_over_100_ms": 0,
+        "frame_metrics_reports_dropped": 0,
+        "intervals_over_1_5_vsync_percent": 0.0
+      },
+      "animation_fixed62": {
+        "rendered_fps": {
+          "median": 62.053,
+          "min": 62.052,
+          "max": 62.053,
+          "samples": 3
+        },
+        "interval_p50_ms": {
+          "median": 16.142,
+          "min": 16.135,
+          "max": 16.156,
+          "samples": 3
+        },
+        "interval_p95_ms": {
+          "median": 16.873,
+          "min": 16.873,
+          "max": 16.925,
+          "samples": 3
+        },
+        "interval_p99_ms": {
+          "median": 17.211,
+          "min": 17.174,
+          "max": 17.23,
+          "samples": 3
+        },
+        "interval_max_ms": {
+          "median": 20.841,
+          "min": 18.118,
+          "max": 21.494,
+          "samples": 3
+        },
+        "frame_duration_p95_ms": {
+          "median": 21.152,
+          "min": 20.893,
+          "max": 21.24,
+          "samples": 3
+        },
+        "frames_drawn": 5586,
+        "interval_count": 5583,
+        "intervals_over_1_5_vsync": 0,
+        "intervals_over_50_ms": 0,
+        "intervals_over_100_ms": 0,
+        "frame_metrics_reports_dropped": 0,
+        "intervals_over_1_5_vsync_percent": 0.0
+      },
+      "animation_loaded": {
+        "rendered_fps": {
+          "median": 62.052,
+          "min": 62.052,
+          "max": 62.053,
+          "samples": 3
+        },
+        "interval_p50_ms": {
+          "median": 16.113,
+          "min": 16.112,
+          "max": 16.114,
+          "samples": 3
+        },
+        "interval_p95_ms": {
+          "median": 16.397,
+          "min": 16.375,
+          "max": 16.421,
+          "samples": 3
+        },
+        "interval_p99_ms": {
+          "median": 16.756,
+          "min": 16.632,
+          "max": 16.832,
+          "samples": 3
+        },
+        "interval_max_ms": {
+          "median": 20.433,
+          "min": 19.429,
+          "max": 21.521,
+          "samples": 3
+        },
+        "frame_duration_p95_ms": {
+          "median": 20.977,
+          "min": 20.852,
+          "max": 32.929,
+          "samples": 3
+        },
+        "frames_drawn": 5586,
+        "interval_count": 5583,
+        "intervals_over_1_5_vsync": 0,
+        "intervals_over_50_ms": 0,
+        "intervals_over_100_ms": 0,
+        "frame_metrics_reports_dropped": 0,
+        "intervals_over_1_5_vsync_percent": 0.0
+      },
+      "scroll_fixed62": {
+        "cpu_busy_percent": {
+          "median": 43.803,
+          "min": 43.748,
+          "max": 43.903,
+          "samples": 3
+        },
+        "p50_ms": {
+          "median": 19,
+          "min": 19,
+          "max": 19,
+          "samples": 3
+        },
+        "p90_ms": {
+          "median": 32,
+          "min": 32,
+          "max": 34,
+          "samples": 3
+        },
+        "p95_ms": {
+          "median": 38,
+          "min": 36,
+          "max": 38,
+          "samples": 3
+        },
+        "p99_ms": {
+          "median": 46,
+          "min": 46,
+          "max": 48,
+          "samples": 3
+        },
+        "frames": 1395,
+        "janky": 229,
+        "janky_percent": 16.4158
+      },
+      "scroll_loaded": {
+        "cpu_busy_percent": {
+          "median": 99.808,
+          "min": 99.73,
+          "max": 99.846,
+          "samples": 3
+        },
+        "p50_ms": {
+          "median": 20,
+          "min": 20,
+          "max": 20,
+          "samples": 3
+        },
+        "p90_ms": {
+          "median": 36,
+          "min": 31,
+          "max": 38,
+          "samples": 3
+        },
+        "p95_ms": {
+          "median": 38,
+          "min": 38,
+          "max": 44,
+          "samples": 3
+        },
+        "p99_ms": {
+          "median": 53,
+          "min": 48,
+          "max": 57,
+          "samples": 3
+        },
+        "frames": 1899,
+        "janky": 217,
+        "janky_percent": 11.4271
+      },
+      "settings_launch": {
+        "cold": {
+          "total_time_ms": {
+            "median": 957.5,
+            "min": 945,
+            "max": 998,
+            "samples": 10
+          },
+          "wait_time_ms": {
+            "median": 967.0,
+            "min": 950,
+            "max": 1005,
+            "samples": 10
+          },
+          "launch_states": [
+            "COLD"
+          ]
+        },
+        "warm": {
+          "total_time_ms": {
+            "median": 161.0,
+            "min": 129,
+            "max": 190,
+            "samples": 10
+          },
+          "wait_time_ms": {
+            "median": 181.5,
+            "min": 157,
+            "max": 202,
+            "samples": 10
+          },
+          "launch_states": [
+            "HOT"
+          ]
+        }
+      },
+      "storage": {
+        "write_fsync_ms": {
+          "median": 872,
+          "min": 854,
+          "max": 894,
+          "samples": 3
+        },
+        "cached_read_hash_ms": {
+          "median": 186,
+          "min": 175,
+          "max": 202,
+          "samples": 3
+        },
+        "sqlite_transaction_ms": {
+          "median": 28,
+          "min": 28,
+          "max": 29,
+          "samples": 3
+        }
+      },
+      "compute": {
+        "sha256_1_workers_mib_per_second": {
+          "median": 680.065,
+          "min": 672.647,
+          "max": 682.324,
+          "samples": 3
+        },
+        "sha256_4_workers_mib_per_second": {
+          "median": 2293.965,
+          "min": 2268.247,
+          "max": 2422.257,
+          "samples": 3
+        }
+      },
+      "gpu": {
+        "passes": 3,
+        "frames_verified": 900
+      },
+      "media": {
+        "video-hardware-1080p60-surface": {
+          "decode_ms": {
+            "median": 1528,
+            "min": 1508,
+            "max": 1576,
+            "samples": 3
+          },
+          "output_buffers": [
+            180
+          ],
+          "passes": 3,
+          "codec_names": [
+            "c2.rk.avc.decoder"
+          ],
+          "output_modes": [
+            "Surface"
+          ],
+          "output_bytes": [
+            180
+          ]
+        },
+        "video-hardware-1080p60-bounded": {
+          "decode_ms": {
+            "median": 1789,
+            "min": 1785,
+            "max": 1852,
+            "samples": 3
+          },
+          "output_buffers": [
+            180
+          ],
+          "passes": 3,
+          "codec_names": [
+            "c2.rk.avc.decoder"
+          ],
+          "output_modes": [
+            "YUV ByteBuffer"
+          ],
+          "output_bytes": [
+            559872000
+          ]
+        },
+        "video-software": {
+          "decode_ms": {
+            "median": 295,
+            "min": 288,
+            "max": 297,
+            "samples": 3
+          },
+          "output_buffers": [
+            60
+          ],
+          "passes": 3,
+          "codec_names": [
+            "c2.android.avc.decoder"
+          ],
+          "output_modes": [
+            "YUV ByteBuffer"
+          ],
+          "output_bytes": [
+            6912000
+          ]
+        },
+        "audio-decode": {
+          "decode_ms": {
+            "median": 309,
+            "min": 307,
+            "max": 320,
+            "samples": 3
+          },
+          "output_buffers": [
+            94
+          ],
+          "passes": 3,
+          "codec_names": [
+            "c2.android.aac.decoder"
+          ],
+          "output_modes": [
+            "YUV ByteBuffer"
+          ],
+          "output_bytes": [
+            192512
+          ]
+        }
+      },
+      "sampling": {
+        "observations": 251,
+        "span_seconds": 831.0,
+        "mem_available_min_kib": 2750036,
+        "soc_peak_c": 83.333,
+        "gpu_peak_c": 72.777,
+        "temperature_load_start_c": {
+          "soc-thermal": 58.333,
+          "gpu-thermal": 55.0
+        },
+        "temperature_load_end_c": {
+          "soc-thermal": 83.333,
+          "gpu-thermal": 72.222
+        },
+        "load_cpu_frequency_khz_range": [
+          1416000,
+          1800000
+        ],
+        "loaded_cpu_busy_percent": 98.18,
+        "memory_psi_some_avg10_peak": 0.0,
+        "memory_psi_full_avg10_peak": 0.0
+      },
+      "frame_timestamp_quality": {
+        "scroll-fixed62": [
+          {
+            "deadline_budget_p50_ms": 32.286,
+            "deadline_budget_p95_ms": 48.641,
+            "deadline_budget_p99_ms": 48.671,
+            "pipeline_completion_p50_ms": 17.348,
+            "pipeline_completion_p95_ms": 39.899,
+            "pipeline_completion_p99_ms": 43.791,
+            "ui_work_p50_ms": 2.141,
+            "ui_work_p95_ms": 5.868,
+            "render_submit_p50_ms": 7.82,
+            "render_submit_p95_ms": 14.947,
+            "retained_frames": 120,
+            "gpu_completed_before_swap_count": 1,
+            "present_lag_p50_ms": 47.221,
+            "present_lag_p95_ms": 63.602,
+            "present_lag_p99_ms": 63.637,
+            "frame_completed_after_deadline_count": 19
+          },
+          {
+            "deadline_budget_p50_ms": 32.275,
+            "deadline_budget_p95_ms": 64.72,
+            "deadline_budget_p99_ms": 64.812,
+            "pipeline_completion_p50_ms": 22.576,
+            "pipeline_completion_p95_ms": 38.628,
+            "pipeline_completion_p99_ms": 42.942,
+            "ui_work_p50_ms": 2.19,
+            "ui_work_p95_ms": 5.68,
+            "render_submit_p50_ms": 8.937,
+            "render_submit_p95_ms": 15.35,
+            "retained_frames": 120,
+            "gpu_completed_before_swap_count": 2,
+            "present_lag_p50_ms": 47.424,
+            "present_lag_p95_ms": 63.637,
+            "present_lag_p99_ms": 63.731,
+            "frame_completed_after_deadline_count": 28
+          },
+          {
+            "deadline_budget_p50_ms": 32.354,
+            "deadline_budget_p95_ms": 64.548,
+            "deadline_budget_p99_ms": 64.621,
+            "pipeline_completion_p50_ms": 19.063,
+            "pipeline_completion_p95_ms": 49.191,
+            "pipeline_completion_p99_ms": 52.448,
+            "ui_work_p50_ms": 1.918,
+            "ui_work_p95_ms": 5.786,
+            "render_submit_p50_ms": 7.799,
+            "render_submit_p95_ms": 15.175,
+            "retained_frames": 120,
+            "gpu_completed_before_swap_count": 2,
+            "present_lag_p50_ms": 47.332,
+            "present_lag_p95_ms": 79.693,
+            "present_lag_p99_ms": 79.791,
+            "frame_completed_after_deadline_count": 20
+          }
+        ],
+        "scroll-loaded": [
+          {
+            "deadline_budget_p50_ms": 32.408,
+            "deadline_budget_p95_ms": 64.132,
+            "deadline_budget_p99_ms": 64.267,
+            "pipeline_completion_p50_ms": 20.363,
+            "pipeline_completion_p95_ms": 47.753,
+            "pipeline_completion_p99_ms": 49.655,
+            "ui_work_p50_ms": 1.696,
+            "ui_work_p95_ms": 4.774,
+            "render_submit_p50_ms": 5.975,
+            "render_submit_p95_ms": 16.708,
+            "retained_frames": 120,
+            "gpu_completed_before_swap_count": 1,
+            "present_lag_p50_ms": 47.376,
+            "present_lag_p95_ms": 63.594,
+            "present_lag_p99_ms": 63.703,
+            "frame_completed_after_deadline_count": 18
+          },
+          {
+            "deadline_budget_p50_ms": 32.225,
+            "deadline_budget_p95_ms": 80.71,
+            "deadline_budget_p99_ms": 80.797,
+            "pipeline_completion_p50_ms": 20.161,
+            "pipeline_completion_p95_ms": 74.44,
+            "pipeline_completion_p99_ms": 76.873,
+            "ui_work_p50_ms": 1.726,
+            "ui_work_p95_ms": 3.155,
+            "render_submit_p50_ms": 7.251,
+            "render_submit_p95_ms": 17.134,
+            "retained_frames": 120,
+            "gpu_completed_before_swap_count": 1,
+            "present_lag_p50_ms": 47.382,
+            "present_lag_p95_ms": 79.739,
+            "present_lag_p99_ms": 79.769,
+            "frame_completed_after_deadline_count": 16
+          },
+          {
+            "deadline_budget_p50_ms": 32.241,
+            "deadline_budget_p95_ms": 48.592,
+            "deadline_budget_p99_ms": 48.63,
+            "pipeline_completion_p50_ms": 29.696,
+            "pipeline_completion_p95_ms": 40.758,
+            "pipeline_completion_p99_ms": 44.12,
+            "ui_work_p50_ms": 1.839,
+            "ui_work_p95_ms": 5.055,
+            "render_submit_p50_ms": 9.791,
+            "render_submit_p95_ms": 15.037,
+            "retained_frames": 120,
+            "gpu_completed_before_swap_count": 1,
+            "present_lag_p50_ms": 47.654,
+            "present_lag_p95_ms": 63.623,
+            "present_lag_p99_ms": 63.702,
+            "frame_completed_after_deadline_count": 14
+          }
+        ]
+      },
+      "resource_by_phase": {
+        "animation-default": {
+          "cpu_busy_percent": 33.529,
+          "sample_span_seconds": 94.94,
+          "soc_temperature_range_c": [
+            57.222,
+            61.111
+          ]
+        },
+        "animation-fixed62": {
+          "cpu_busy_percent": 33.062,
+          "sample_span_seconds": 98.04,
+          "soc_temperature_range_c": [
+            59.444,
+            61.666
+          ]
+        },
+        "animation-loaded": {
+          "cpu_busy_percent": 99.852,
+          "sample_span_seconds": 98.02,
+          "soc_temperature_range_c": [
+            79.375,
+            83.333
+          ]
+        },
+        "settings-launch": {
+          "cpu_busy_percent": 56.995,
+          "sample_span_seconds": 39.76,
+          "soc_temperature_range_c": [
+            66.25,
+            69.375
+          ]
+        },
+        "compute": {
+          "cpu_busy_percent": 59.962,
+          "sample_span_seconds": 30.49,
+          "soc_temperature_range_c": [
+            69.375,
+            82.777
+          ]
+        }
+      },
+      "boot_mode": "single-boot DSU",
+      "tracing": {
+        "traced_status": "running",
+        "vm_relay_configured": false
+      },
+      "android_meminfo": {
+        "used_ram_before_kib": 1251123,
+        "pss_before_kib": {
+          "system": 420264,
+          "com.android.systemui": 300660,
+          "com.android.launcher3": 232904
+        },
+        "used_ram_after_kib": 1343782,
+        "pss_after_kib": {
+          "system": 432760,
+          "com.android.systemui": 301668,
+          "com.android.launcher3": 222460
+        }
+      },
+      "crash_buffer_changed": false,
+      "original_refresh_limits_null": true
+    },
+    "android16": {
+      "sdk": 36,
+      "complete": true,
+      "settings_restored": true,
+      "core_pids_stable": true,
+      "safety_events": [],
+      "apk_sha256": "eeb52e3b1d1923e05ff0a8162961e1febd1fd2a30a95d565e4931d91d7a29599",
+      "idle": {
+        "seconds": 60.25,
+        "cpu_busy_percent": 5.755,
+        "mem_kib": {
+          "MemTotal": 3993136,
+          "MemFree": 1614000,
+          "MemAvailable": 2967064,
+          "Cached": 1370824,
+          "SwapTotal": 1996564,
+          "SwapFree": 1896468,
+          "Slab": 225888
+        },
+        "temperature_c": {
+          "soc-thermal": 58.333,
+          "gpu-thermal": 55.0
+        },
+        "memory_psi_avg10": {
+          "some": 0.0,
+          "full": 0.0
+        }
+      },
+      "animation_default": {
+        "rendered_fps": {
+          "median": 62.052,
+          "min": 62.051,
+          "max": 62.052,
+          "samples": 3
+        },
+        "interval_p50_ms": {
+          "median": 16.116,
+          "min": 16.111,
+          "max": 16.117,
+          "samples": 3
+        },
+        "interval_p95_ms": {
+          "median": 16.385,
+          "min": 16.374,
+          "max": 16.624,
+          "samples": 3
+        },
+        "interval_p99_ms": {
+          "median": 16.796,
+          "min": 16.778,
+          "max": 16.842,
+          "samples": 3
+        },
+        "interval_max_ms": {
+          "median": 19.924,
+          "min": 19.251,
+          "max": 20.259,
+          "samples": 3
+        },
+        "frame_duration_p95_ms": {
+          "median": 36.206,
+          "min": 17.688,
+          "max": 36.239,
+          "samples": 3
+        },
+        "frames_drawn": 5586,
+        "interval_count": 5583,
+        "intervals_over_1_5_vsync": 0,
+        "intervals_over_50_ms": 0,
+        "intervals_over_100_ms": 0,
+        "frame_metrics_reports_dropped": 0,
+        "intervals_over_1_5_vsync_percent": 0.0
+      },
+      "animation_fixed62": {
+        "rendered_fps": {
+          "median": 62.041,
+          "min": 62.041,
+          "max": 62.051,
+          "samples": 3
+        },
+        "interval_p50_ms": {
+          "median": 16.116,
+          "min": 16.113,
+          "max": 16.117,
+          "samples": 3
+        },
+        "interval_p95_ms": {
+          "median": 16.471,
+          "min": 16.36,
+          "max": 16.638,
+          "samples": 3
+        },
+        "interval_p99_ms": {
+          "median": 17.434,
+          "min": 17.345,
+          "max": 19.482,
+          "samples": 3
+        },
+        "interval_max_ms": {
+          "median": 22.491,
+          "min": 21.054,
+          "max": 23.694,
+          "samples": 3
+        },
+        "frame_duration_p95_ms": {
+          "median": 49.115,
+          "min": 36.194,
+          "max": 52.07,
+          "samples": 3
+        },
+        "frames_drawn": 5584,
+        "interval_count": 5581,
+        "intervals_over_1_5_vsync": 0,
+        "intervals_over_50_ms": 0,
+        "intervals_over_100_ms": 0,
+        "frame_metrics_reports_dropped": 0,
+        "intervals_over_1_5_vsync_percent": 0.0
+      },
+      "animation_loaded": {
+        "rendered_fps": {
+          "median": 62.038,
+          "min": 61.973,
+          "max": 62.041,
+          "samples": 3
+        },
+        "interval_p50_ms": {
+          "median": 16.114,
+          "min": 16.113,
+          "max": 16.115,
+          "samples": 3
+        },
+        "interval_p95_ms": {
+          "median": 16.824,
+          "min": 16.482,
+          "max": 17.314,
+          "samples": 3
+        },
+        "interval_p99_ms": {
+          "median": 18.966,
+          "min": 17.712,
+          "max": 19.815,
+          "samples": 3
+        },
+        "interval_max_ms": {
+          "median": 23.31,
+          "min": 23.074,
+          "max": 26.382,
+          "samples": 3
+        },
+        "frame_duration_p95_ms": {
+          "median": 49.2,
+          "min": 49.126,
+          "max": 52.33,
+          "samples": 3
+        },
+        "frames_drawn": 5582,
+        "interval_count": 5579,
+        "intervals_over_1_5_vsync": 1,
+        "intervals_over_50_ms": 0,
+        "intervals_over_100_ms": 0,
+        "frame_metrics_reports_dropped": 0,
+        "intervals_over_1_5_vsync_percent": 0.0179
+      },
+      "scroll_fixed62": {
+        "cpu_busy_percent": {
+          "median": 60.208,
+          "min": 58.274,
+          "max": 60.281,
+          "samples": 3
+        },
+        "p50_ms": {
+          "median": 30,
+          "min": 30,
+          "max": 31,
+          "samples": 3
+        },
+        "p90_ms": {
+          "median": 34,
+          "min": 34,
+          "max": 38,
+          "samples": 3
+        },
+        "p95_ms": {
+          "median": 38,
+          "min": 36,
+          "max": 38,
+          "samples": 3
+        },
+        "p99_ms": {
+          "median": 40,
+          "min": 40,
+          "max": 42,
+          "samples": 3
+        },
+        "frames": 1679,
+        "janky": 13,
+        "janky_percent": 0.7743
+      },
+      "scroll_loaded": {
+        "cpu_busy_percent": {
+          "median": 99.577,
+          "min": 99.36,
+          "max": 99.684,
+          "samples": 3
+        },
+        "p50_ms": {
+          "median": 29,
+          "min": 27,
+          "max": 29,
+          "samples": 3
+        },
+        "p90_ms": {
+          "median": 34,
+          "min": 32,
+          "max": 36,
+          "samples": 3
+        },
+        "p95_ms": {
+          "median": 40,
+          "min": 40,
+          "max": 44,
+          "samples": 3
+        },
+        "p99_ms": {
+          "median": 53,
+          "min": 46,
+          "max": 57,
+          "samples": 3
+        },
+        "frames": 2241,
+        "janky": 55,
+        "janky_percent": 2.4543
+      },
+      "settings_launch": {
+        "cold": {
+          "total_time_ms": {
+            "median": 1022.0,
+            "min": 1008,
+            "max": 1070,
+            "samples": 10
+          },
+          "wait_time_ms": {
+            "median": 1029.5,
+            "min": 1014,
+            "max": 1077,
+            "samples": 10
+          },
+          "launch_states": [
+            "COLD"
+          ]
+        },
+        "warm": {
+          "total_time_ms": {
+            "median": 179.0,
+            "min": 144,
+            "max": 216,
+            "samples": 10
+          },
+          "wait_time_ms": {
+            "median": 186.0,
+            "min": 165,
+            "max": 227,
+            "samples": 10
+          },
+          "launch_states": [
+            "HOT"
+          ]
+        }
+      },
+      "storage": {
+        "write_fsync_ms": {
+          "median": 1094,
+          "min": 918,
+          "max": 1122,
+          "samples": 3
+        },
+        "cached_read_hash_ms": {
+          "median": 191,
+          "min": 173,
+          "max": 193,
+          "samples": 3
+        },
+        "sqlite_transaction_ms": {
+          "median": 27,
+          "min": 27,
+          "max": 34,
+          "samples": 3
+        }
+      },
+      "compute": {
+        "sha256_1_workers_mib_per_second": {
+          "median": 670.16,
+          "min": 662.922,
+          "max": 673.492,
+          "samples": 3
+        },
+        "sha256_4_workers_mib_per_second": {
+          "median": 2044.076,
+          "min": 2042.672,
+          "max": 2129.082,
+          "samples": 3
+        }
+      },
+      "gpu": {
+        "passes": 3,
+        "frames_verified": 900
+      },
+      "media": {
+        "video-hardware-1080p60-surface": {
+          "decode_ms": {
+            "median": 1562,
+            "min": 1519,
+            "max": 1583,
+            "samples": 3
+          },
+          "output_buffers": [
+            180
+          ],
+          "passes": 3,
+          "codec_names": [
+            "c2.rk.avc.decoder"
+          ],
+          "output_modes": [
+            "Surface"
+          ],
+          "output_bytes": [
+            180
+          ]
+        },
+        "video-hardware-1080p60-bounded": {
+          "decode_ms": {
+            "median": 10519,
+            "min": 8366,
+            "max": 14076,
+            "samples": 3
+          },
+          "output_buffers": [
+            180
+          ],
+          "passes": 3,
+          "codec_names": [
+            "c2.rk.avc.decoder"
+          ],
+          "output_modes": [
+            "YUV ByteBuffer"
+          ],
+          "output_bytes": [
+            559872000
+          ]
+        },
+        "video-software": {
+          "decode_ms": {
+            "median": 294,
+            "min": 284,
+            "max": 295,
+            "samples": 3
+          },
+          "output_buffers": [
+            60
+          ],
+          "passes": 3,
+          "codec_names": [
+            "c2.android.avc.decoder"
+          ],
+          "output_modes": [
+            "YUV ByteBuffer"
+          ],
+          "output_bytes": [
+            6912000
+          ]
+        },
+        "audio-decode": {
+          "decode_ms": {
+            "median": 270,
+            "min": 270,
+            "max": 307,
+            "samples": 3
+          },
+          "output_buffers": [
+            94
+          ],
+          "passes": 3,
+          "codec_names": [
+            "c2.android.aac.decoder"
+          ],
+          "output_modes": [
+            "YUV ByteBuffer"
+          ],
+          "output_bytes": [
+            192512
+          ]
+        }
+      },
+      "sampling": {
+        "observations": 259,
+        "span_seconds": 860.8,
+        "mem_available_min_kib": 2118484,
+        "soc_peak_c": 83.888,
+        "gpu_peak_c": 73.333,
+        "temperature_load_start_c": {
+          "soc-thermal": 60.0,
+          "gpu-thermal": 57.222
+        },
+        "temperature_load_end_c": {
+          "soc-thermal": 83.333,
+          "gpu-thermal": 72.777
+        },
+        "load_cpu_frequency_khz_range": [
+          1416000,
+          1800000
+        ],
+        "loaded_cpu_busy_percent": 98.148,
+        "memory_psi_some_avg10_peak": 0.0,
+        "memory_psi_full_avg10_peak": 0.0
+      },
+      "frame_timestamp_quality": {
+        "scroll-fixed62": [
+          {
+            "deadline_budget_p50_ms": 48.428,
+            "deadline_budget_p95_ms": 48.518,
+            "deadline_budget_p99_ms": 48.575,
+            "pipeline_completion_p50_ms": 36.297,
+            "pipeline_completion_p95_ms": 37.824,
+            "pipeline_completion_p99_ms": 41.452,
+            "ui_work_p50_ms": 2.318,
+            "ui_work_p95_ms": 3.814,
+            "render_submit_p50_ms": 14.078,
+            "render_submit_p95_ms": 15.528,
+            "retained_frames": 120,
+            "gpu_completed_before_swap_count": 2,
+            "present_lag_p50_ms": 63.488,
+            "present_lag_p95_ms": 63.593,
+            "present_lag_p99_ms": 63.741,
+            "frame_completed_after_deadline_count": 0
+          },
+          {
+            "deadline_budget_p50_ms": 48.415,
+            "deadline_budget_p95_ms": 64.464,
+            "deadline_budget_p99_ms": 64.501,
+            "pipeline_completion_p50_ms": 36.28,
+            "pipeline_completion_p95_ms": 52.296,
+            "pipeline_completion_p99_ms": 52.639,
+            "ui_work_p50_ms": 2.393,
+            "ui_work_p95_ms": 3.591,
+            "render_submit_p50_ms": 13.924,
+            "render_submit_p95_ms": 15.357,
+            "retained_frames": 120,
+            "gpu_completed_before_swap_count": 2,
+            "present_lag_p50_ms": 63.496,
+            "present_lag_p95_ms": 79.539,
+            "present_lag_p99_ms": 79.621,
+            "frame_completed_after_deadline_count": 0
+          },
+          {
+            "deadline_budget_p50_ms": 48.307,
+            "deadline_budget_p95_ms": 48.638,
+            "deadline_budget_p99_ms": 64.415,
+            "pipeline_completion_p50_ms": 36.273,
+            "pipeline_completion_p95_ms": 39.522,
+            "pipeline_completion_p99_ms": 52.453,
+            "ui_work_p50_ms": 2.252,
+            "ui_work_p95_ms": 3.286,
+            "render_submit_p50_ms": 13.952,
+            "render_submit_p95_ms": 15.374,
+            "retained_frames": 120,
+            "gpu_completed_before_swap_count": 2,
+            "present_lag_p50_ms": 63.49,
+            "present_lag_p95_ms": 65.1,
+            "present_lag_p99_ms": 79.584,
+            "frame_completed_after_deadline_count": 1
+          }
+        ],
+        "scroll-loaded": [
+          {
+            "deadline_budget_p50_ms": 48.395,
+            "deadline_budget_p95_ms": 64.496,
+            "deadline_budget_p99_ms": 64.504,
+            "pipeline_completion_p50_ms": 36.389,
+            "pipeline_completion_p95_ms": 58.803,
+            "pipeline_completion_p99_ms": 65.24,
+            "ui_work_p50_ms": 2.138,
+            "ui_work_p95_ms": 2.771,
+            "render_submit_p50_ms": 13.525,
+            "render_submit_p95_ms": 18.739,
+            "retained_frames": 120,
+            "gpu_completed_before_swap_count": 0,
+            "present_lag_p50_ms": 63.491,
+            "present_lag_p95_ms": 79.587,
+            "present_lag_p99_ms": 79.609,
+            "frame_completed_after_deadline_count": 4
+          },
+          {
+            "deadline_budget_p50_ms": 64.485,
+            "deadline_budget_p95_ms": 64.523,
+            "deadline_budget_p99_ms": 64.539,
+            "pipeline_completion_p50_ms": 36.322,
+            "pipeline_completion_p95_ms": 52.38,
+            "pipeline_completion_p99_ms": 62.69,
+            "ui_work_p50_ms": 1.948,
+            "ui_work_p95_ms": 2.768,
+            "render_submit_p50_ms": 13.531,
+            "render_submit_p95_ms": 18.216,
+            "retained_frames": 120,
+            "gpu_completed_before_swap_count": 1,
+            "present_lag_p50_ms": 63.492,
+            "present_lag_p95_ms": 79.612,
+            "present_lag_p99_ms": 79.641,
+            "frame_completed_after_deadline_count": 2
+          },
+          {
+            "deadline_budget_p50_ms": 48.44,
+            "deadline_budget_p95_ms": 48.612,
+            "deadline_budget_p99_ms": 48.676,
+            "pipeline_completion_p50_ms": 36.308,
+            "pipeline_completion_p95_ms": 37.381,
+            "pipeline_completion_p99_ms": 65.677,
+            "ui_work_p50_ms": 2.156,
+            "ui_work_p95_ms": 5.027,
+            "render_submit_p50_ms": 13.416,
+            "render_submit_p95_ms": 16.123,
+            "retained_frames": 120,
+            "gpu_completed_before_swap_count": 0,
+            "present_lag_p50_ms": 63.483,
+            "present_lag_p95_ms": 63.778,
+            "present_lag_p99_ms": 95.636,
+            "frame_completed_after_deadline_count": 3
+          }
+        ]
+      },
+      "resource_by_phase": {
+        "animation-default": {
+          "cpu_busy_percent": 47.343,
+          "sample_span_seconds": 94.97,
+          "soc_temperature_range_c": [
+            61.666,
+            71.666
+          ]
+        },
+        "animation-fixed62": {
+          "cpu_busy_percent": 53.461,
+          "sample_span_seconds": 98.42,
+          "soc_temperature_range_c": [
+            72.222,
+            74.444
+          ]
+        },
+        "animation-loaded": {
+          "cpu_busy_percent": 99.357,
+          "sample_span_seconds": 99.81,
+          "soc_temperature_range_c": [
+            81.111,
+            83.333
+          ]
+        },
+        "settings-launch": {
+          "cpu_busy_percent": 59.394,
+          "sample_span_seconds": 37.15,
+          "soc_temperature_range_c": [
+            73.888,
+            76.25
+          ]
+        },
+        "compute": {
+          "cpu_busy_percent": 59.596,
+          "sample_span_seconds": 30.58,
+          "soc_temperature_range_c": [
+            72.222,
+            83.888
+          ]
+        }
+      },
+      "boot_mode": "native eMMC",
+      "tracing": {
+        "traced_status": "restarting",
+        "vm_relay_configured": true
+      },
+      "android_meminfo": {
+        "used_ram_before_kib": 1242679,
+        "pss_before_kib": {
+          "system": 407272,
+          "com.android.systemui": 279568,
+          "com.android.launcher3": 221724
+        },
+        "used_ram_after_kib": 2058794,
+        "pss_after_kib": {
+          "system": 438096,
+          "com.android.systemui": 297572,
+          "com.android.launcher3": 223396
+        }
+      },
+      "crash_buffer_changed": false,
+      "original_refresh_limits_null": true
+    }
+  },
+  "final_state": {
+    "checked_on": "2026-10-25",
+    "sdk": 37,
+    "selinux": "Enforcing",
+    "boot_seconds_adb_poll": 38.82,
+    "expected_dsu_slot": true,
+    "native16_settings_restored_before_switch": true,
+    "android17_settings_restored": true,
+    "diagnostics_uninstalled": true,
+    "stress_processes_present": false,
+    "native_firmware_partitions_written": false,
+    "compat_helpers": {
+      "ril_compat": "active",
+      "bluetooth_compat": "active",
+      "rtc_timer": "active",
+      "sensors_compat": "no-configured-device"
+    },
+    "same_vendor_fingerprint": true,
+    "post_restore_crash_buffer_empty": true,
+    "boot_complete": true
+  },
+  "boot_observations": {
+    "android16_seconds_adb_poll": 49.83,
+    "android17_seconds_adb_poll": 38.82,
+    "samples_each": 1,
+    "mode_differs": true,
+    "first_boot": false
+  }
+}

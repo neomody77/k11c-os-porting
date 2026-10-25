@@ -1,0 +1,71 @@
+diff --git a/src/com/android/launcher3/util/DimensionUtils.kt b/src/com/android/launcher3/util/DimensionUtils.kt
+--- a/src/com/android/launcher3/util/DimensionUtils.kt
++++ b/src/com/android/launcher3/util/DimensionUtils.kt
+@@ -18,6 +18,8 @@
+ 
+ import android.content.res.Resources
+ import android.graphics.Point
++import android.view.Surface.ROTATION_0
++import android.view.Surface.ROTATION_180
+ import android.view.ViewGroup
+ import com.android.launcher3.DeviceProfile
+ import com.android.launcher3.R
+@@ -49,14 +51,16 @@
+             return p
+         }
+ 
+-        // Taskbar on phone, portrait
+-        if (!deviceProfile.deviceProperties.isLandscape) {
++        // Match the window edge selected by TaskbarActivityContext, including
++        // phones whose display is naturally landscape.
++        val rotation = deviceProfile.deviceProperties.rotationHint
++        if (rotation == ROTATION_0 || rotation == ROTATION_180) {
+             p.x = ViewGroup.LayoutParams.MATCH_PARENT
+             p.y = res.getDimensionPixelSize(R.dimen.taskbar_phone_size)
+             return p
+         }
+ 
+-        // Taskbar on phone, landscape
++        // Taskbar on phone, side navigation at quarter-turn rotations
+         p.x = res.getDimensionPixelSize(R.dimen.taskbar_phone_size)
+         p.y = ViewGroup.LayoutParams.MATCH_PARENT
+         return p
+diff --git a/quickstep/src/com/android/launcher3/taskbar/navbutton/NavButtonLayoutFactory.kt b/quickstep/src/com/android/launcher3/taskbar/navbutton/NavButtonLayoutFactory.kt
+--- a/quickstep/src/com/android/launcher3/taskbar/navbutton/NavButtonLayoutFactory.kt
++++ b/quickstep/src/com/android/launcher3/taskbar/navbutton/NavButtonLayoutFactory.kt
+@@ -17,6 +17,8 @@
+ package com.android.launcher3.taskbar.navbutton
+ 
+ import android.content.res.Resources
++import android.view.Surface.ROTATION_0
++import android.view.Surface.ROTATION_180
+ import android.view.Surface.ROTATION_90
+ import android.view.Surface.Rotation
+ import android.view.ViewGroup
+@@ -97,7 +99,8 @@
+                     )
+                 }
+                 isPhoneNavMode -> {
+-                    if (!deviceProfile.deviceProperties.isLandscape) {
++                    // Follow the navigation window rotation, not screen aspect ratio.
++                    if (surfaceRotation == ROTATION_0 || surfaceRotation == ROTATION_180) {
+                         navButtonsView.setIsVertical(false)
+                         PhonePortraitNavLayoutter(
+                             resources,
+diff --git a/quickstep/src/com/android/launcher3/taskbar/TaskbarActivityContext.java b/quickstep/src/com/android/launcher3/taskbar/TaskbarActivityContext.java
+--- a/quickstep/src/com/android/launcher3/taskbar/TaskbarActivityContext.java
++++ b/quickstep/src/com/android/launcher3/taskbar/TaskbarActivityContext.java
+@@ -1563,9 +1563,10 @@
+      * Updates the TaskbarContainer size (pass {@link #getDefaultTaskbarWindowSize()} to reset).
+      */
+     public void setTaskbarWindowSize(int size) {
+-        // In landscape phone button nav mode, we should set the task bar width instead of height
+-        // because this is the only case in which the nav bar is not on the display bottom.
+-        boolean landscapePhoneButtonNav = isPhoneButtonNavMode() && mDeviceProfile.getDeviceProperties().isLandscape();
++        // Match the actual navigation window edge, including naturally landscape displays.
++        int rotation = getDisplay().getRotation();
++        boolean landscapePhoneButtonNav = isPhoneButtonNavMode()
++                && (rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_270);
+         if ((landscapePhoneButtonNav ? mWindowLayoutParams.width : mWindowLayoutParams.height)
+                 == size || mIsDestroyed) {
+             return;

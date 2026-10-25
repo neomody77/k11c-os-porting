@@ -67,3 +67,13 @@ boot cmdline只将SELinux改为enforcing，保留已有DSU/AVB修正及其他载
 原生首启与一次正常重启均API36.1、Enforcing、DSU=0；USB和Wi-Fi VALIDATED，兼容修复active。第二次启动亮屏待机63.15秒，四核CPU平均4.68%，MemAvailable约2.89GiB，SoC52.5–53.13℃，核心服务采样PID稳定。历史DSU和测试备份约占17.91GiB保留，/data可用约6.05GiB。
 
 Sensors1.0 VTS此前DSU36通过、0失败；官方CTS已展开、完整VTS已构建，临时AppArmor例外卸载删除。用户要求Android16到此结束，未在原生安装上继续套件，临时ADB转发关闭。Android17未开始。详见 [阶段总结](../android16/summary-20261003.md)。
+
+## 2026-10-24：自然横屏三键导航维护
+
+原生 Android16 切换到三键后，复现与 Android17 相同的 Launcher 方向/窗口尺寸不一致，导航窗口被收成 60×60。新增第十一个补丁，统一三处导航方向判断与实际显示旋转；同版本 Launcher APK 以保留数据的系统应用更新方式部署，原始系统 APK 保留，未刷写原生固件。
+
+底栏恢复为 1024×60，密度仍为 200、Enforcing；返回、主页和最近任务均经真实坐标点击与画面验证。只实测自然方向的旋转 0，没有重启完整兼容套件。Android17 的工作在其独立分支维护，本分支仅记录 Android16 的这次 UI 修复。见 [导航修复](../android16/navbar-fix-20261024.md) / [JSON](../android16/navbar-results-20261024.json)。
+
+## 2026-10-25：Android17与原生Android16性能对照
+
+同一APK、显示设置和负载顺序，完成三轮默认/固定62Hz/四核压力动画、设置页滚动，十轮进程冷启动和已有任务恢复，以及CPU、存储、GPU、媒体测试。额外核对帧deadline和软件呈现时间，确认两个版本的gfxinfo超期比例不能直接作为同口径排名。Android16保留traced重启的真实基线，Android17已含tracing修复。两套系统核心进程PID稳定、设置恢复，测试结束回Android17单次DSU；原生固件未刷写。见 [报告](../android16/performance-comparison-20261025.md)。

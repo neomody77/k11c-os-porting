@@ -1,5 +1,5 @@
 {
-  "updated_on": "2026-10-03",
+  "updated_on": "2026-10-25",
   "board": "KICKPI K11C / RK3566",
   "scope": "AOSP ARM64 GSI on factory kernel/vendor",
   "android16": {
@@ -61,6 +61,27 @@
         53.125
       ],
       "userdata_available_kib": 6341372
+    },
+    "navbar_followup": {
+      "stage": "verified_same_version_launcher_update",
+      "source_patch": "patches/android16/0011-navbar-natural-landscape-rotation.patch",
+      "report": "docs/android16/navbar-fix-20261024.md",
+      "results": "docs/android16/navbar-results-20261024.json",
+      "navigation_mode": "three_button",
+      "density": 200,
+      "rotation_tested": [
+        0
+      ],
+      "native_firmware_partitions_written": false,
+      "original_system_apk_retained": true
+    },
+    "performance_baseline_retest": {
+      "checked_on": "2026-10-25",
+      "report": "docs/android16/performance-comparison-20261025.md",
+      "results": "docs/android16/performance-comparison-20261025.json",
+      "same_apk_as_android17": true,
+      "firmware_changed_by_test": false,
+      "traced_known_issue": "original native baseline retains VM relay on kernel without VSOCK; restarting observed; not temporarily hidden during comparison"
     }
   },
   "android17": {
@@ -68,7 +89,17 @@
     "build": "not_started",
     "device_boot": "not_tested",
     "full_peripheral_validation": false,
-    "cts_vts": "not_run"
+    "cts_vts": "not_run",
+    "performance_comparison": {
+      "checked_on": "2026-10-25",
+      "report": "docs/android16/performance-comparison-20261025.md",
+      "results": "docs/android16/performance-comparison-20261025.json",
+      "baseline": "native Android16",
+      "final_device": "Android17 single-boot DSU, SDK37, Enforcing",
+      "core_processes_stable_both": true,
+      "same_vendor_fingerprint": true,
+      "cts_vts": "not part of this performance comparison"
+    }
   },
   "firmware_binaries_in_repository": false,
   "raw_captures_in_repository": false

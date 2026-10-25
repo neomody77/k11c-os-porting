@@ -4,6 +4,8 @@
 
 这是社区实验项目，与 KICKPI、Rockchip 或 Google 无官方关联。启动成功不代表完成原生板级移植或通过 CTS/VTS。
 
+2026-10-25：已完成同板Android16原生与Android17 DSU的性能、资源和流畅度对照；同一APK普通/压力动画约62FPS，设置页另核对deadline与软件呈现时间，避免直接比较不同预算的卡顿百分比。见 [完整对比](docs/android16/performance-comparison-20261025.md) / [机器结果](docs/android16/performance-comparison-20261025.json)。测试结束恢复Android17 DSU，本轮未刷写固件。
+
 ## 分支约定
 
 公开仓库：[neomody77/k11c-os-porting](https://github.com/neomody77/k11c-os-porting)。每个系统版本使用独立分支，命名为 `系统-版本`。
@@ -12,13 +14,15 @@
 |---|---|
 | `main` | 项目总览、通用记录及首次公开时的 Android16 基线 |
 | `android-16` | Android16 补丁、构建工具、板上验证与阶段总结；本阶段已结束 |
-| `android-17` | 后续 Android17 开发；开始实际工作时创建，目前尚不存在 |
+| `android-17` | Android17 独立开发与验证；本分支只维护 Android16 结果 |
 
 复现 Android16 时先执行 `git switch android-16`。后续版本的实现与测试结果在对应版本分支维护，不把 Android16 的验证结果当作其他版本的通过证据。
 
 ## 当前状态
 
 截至 2026-10-03，记录是一次具体固件组合的测试快照。Android16本阶段已按用户要求结束，见 [总结与原生资源实测](docs/android16/summary-20261003.md)。
+
+2026-10-24 补充修复自然横屏下三键导航被裁剪的问题：同版本 Launcher 系统应用更新已在原生 Android16 验证显示、返回、主页和最近任务，保持密度 200 与 Enforcing。见 [三键导航修复](docs/android16/navbar-fix-20261024.md)。
 
 | 版本 | 构建与启动 | 完成度 |
 |---|---|---|
