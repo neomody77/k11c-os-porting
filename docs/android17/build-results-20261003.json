@@ -1,6 +1,6 @@
 {
   "checked_on": "2026-10-03",
-  "stage": "offline_native_candidate_verified",
+  "stage": "dsu_boot_failure_under_apexd_diagnosis",
   "source_ref": "android-17.0.0_r1",
   "build_target": "aosp_arm64-cp2a-userdebug",
   "sdk": 37,
@@ -24,7 +24,7 @@
   "packaged_ril_hash": "passed",
   "vintf_static_with_factory_kernel_config": "passed",
   "factory_kernel": "5.10.157",
-  "runtime_apex_validation": "not_tested",
+  "runtime_apex_validation": "EROFS virt payload was incompatible with stock kernel; EXT4 fix boot verified",
   "test_modules_compiled": {
     "CodecCapabilitiesTest": [
       {
@@ -46,11 +46,17 @@
       }
     ]
   },
-  "android17_device_tests_run": false,
-  "device_boot_tested": false,
+  "android17_device_tests_run": true,
+  "device_boot_tested": true,
+  "device_boot_result": "follow-up regular SDK37 DSU boot and three-button navigation verified after EXT4 and natural-landscape fixes; see 20261024 report",
+  "device_dsu_report": "docs/android17/dsu-boot-test-20261003.md",
   "device_flashed": false,
   "cts_vts": "not_run",
   "sandbox_profile_unloaded_and_deleted": true,
   "existing_android16_preserved": true,
-  "android16_restore_super_hash_verified": true
+  "android16_restore_super_hash_verified": true,
+  "followup_report": "docs/android17/dsu-ext4-fix-20261024.md",
+  "followup_results": "docs/android17/boot-results-20261024.json",
+  "original_native_super_superseded": true,
+  "latest_followup_results": "docs/android17/perfetto-hevc-results-20261024.json"
 }

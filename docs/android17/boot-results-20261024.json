@@ -1,0 +1,123 @@
+{
+  "checked_on": "2026-10-24",
+  "source_ref": "android-17.0.0_r1",
+  "build_target": "aosp_arm64-cp2a-userdebug",
+  "stage": "dsu_boot_and_three_button_navigation_verified",
+  "sdk": 37,
+  "boot_mode": "single-boot DSU",
+  "original_android16_preserved": true,
+  "system_sha256": "bbdc2576aed08e910d0bfc58f0916dd0fe27714c6514a62c1f72df734f4f3669",
+  "system_image_bytes": 1936048128,
+  "virt_apex_payload_fs": "ext4",
+  "ext4_readonly_check": "passed",
+  "avb_integrity": "passed",
+  "diagnostic_rules_in_final_image": false,
+  "regular_ext4_boot_seconds": 37.72,
+  "regular_ext4_boot_verified": true,
+  "navbar_image_boot_verified": true,
+  "navbar_patch": "patches/android17/0007-navbar-natural-landscape-rotation.patch",
+  "selinux": "Enforcing",
+  "helpers": {
+    "ril_compat": "active",
+    "bluetooth_compat": "active",
+    "rtc_timer": "active",
+    "sensors_compat": "no-configured-device"
+  },
+  "mounted_ril_hash_matches": true,
+  "display": {
+    "width": 1024,
+    "height": 600,
+    "refresh_hz": 62,
+    "renderer": "Mali-G52 / OpenGL ES 3.2"
+  },
+  "tests_before_navbar_only_change": {
+    "codec_arm64": {
+      "exit_code": 1,
+      "total": 34,
+      "passed": 33,
+      "failed": 1,
+      "skipped": 0,
+      "avc_regressions_passed": 4,
+      "failed_cases": [
+        "VideoCapsHevcTest.VideoCaps_HEVC_SupportedFrameRates"
+      ]
+    },
+    "codec_arm": {
+      "exit_code": 1,
+      "total": 34,
+      "passed": 33,
+      "failed": 1,
+      "skipped": 0,
+      "avc_regressions_passed": 4,
+      "failed_cases": [
+        "VideoCapsHevcTest.VideoCaps_HEVC_SupportedFrameRates"
+      ]
+    },
+    "gpuwork_missing_map": {
+      "exit_code": 0,
+      "total": 1,
+      "passed": 0,
+      "failed": 0,
+      "skipped": 1
+    }
+  },
+  "codec_open_failure": "resolved in follow-up by correcting the stale test expectation against Java legacy; historical results above retained",
+  "idle_sample_before_navbar_change": {
+    "idle_sample_seconds": 20.1,
+    "cpu_busy_percent": 6.33,
+    "mem_available_kib": 3002024,
+    "thermal_zone0_type": "soc-thermal",
+    "thermal_zone0_c": 55.555,
+    "crash_buffer_empty": true
+  },
+  "full_peripheral_validation": false,
+  "cts_vts": "not_run",
+  "raw_captures_published": false,
+  "native_package": "previous super is superseded; repack and revalidate before any native installation",
+  "navbar_image_boot_seconds": 37.69,
+  "dsu_userdata_preserved": true,
+  "old_dsu_slots_preserved": true,
+  "navigation": {
+    "sdk": 37,
+    "navigation_mode": "three_button",
+    "buttons": {
+      "recent_apps": [
+        636,
+        542,
+        912,
+        597
+      ],
+      "back": [
+        111,
+        542,
+        385,
+        597
+      ],
+      "home": [
+        386,
+        542,
+        635,
+        597
+      ]
+    },
+    "bounds_source": "taskbar_touch_regions",
+    "back_and_home_tap_verified": true,
+    "recents_screenshot_captured": true,
+    "density": "Physical density: 200",
+    "selinux": "Enforcing",
+    "recents_verified_by_screenshot": true,
+    "display_rotation_tested": [
+      0
+    ]
+  },
+  "native_firmware_partitions_flashed": false,
+  "native_userdata_change_scope": "DSU backing images; Android16 same-version Launcher application update",
+  "perfetto_traced": {
+    "stage": "resolved_in_followup_regular_image",
+    "service_state": "restarting",
+    "reason": "vsock socket family unsupported by kernel",
+    "also_observed_on_android16_baseline": true,
+    "followup_results": "docs/android17/perfetto-hevc-results-20261024.json"
+  },
+  "followup_results": "docs/android17/perfetto-hevc-results-20261024.json"
+}

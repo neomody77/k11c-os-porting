@@ -1,0 +1,134 @@
+{
+  "checked_on": "2026-10-24",
+  "stage": "verified_after_regular_image_reboot",
+  "source_ref": "android-17.0.0_r1",
+  "build_target": "aosp_arm64-cp2a-userdebug",
+  "sdk": 37,
+  "system_image_bytes": 1936048128,
+  "system_sha256": "28fa0a90c47992d53ad3254be994ff3c5664a64da10a05af30d8ab98e2248a07",
+  "diagnostic_rules_in_image": false,
+  "ext4_readonly_check": "passed",
+  "avb_integrity": "passed",
+  "boot_mode": "single-boot DSU",
+  "boot_seconds": 37.28,
+  "dsu_userdata_preserved": true,
+  "old_dsu_slots_preserved": true,
+  "native_firmware_partitions_flashed": false,
+  "selinux": "Enforcing",
+  "helpers": {
+    "ril_compat": "active",
+    "bluetooth_compat": "active",
+    "rtc_timer": "active",
+    "sensors_compat": "no-configured-device"
+  },
+  "mounted_ril_hash_matches": true,
+  "perfetto": {
+    "sdk": 37,
+    "selinux": "Enforcing",
+    "service": "running",
+    "probes": "running",
+    "tracing_enabled": true,
+    "vm_relay_address_empty": true,
+    "pid_stable": true,
+    "stability_sample_seconds": 61.51,
+    "observations": 7,
+    "updatable_crashing": "",
+    "trace": {
+      "bytes": 22629,
+      "packets": 45,
+      "sys_stats_samples": 31,
+      "cpu_entries": 124,
+      "meminfo_entries": 1023,
+      "sample_span_seconds": 2.981
+    }
+  },
+  "hevc": {
+    "production_algorithm_changed": false,
+    "java_reference_implementation": "CodecCapsLegacyImpl",
+    "exact_native_fixture_reused": true,
+    "reference_frame_rate_range": [
+      1,
+      960
+    ],
+    "reference_0fps_supported": false,
+    "reference_1fps_supported": true,
+    "native_test_expectation_corrected": true,
+    "test_source": "tools/reference/HevcFrameRateReference.java"
+  },
+  "tests": {
+    "codec_arm64": {
+      "exit_code": 0,
+      "total": 34,
+      "passed": 34,
+      "failed": 0,
+      "skipped": 0,
+      "avc_regressions_passed": 4,
+      "failed_cases": []
+    },
+    "codec_arm": {
+      "exit_code": 0,
+      "total": 34,
+      "passed": 34,
+      "failed": 0,
+      "skipped": 0,
+      "avc_regressions_passed": 4,
+      "failed_cases": []
+    },
+    "gpuwork_missing_map": {
+      "exit_code": 0,
+      "total": 1,
+      "passed": 0,
+      "failed": 0,
+      "skipped": 1
+    }
+  },
+  "codec_test_scope": "native capability calculations, not end-to-end hardware decode",
+  "display": {
+    "width": 1024,
+    "height": 600,
+    "refresh_hz": 62,
+    "renderer": "Mali-G52 / OpenGL ES 3.2"
+  },
+  "navigation": {
+    "sdk": 37,
+    "navigation_mode": "three_button",
+    "buttons": {
+      "recent_apps": [
+        636,
+        542,
+        912,
+        597
+      ],
+      "back": [
+        111,
+        542,
+        385,
+        597
+      ],
+      "home": [
+        386,
+        542,
+        635,
+        597
+      ]
+    },
+    "bounds_source": "taskbar_touch_regions",
+    "back_and_home_tap_verified": true,
+    "recents_screenshot_captured": true,
+    "density": "Physical density: 200",
+    "selinux": "Enforcing"
+  },
+  "idle_resources": {
+    "idle_sample_seconds": 20.1,
+    "cpu_busy_percent": 2.72,
+    "mem_available_kib": 3015284,
+    "thermal_zone0_type": "soc-thermal",
+    "thermal_zone0_c": 52.5,
+    "crash_buffer_empty": true
+  },
+  "cts_vts": "not_run",
+  "full_peripheral_validation": false,
+  "raw_captures_published": false,
+  "android16_tracing_fix_deployed": false,
+  "temporary_sandbox_profile_cleaned": true
+}

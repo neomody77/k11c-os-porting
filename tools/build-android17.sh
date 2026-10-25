@@ -30,4 +30,20 @@ for library in k11c/librk-ril.so sensors.k11c-empty.so; do
   debugfs -R "ea_list /system/system_ext/lib64/$library" "$image" 2>/dev/null |
     grep -F 'u:object_r:system_lib_file:s0' >/dev/null || { echo "Incorrect label: $library" >&2; exit 1; }
 done
-echo 'Android17 candidate compiled and labels checked; runtime/device validation remains.'
+python3 - "$image" <<'PY'
+from pathlib import Path
+import subprocess
+import sys
+import tempfile
+import zipfile
+
+with tempfile.TemporaryDirectory(prefix="k11c-virt-apex-") as directory:
+    apex = Path(directory) / "virt.apex"
+    subprocess.run(["debugfs", "-R", f"dump /system/apex/com.android.virt.apex {apex}", sys.argv[1]],
+                   check=True, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+    with zipfile.ZipFile(apex) as archive, archive.open("apex_payload.img") as payload:
+        header = payload.read(4096)
+    if header[1080:1082] != bytes.fromhex("53ef"):
+        raise SystemExit("virt APEX must use EXT4 for the stock K11C kernel")
+PY
+echo 'Android17 candidate compiled; labels and virt APEX EXT4 payload checked; runtime/device validation remains.'

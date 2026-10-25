@@ -1,5 +1,5 @@
 {
-  "updated_on": "2026-10-03",
+  "updated_on": "2026-10-25",
   "board": "KICKPI K11C / RK3566",
   "scope": "AOSP ARM64 GSI on factory kernel/vendor",
   "android16": {
@@ -61,23 +61,38 @@
         53.125
       ],
       "userdata_available_kib": 6341372
+    },
+    "performance_baseline_retest": {
+      "checked_on": "2026-10-25",
+      "report": "docs/android17/performance-comparison-20261025.md",
+      "results": "docs/android17/performance-comparison-20261025.json",
+      "same_apk_as_android17": true,
+      "firmware_changed_by_test": false,
+      "traced_known_issue": "original native baseline retains VM relay on kernel without VSOCK; restarting observed; not temporarily hidden during comparison"
     }
   },
   "android17": {
     "source_ref": "android-17.0.0_r1",
     "build": "verified",
-    "device_boot": "not_tested",
+    "device_boot": "verified SDK37 regular DSU with EXT4, navbar and local tracing fixes; Enforcing and boot_completed=1",
     "full_peripheral_validation": false,
     "cts_vts": "not_run",
     "manifest_commit": "5bc9a7ce1cd78dd53613bbfd0ebf506e1e4adb0f",
     "branch": "android-17",
-    "stage": "offline_native_candidate_verified",
+    "stage": "dsu_performance_compared_with_native_android16",
     "source_sync": "verified; independent shallow checkout and pinned project manifest exported",
     "build_target_verified": true,
-    "avc_patch": "rebased and CodecCapabilitiesTest compiled; not run on Android17",
+    "avc_patch": "four AVC regressions and full CodecCapabilitiesTest 34/34 passed on both arm and arm64; HEVC expectation corrected against exact-fixture Java legacy reference",
     "gpuwork_upstream_fix": "present in official tag; do not duplicate Android16 production fix",
     "sandbox": "all build phases completed; temporary exact-path nsjail profile independently verified unloaded and deleted",
     "report": "docs/android17/build-20261003.md",
+    "dsu_test_report": "docs/android17/dsu-ext4-fix-20261024.md",
+    "native_android16_recovery_after_first_attempt": "verified: SDK36, Enforcing, boot_completed=1",
+    "current_device_after_diagnostic_retry": "verified SDK37 Android17 regular DSU image with EXT4, navigation and local tracing fixes; Enforcing",
+    "diagnostic_dsu_retry": "device returned to Android16; pstore empty after power cycle; exact failure stage unknown; unique k11c17trial-20261003 slot wiped; old android17 and dsu slots retained; /data free about 10 GiB",
+    "first_dsu_failure": "pstore: init rebooted to bootloader with bootstrap-apexd-failed at about 8.98 seconds",
+    "diagnostic_dsu_image_sha256": "0b4fa6959bb9b2fb40e6e62bd4d0aec8163d9e19c71ada7e8445cb8b4ef7d5ad",
+    "native_partitions_written": false,
     "locked_project_count": 1084,
     "build_target": "aosp_arm64-cp2a-userdebug",
     "sdk": 37,
@@ -85,9 +100,11 @@
     "codec_module_build": {
       "status": "passed",
       "elapsed_seconds": 565.05,
-      "device_tests_run": false
+      "device_tests_run": true,
+      "latest_results": "docs/android17/perfetto-hevc-results-20261024.json",
+      "elapsed_seconds_context": "initial 20261003 codec-only build"
     },
-    "ril_candidate": "Android17 release170 only; regenerated from exact factory library; independently byte-compared; Android16 and tampered payload rejection verified",
+    "ril_candidate": "release170 candidate runtime guard and read-only bind verified on SDK37 Enforcing; no physical modem test",
     "board_patch_application": "all five patches applied; repeated application verified",
     "soong_memory_controls": {
       "GOMEMLIMIT": "24GiB",
@@ -95,11 +112,12 @@
       "forwarding_verified": true
     },
     "offline_continuation": {
-      "stage": "completed_offline_native_candidate_verified",
+      "stage": "previous_native_package_superseded_by_latest_dsu_system",
       "automatic_system_integrity_vintf_capacity_and_native_package_checks": true,
       "device_access": false,
       "flashing_performed": false,
-      "all_eight_super_partitions_hash_verified": true
+      "all_eight_super_partitions_hash_verified": true,
+      "note": "original static validation retained; latest system requires new super before native use"
     },
     "system_sha256": "a9c446041375331ebb829d5a8e214bb0c3ad1ee10c1ea0c31181e07da7e4a379",
     "super_sha256": "8e4d13a8502b3fc977497092e704353f04f5a9731849631a3cb1e7c11e2360dd",
@@ -107,8 +125,49 @@
     "build_elapsed_seconds": 7653.56,
     "system_image_bytes": 1910353920,
     "native_group_free_bytes": 565399552,
-    "offline_validation": "ext4, AVB, labels, private payload, factory kernel/vendor static VINTF and native super unpacked hashes passed; runtime APEX not tested",
-    "gpuwork_test_module": "arm64 compiled; not run on Android17"
+    "offline_validation": "initial static VINTF/kernel validation retained; latest regular GSI ext4/AVB and runtime APEX validated by SDK37 DSU; latest native super still requires repacking",
+    "gpuwork_test_module": "compiled; actual missing-map regression skipped because map exists",
+    "boot_mode": "single-boot DSU; native eMMC remains Android16",
+    "runtime_results": "docs/android17/perfetto-hevc-results-20261024.json",
+    "latest_system_sha256": "28fa0a90c47992d53ad3254be994ff3c5664a64da10a05af30d8ab98e2248a07",
+    "latest_system_image_bytes": 1936048128,
+    "latest_system_diagnostic": false,
+    "bootstrap_failure_root_cause": "com.android.virt.apex EROFS payload on stock kernel without CONFIG_EROFS_FS",
+    "bootstrap_fix": "0006-virt-apex-ext4-for-stock-kernel.patch",
+    "navbar_fix": "0007-navbar-natural-landscape-rotation.patch",
+    "native_package_status": "previous super superseded by EXT4/navbar system; repack required",
+    "latest_native_group_free_bytes_calculated": 539705344,
+    "compat_helpers": {
+      "ril_compat": "active",
+      "bluetooth_compat": "active",
+      "rtc_timer": "active",
+      "sensors_compat": "no-configured-device"
+    },
+    "current_sdk": 37,
+    "navigation": {
+      "mode": "three_button",
+      "density": 200,
+      "rotation_tested": [
+        0
+      ],
+      "visible_and_interactive": true
+    },
+    "perfetto_traced": "verified after image reboot: local tracing enabled, PID stable over 60 seconds, actual sys_stats trace captured; unsupported VM relay omitted",
+    "native_userdata_change_scope": "DSU backing files plus requested Android16 Launcher system app update",
+    "latest_followup_report": "docs/android17/perfetto-hevc-20261024.md",
+    "latest_followup_results": "docs/android17/perfetto-hevc-results-20261024.json",
+    "hevc_test_failure": "resolved: stale expected lower bound 0; both reference and production return 1; production unchanged",
+    "initial_runtime_results": "docs/android17/boot-results-20261024.json",
+    "performance_comparison": {
+      "checked_on": "2026-10-25",
+      "report": "docs/android17/performance-comparison-20261025.md",
+      "results": "docs/android17/performance-comparison-20261025.json",
+      "baseline": "native Android16",
+      "final_device": "Android17 single-boot DSU, SDK37, Enforcing",
+      "core_processes_stable_both": true,
+      "same_vendor_fingerprint": true,
+      "cts_vts": "not part of this performance comparison"
+    }
   },
   "firmware_binaries_in_repository": false,
   "raw_captures_in_repository": false

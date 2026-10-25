@@ -1,0 +1,17 @@
+diff --git a/media/libmedia/tests/codeccapabilities/CodecCapabilitiesTest.cpp b/media/libmedia/tests/codeccapabilities/CodecCapabilitiesTest.cpp
+--- a/media/libmedia/tests/codeccapabilities/CodecCapabilitiesTest.cpp
++++ b/media/libmedia/tests/codeccapabilities/CodecCapabilitiesTest.cpp
+@@ -334,8 +334,12 @@
+ 
+ TEST_F(VideoCapsHevcTest, VideoCaps_HEVC_SupportedFrameRates) {
+     const Range<int32_t>& supportedFrameRates = videoCaps->getSupportedFrameRates();
+-    EXPECT_EQ(supportedFrameRates.lower(), 0);
++    // Positive block throughput rounds the global minimum up to 1 fps,
++    // matching the Java legacy implementation for this HEVC fixture.
++    EXPECT_EQ(supportedFrameRates.lower(), 1);
+     EXPECT_EQ(supportedFrameRates.upper(), 960);
++    EXPECT_FALSE(videoCaps->areSizeAndRateSupported(1280, 720, 0.0));
++    EXPECT_TRUE(videoCaps->areSizeAndRateSupported(1280, 720, 1.0));
+ 
+     std::optional<Range<double>> supportedFR720p = videoCaps->getSupportedFrameRatesFor(1280, 720);
+     EXPECT_EQ(supportedFR720p.value().upper(), 960.0);

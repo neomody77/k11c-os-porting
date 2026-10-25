@@ -87,3 +87,21 @@ AVC回归模块编译成功，用时565.05秒，运行验证仍待Android17设�
 完整构建02:07:29成功，同版本静态验证工具编译成功；AVC arm/arm64与GPU-work arm64回归模块产物均已核验，运行待测。system为1910353920字节，ext4、AVB、标签、SDK37/release17、精确私有RIL载荷与真实vendor/5.10.157 kernel配置静态VINTF通过。原生super已构建，全部八个解包分区哈希独立核验，七个原厂逻辑分区保留，组内剩余565399552字节。
 
 候选system/super/boot完整哈希、Android16恢复super哈希和临时nsjail权限清理再次核验通过。构建与续跑进程均结束。Android17尚未刷入或启动、runtime APEX及CTS/VTS未验证；后续需具体候选写入授权和当前userdata备份。见 [构建验收](../android17/build-20261003.md) / [JSON](../android17/build-results-20261003.json)。
+
+## 2026-10-24：Android17 DSU 启动与自然横屏三键修复
+
+完整早期日志确认 virt APEX 改用 EROFS，而原厂内核未启用 EROFS，导致 bootstrap 挂载失败。改为 EXT4 后，诊断版和去除诊断规则的常规版均已启动 SDK37、Enforcing；原生 Android16 固件及旧 DSU 槽保留。本轮采用独立 4 GiB userdata，后续 system-only 更新核对其属性保持不变。
+
+发现 Android16/17 Launcher 在自然横屏、手机分类下的三键方向与窗口尺寸不一致；分别在两个系统分支加入三处旋转判断修复。Android16 使用同版本 Launcher 应用更新验证，Android17 最终 system 镜像直接集成；均保持密度 200，验证返回、主页及最近任务的真实点击。最终 Android17 镜像约 37.69 秒完成 DSU 启动，当前仍是单次试运行，正常重启返回原生 Android16。
+
+双架构 codec 各 33/34 通过，AVC 四项回归均通过；HEVC 帧率下限断言和 Perfetto vsock 内核兼容缺口保留为未解决，缺 map GPU-work 测试跳过。所有临时 AppArmor 例外已独立核对移除；补丁和文档通过完整历史脱敏检查。见 [实测与限制](../android17/dsu-ext4-fix-20261024.md) / [JSON](../android17/boot-results-20261024.json)。
+
+## 2026-10-24：本地 Perfetto 与 HEVC 测试参考核对
+
+追溯到 AVF 产品配置强制写入 VM relay 地址，而原厂内核未启用 VSOCKETS。仅对 K11C 构建目标去掉该地址，本地 tracing 仍启用；常规镜像 system-only DSU 更新后 37.28 秒启动完成，无手工改属性，traced/probes 运行，61.51 秒内 PID 不变，未再置位 updatable_crashing。实际 3 秒 trace 包含 31 组 CPU/内存样本，原始数据保存在私有工作区。
+
+使用与 native HEVC fixture 完全相同的输入，显式调用 Java legacy 算法得到帧率范围 [1,960]、拒绝 0fps、支持 1fps。生产算法保持不变，修正测试期望并补齐边界断言后，arm/arm64 codec 均 34/34、四项 AVC 回归均通过。设置与桌面、三键实际点击、helper 和 Enforcing 复核通过。完整九补丁重复应用及 25 项工具测试通过；完整外设、CTS/VTS 及 native super 重打包仍未由本阶段完成。见 [验收](../android17/perfetto-hevc-20261024.md) / [JSON](../android17/perfetto-hevc-results-20261024.json)。
+
+## 2026-10-25：Android17与原生Android16性能对照
+
+同一APK、显示设置和负载顺序，完成三轮默认/固定62Hz/四核压力动画、设置页滚动，十轮进程冷启动和已有任务恢复，以及CPU、存储、GPU、媒体测试。额外核对帧deadline和软件呈现时间，确认两个版本的gfxinfo超期比例不能直接作为同口径排名。Android16保留traced重启的真实基线，Android17已含tracing修复。两套系统核心进程PID稳定、设置恢复，测试结束回Android17单次DSU；原生固件未刷写。见 [报告](../android17/performance-comparison-20261025.md)。

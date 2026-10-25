@@ -5,8 +5,8 @@ repo_root="$(cd "$(dirname "$0")/.." && pwd)"
 aosp="${1:?Usage: apply-android17.sh /path/to/aosp17}"
 aosp="$(cd "$aosp" && pwd)"
 tag=android-17.0.0_r1
-projects=(frameworks/av build/make system/core build/soong frameworks/native)
-patches=(0001-avc-high10-overflow-and-tests.patch 0002-k11c-board-integration.patch 0003-k11c-ueventd-import.patch 0004-soong-runtime-memory-controls.patch 0005-gpuwork-missing-map-regression.patch)
+projects=(frameworks/av build/make system/core build/soong frameworks/native packages/modules/Virtualization packages/apps/Launcher3 packages/modules/Virtualization frameworks/av)
+patches=(0001-avc-high10-overflow-and-tests.patch 0002-k11c-board-integration.patch 0003-k11c-ueventd-import.patch 0004-soong-runtime-memory-controls.patch 0005-gpuwork-missing-map-regression.patch 0006-virt-apex-ext4-for-stock-kernel.patch 0007-navbar-natural-landscape-rotation.patch 0008-perfetto-local-tracing-without-vsock.patch 0009-hevc-frame-rate-reference-expectations.patch)
 pending=()
 for i in "${!projects[@]}"; do
   project="$aosp/${projects[$i]}"

@@ -4,7 +4,9 @@
 
 这是社区实验项目，与 KICKPI、Rockchip 或 Google 无官方关联。启动成功不代表完成原生板级移植或通过 CTS/VTS。
 
-当前分支为 `android-17`：官方固定标签源码和API37已验证，AVC回归模块编译成功，K11C板级补丁及Android17专用RIL候选已集成，完整系统镜像编译与离线验收通过，原生super候选已准备。临时nsjail例外已卸载删除并独立核验。尚未在板上启动。下方 Android16 记录是保留的已验证基线，不能当作 Android17 通过证据。见 [Android17 构建记录](docs/android17/build-20261003.md)。
+当前分支为 `android-17`：固定 `android-17.0.0_r1`、SDK37，已在 K11C 通过独立单次 DSU 启动，SELinux Enforcing，Mali-G52 和 62 Hz 显示生效。virt APEX EXT4、自然横屏三键导航和本地 Perfetto 采样均已实机验证；HEVC 单测与 Java 参考对齐后，arm/arm64 codec 各 34/34 通过。原生 eMMC 保持 Android16；旧 Android17 super 候选已过时，不能用于当前修复版原生安装。见 [启动与导航](docs/android17/dsu-ext4-fix-20261024.md) / [最新 tracing 与 codec 验收](docs/android17/perfetto-hevc-20261024.md)。
+
+2026-10-25：已完成同板Android16原生与Android17 DSU的性能、资源和流畅度对照；同一APK普通/压力动画约62FPS，设置页另核对deadline与软件呈现时间，避免直接比较不同预算的卡顿百分比。见 [完整对比](docs/android17/performance-comparison-20261025.md) / [机器结果](docs/android17/performance-comparison-20261025.json)。测试结束恢复Android17 DSU，本轮未刷写固件。
 
 ## 分支约定
 
@@ -14,7 +16,7 @@
 |---|---|
 | `main` | 项目总览、通用记录及首次公开时的 Android16 基线 |
 | `android-16` | Android16 补丁、构建工具、板上验证与阶段总结；本阶段已结束 |
-| `android-17` | Android17 独立开发、补丁审查和验证记录；离线原生候选已就绪，板测待进行 |
+| `android-17` | Android17 独立开发、补丁审查和验证记录；DSU 启动已验证，完整外设和 CTS/VTS 待测 |
 
 复现 Android16 时先执行 `git switch android-16`。后续版本的实现与测试结果在对应版本分支维护，不把 Android16 的验证结果当作其他版本的通过证据。
 
@@ -22,10 +24,12 @@
 
 截至 2026-10-03，记录是一次具体固件组合的测试快照。Android16本阶段已按用户要求结束，见 [总结与原生资源实测](docs/android16/summary-20261003.md)。
 
+2026-10-24 更新：Android17 常规候选已通过 DSU 实机启动；以下 Android16 指标是保留的历史基线。Android17 后续将 HEVC 过时断言与同输入 Java legacy 参考对齐，双架构 codec 各 34/34 通过，四项 AVC 回归均通过。本地 tracing 已跨镜像重启验证，61 秒 PID 不变并实际采集 CPU/内存 trace；缺 map GPU-work 用例因 map 存在继续跳过。
+
 | 版本 | 构建与启动 | 完成度 |
 |---|---|---|
 | Android 16 | android-16.0.0_r4；aosp_arm64-bp4a-userdebug；编译成功，eMMC原生首启与正常重启成功，API36.1 | 网络、GPU、媒体、存储等已有实际测试；仍有外设兼容缺口 |
-| Android 17 | android-17.0.0_r1；源码同步完成；aosp_arm64-cp2a-userdebug/API37已验证 | 完整系统与回归模块编译通过，ext4/AVB/标签/静态VINTF及原生super验收通过；尚未板测 |
+| Android 17 | android-17.0.0_r1；aosp_arm64-cp2a-userdebug；SDK37 DSU 启动、桌面和 Enforcing 已验证 | virt APEX EXT4 兼容修复已启动验证；完整外设、长期稳定和 CTS/VTS 尚未完成 |
 
 Android16 修正了 factory first-stage 缺少 vbmeta 节点初始化，以及 AVC High10 Level6.2 码率乘法溢出。保留 UBSan/CFI，32/64 位回归测试各 25 项通过。
 
@@ -58,6 +62,8 @@ Android16 修正了 factory first-stage 缺少 vbmeta 节点初始化，以及 A
 | 待修问题 | [docs/android16/known-issues.md](docs/android16/known-issues.md) |
 | Android17 计划 | [docs/android17/roadmap.md](docs/android17/roadmap.md) |
 | Android17 构建与适配 | [记录](docs/android17/build-20261003.md) / [JSON](docs/android17/build-results-20261003.json) |
+| Android17 DSU 启动、EROFS 和导航修复 | [记录](docs/android17/dsu-ext4-fix-20261024.md) / [JSON](docs/android17/boot-results-20261024.json) |
+| Android17 本地 tracing 与 HEVC 参考核对 | [记录](docs/android17/perfetto-hevc-20261024.md) / [JSON](docs/android17/perfetto-hevc-results-20261024.json) |
 | Android17 环境与补丁准备 | [docs/android17/preparation-20261003.md](docs/android17/preparation-20261003.md) |
 | 上游跟踪 | [docs/upstream.md](docs/upstream.md) |
 | 脱敏规则 | [docs/privacy.md](docs/privacy.md) |
